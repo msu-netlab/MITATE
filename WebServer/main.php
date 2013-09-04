@@ -28,17 +28,12 @@ if ($_FILES["file"]["error"] > 0)
   }
 else
 {
-if (file_exists("user_accounts/" . $_COOKIE["username"] . "/" . $_FILES["file"]["name"]))
-      {
-      echo $_FILES["file"]["name"] . " already exists in your records. ";
-      }
-    else
-      {
-      move_uploaded_file($_FILES["file"]["tmp_name"],
-      "user_accounts/" . $_COOKIE["username"] . "/" . $_FILES["file"]["name"]);
+$file_extension = end(explode(".", $_FILES["file"]["name"]));
+$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
+$current_time = time();
+$final_file_path = $file_name_without_extension . $current_time . "." . $file_extension;
+move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/" . $_COOKIE["username"] . "/" . $final_file_path);		
 $yesdone = 1;
-      }
-
   }
 }
 ?>
@@ -52,7 +47,7 @@ $con = mysql_connect("localhost","root","root");
   mysql_select_db("mitate", $con);
 
 $username = $_COOKIE[username];
-$filepath = "user_accounts/" . $username . "/" . $_FILES["file"]["name"];
+$filepath = "user_accounts/" . $username . "/" . $final_file_path;
 $xml = simplexml_load_file("$filepath");
 
 
@@ -62,7 +57,7 @@ foreach($xml->transactions->transaction as $temptransaction)
   $changeagain = rand(10, 10000);
   $change=rand(10, 10000);
   $transactionid = time() + ($change * 9655) - $changeagain;
-  $transaction_count = $temptransaction->count;
+  $transaction_count = $temptransaction["count"];
   
   if($transaction_count != "") { 
   $sql="INSERT INTO transaction1 (transactionid, username, count, original_count) VALUES($transactionid, '$username', $transaction_count, $transaction_count)";
@@ -141,7 +136,7 @@ $changeagain = rand(10, 10000);
 	//$bytestostore = ceil($bytestostore/8) + 26;
   //else
 	//$bytestostore = $bytestostore + 26;
-	$transfer_repeat = $temptransfer->repeat;
+	$transfer_repeat = 1;//$temptransfer->repeat;
   while($transfer_repeat > 0) {
   $sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
   if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
