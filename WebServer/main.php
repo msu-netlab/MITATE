@@ -65,7 +65,7 @@ foreach($xml->transactions->transaction as $temptransaction)
   $transaction_count = $temptransaction->count;
   
   if($transaction_count != "") { 
-  $sql="INSERT INTO transaction1 (transactionid, username, count) VALUES($transactionid, '$username', $transaction_count)";
+  $sql="INSERT INTO transaction1 (transactionid, username, count, original_count) VALUES($transactionid, '$username', $transaction_count, $transaction_count)";
 	if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
   }
   if($transaction_count == ""){
@@ -149,8 +149,8 @@ $changeagain = rand(10, 10000);
   $sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
   if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
   
-  $sql="INSERT INTO metricdata (metricid, transferid, transactionid, value) VALUES(9999, $transferid, $transactionid, 0)";
-  if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+  //$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value) VALUES(9999, $transferid, $transactionid, 0)";
+  //if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
   $transferid = $transferid + 1;
   $transfer_repeat = $transfer_repeat - 1;
   }
