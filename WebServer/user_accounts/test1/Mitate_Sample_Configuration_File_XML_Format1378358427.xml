@@ -207,7 +207,7 @@
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
-				<deviceid> uio</deviceid>
+				<deviceid>abc</deviceid>
 			</criteria>
 			<criteria>
 				<id>c2</id>
@@ -219,7 +219,7 @@
 		</criteriadefine>
 	</defines>
 	<transactions>
-		<transaction count="2">
+		<transaction count="1">
 			<transfers>
 				<transfer repeat="1">
 					<transferid>t1</transferid>
@@ -259,7 +259,7 @@
 				<criteriaid>c1</criteriaid>
 			</criteria>
 		</transaction>
-		<transaction count="1">
+		<transaction count="2">
 			<transfers>
 				<transfer repeat="1">
 					<transferid>t1</transferid>
