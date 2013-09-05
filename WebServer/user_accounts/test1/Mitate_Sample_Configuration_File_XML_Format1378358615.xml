@@ -207,7 +207,7 @@
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
-				<deviceid> uio</deviceid>
+				<deviceid>abc</deviceid>
 			</criteria>
 			<criteria>
 				<id>c2</id>
