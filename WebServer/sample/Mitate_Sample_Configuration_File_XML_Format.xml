@@ -219,39 +219,39 @@
 		</criteriadefine>
 	</defines>
 	<transactions>
-		<transaction count="19">
+		<transaction count="1">
 			<transfers>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t3</transferid>
-				</transfer>
-				<transfer>
+				</transfer >
+				<transfer repeat="1">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
@@ -259,39 +259,39 @@
 				<criteriaid>c1</criteriaid>
 			</criteria>
 		</transaction>
-		<transaction count="4">
+		<transaction count="2">
 			<transfers>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t3</transferid>
-				</transfer>
-				<transfer>
+				</transfer >
+				<transfer repeat="2">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="3">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
