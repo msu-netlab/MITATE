@@ -42,7 +42,6 @@
 				<type>2</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -58,7 +57,6 @@
 				<type>0</type>
 				<portnumber>5061</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -74,7 +72,6 @@
 				<type>2</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -90,7 +87,6 @@
 				<type>0</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -106,7 +102,6 @@
 				<type>0</type>
 				<portnumber>23399</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -122,7 +117,6 @@
 				<type>0</type>
 				<portnumber>5061</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -138,7 +132,6 @@
 				<type>0</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
-				<repeat>3</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -154,7 +147,6 @@
 				<type>0</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
-				<repeat>2</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -170,7 +162,6 @@
 				<type>0</type>
 				<portnumber>23399</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>1</explicit>
 					<noofbytes></noofbytes>
@@ -186,7 +177,6 @@
 				<type>0</type>
 				<portnumber>32163</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
@@ -202,7 +192,6 @@
 				<type>0</type>
 				<portnumber>32164</portnumber>
 				<response>0</response>
-				<repeat>1</repeat>
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
@@ -230,40 +219,39 @@
 		</criteriadefine>
 	</defines>
 	<transactions>
-		<transaction>
-			<count>10</count>
+		<transaction count="1">
 			<transfers>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t3</transferid>
-				</transfer>
-				<transfer>
+				</transfer >
+				<transfer repeat="1">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
@@ -271,39 +259,39 @@
 				<criteriaid>c1</criteriaid>
 			</criteria>
 		</transaction>
-		<transaction>
+		<transaction count="2">
 			<transfers>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t3</transferid>
-				</transfer>
-				<transfer>
+				</transfer >
+				<transfer repeat="2">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="3">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer>
+				<transfer repeat="1">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
