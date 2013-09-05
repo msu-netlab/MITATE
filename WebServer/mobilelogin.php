@@ -19,7 +19,6 @@ if($_GET['username']!="" || $_GET['password']!="")
         if ($loginresultrow['status'] == "1") {
             $pendingtestset = mysql_query("SELECT
 cri.specification specification,
-cri.deviceid,
 SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as location,
 SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as networktype,
 SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as starttime,
@@ -30,8 +29,10 @@ from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, tran
 where cri.criteriaid = tcl.criteriaid
 and trs.transactionid = tcl.transactionid
 and trs.count > 0
+and (find_in_set('$_GET[deviceid]', cast(REPLACE(cri.deviceid, ' ', '') as char)) > 0 or cri.deviceid = 'client')
 and trf.transferid = ttl.transferid
 and ttl.transactionid = trs.transactionid
+and trs.transactionid not in (select transactionid from transaction_fetched where deviceid = '$_GET[deviceid]')
 and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1)
 and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) = '$_GET[networktype]'
 and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) = '$_GET[city]'
@@ -52,6 +53,8 @@ order by ttl.orderno");
 				print(json_encode($output));
 				while($temp_count > 0) {
 					$transaction_count_reduce = array_unique($transaction_id_array)[$temp_count - 1];
+					$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
+					if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
 					mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
 					$temp_count = $temp_count - 1;
 				}							
