@@ -29,23 +29,33 @@ trs.transactionid as transactionid, trf.type as type, trf.packetdelay, trf.expli
 from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl
 where cri.criteriaid = tcl.criteriaid
 and trs.transactionid = tcl.transactionid
+and trs.count > 0
 and trf.transferid = ttl.transferid
 and ttl.transactionid = trs.transactionid
-and trs.username = '$_GET[username]'
-and trf.transferid in (SELECT transferid from metric m, metricdata md where m.metricid = md.metricid and m.metricid = 9999 and md.value = 0.00)
 and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1)
 and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) = '$_GET[networktype]'
 and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) = '$_GET[city]'
 order by ttl.orderno"); 
             $output="";
 		$i = 0 ;
+		$transaction_id_array = "";
             while($pendingtestrow=mysql_fetch_assoc($pendingtestset))
-     		{$output[]= $pendingtestrow;
-		$output[$i][content] = str_replace("/", "/", $output[$i][content]);
-		$i = $i + 1;
-		}
-            if($output)
-                print(json_encode($output));
+     		{
+				$output[]= $pendingtestrow;
+				$output[$i][content] = str_replace("/", "/", $output[$i][content]);
+				$output_transaction_id = $output[$i][transactionid];
+				$transaction_id_array[$i] = $output_transaction_id;
+				$i = $i + 1;
+			}
+            if($output) {
+				$temp_count = count(array_unique($transaction_id_array));
+				print(json_encode($output));
+				while($temp_count > 0) {
+					$transaction_count_reduce = array_unique($transaction_id_array)[$temp_count - 1];
+					mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
+					$temp_count = $temp_count - 1;
+				}							
+			}
              else {
 				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as location, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
 				$pendingtestrow=mysql_fetch_assoc($pendingtestset);
