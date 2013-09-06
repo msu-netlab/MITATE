@@ -203,15 +203,19 @@
 		<criteriadefine>
 			<criteria>
 				<id>c1</id>
-				<location>Bozeman</location>
+				<latitude>52.949504</latitude>
+				<longitude>-18.056939</longitude>
+				<radius>5000</radius>
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
-				<deviceid> uio</deviceid>
+				<deviceid>abc, def</deviceid>
 			</criteria>
 			<criteria>
 				<id>c2</id>
-				<location>Bozeman</location>
+				<latitude>55.949504</latitude>
+				<longitude>68.056939</longitude>
+				<radius>5000</radius>
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>

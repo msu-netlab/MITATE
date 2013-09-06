@@ -22,7 +22,7 @@ public class MNEPServer {
     public int iTCPPackets, iTCPBytes, iTCPPort;
     public int iTransferId, iTransactionId, iExplicit;
     public static int iPacketDelay = 300;
-    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "";
+    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "", sDeviceId = "";
     public static long lServerOffsetFromNTP;
     public long lClientOffsetFromNTP;
     
@@ -56,7 +56,7 @@ public class MNEPServer {
     
     String tsaTCPPacketReceivedTimes_Client = "", iaTCPBytes_Client = "", sTCPBytesReceived_Client = "", sTCPBytesSent_Client = "";
     String tsaUDPPacketReceivedTimes_Client = "", iaUDPBytes_Client = "", sUDPBytesReceived_Client;
-    String sClientTime="";    
+    String sClientTime="", sLatitudeBeforeTransferExecution = "", sLongitudeBeforeTransferExecution = "", sLatitudeAfterTransferExecution = "", sLongitudeAfterTransferExecution = "";    
 
     private boolean receiveAndSendConnectionParameters() {     
         boolean bParametersReceivedSent = false;
@@ -88,7 +88,8 @@ public class MNEPServer {
             	iTCPPort = new Random().nextInt(20000) + 40000; // change required, port number changed after connection accepted
             }
             sContentType = saClientParameters[12];
-            sContent = saClientParameters[13];           
+			sDeviceId = saClientParameters[13];
+            sContent = saClientParameters[14];           
             if(iExplicit == 0) {
             	if(iPacketType == 0 ) {
             			iUDPBytes = iNumberOfBytes/iUDPPackets;
@@ -171,7 +172,19 @@ public class MNEPServer {
                     case 7: sClientTime = (sDataFromClient == null ? new String() : sDataFromClient);
                             sClientTime = sClientTime.substring(0, sClientTime.indexOf("."));
                             System.out.println(sClientTime);
-                            break;		
+                            break;	
+					case 8: sLatitudeBeforeTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sLatitudeBeforeTransferExecution" + sLatitudeBeforeTransferExecution);
+							break;
+					case 9: sLongitudeBeforeTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sLongitudeBeforeTransferExecution" + sLongitudeBeforeTransferExecution);
+							break;
+					case 10: sLatitudeAfterTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sLatitudeAfterTransferExecution" + sLatitudeAfterTransferExecution);
+							break;
+					case 11: sLongitudeBeforeTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sLongitudeAfterTransferExecution" + sLongitudeAfterTransferExecution);
+							break;
                 }
             }
             
@@ -253,13 +266,18 @@ public class MNEPServer {
         	   psInsertStmt.setFloat(6, tmUDPTransferMetrics.fThroughpuConfInterval);
         	   psInsertStmt.setFloat(7, tmTCPTransferMetrics.fLatencyConfInterval);
         	   psInsertStmt.setFloat(8, tmTCPTransferMetrics.fThroughpuConfInterval);
+			   psInsertStmt.setString(9, sDeviceId);
            
         	   int t = psInsertStmt.executeUpdate();
         	   System.out.println("number of records inserted - "+t);
            
         	   //s.execute("update metricdata set value = 1 where metricid = 9999 and transferid = " + iTransferId + " and transactionid = " + iTransactionId);
         	   //s.execute("update metricdata set transferfinished = '" + sClientTime + "' where transferid = " + iTransferId + " and transactionid = " + iTransactionId);
-        	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "')");
+			   s.execute("insert into metricdata values(10030, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLatitudeBeforeTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10031, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeBeforeTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10032, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLatitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10033, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+        	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
         	   conn.close();
         	   System.out.println ("Entry made in Database");  
            	}

@@ -22,7 +22,20 @@ public class MNEPAcceptConnection {
     }
     
     public static void main(String arg[]) {
-    	System.out.println("\n".getBytes().length);
+   
+    	
+    	/*
+		double lat1=50.0836076, lng1= 0, lat2= 50.0836076, lng2= 14.4665790;
+    	double earthRadius = 3958.75;
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+               Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+               Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    	System.out.println(earthRadius * c);
+		*/
+    	
         MNEPAcceptConnection macClientConnection = new MNEPAcceptConnection();
 
             try {
@@ -49,4 +62,16 @@ public class MNEPAcceptConnection {
             }
        
     }
+    
+    private double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+               Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+               Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return   earthRadius * c;
+      }
+    
 }
