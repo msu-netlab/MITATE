@@ -1,7 +1,6 @@
 package com.mnep.service;
 
 public class Transfer {
-	String sLocation;
 	String sNetworkType;
 	String sEndTime;
 	String sStartTime;
@@ -103,10 +102,6 @@ public class Transfer {
 	public void setiBytes(int iBytes) {
 		this.iBytes = iBytes;
 	}
-	public String getsLocation() {
-		return sLocation;
-	}
-	
 	public int getiTransferid() {
 		return iTransferid;
 	}
@@ -118,11 +113,5 @@ public class Transfer {
 	}
 	public void setiTransactionid(int iTransactionid) {
 		this.iTransactionid = iTransactionid;
-	}
-	String getSLocation() {
-		return sLocation;
-	}
-	void setsLocation(String sLocation) {
-		this.sLocation = sLocation;
 	}
 }

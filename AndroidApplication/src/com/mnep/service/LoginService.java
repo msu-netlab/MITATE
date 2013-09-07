@@ -35,6 +35,7 @@ public class LoginService extends Service {
 	public static final String sPreferenceName = "MNEP_Preferences";	
     public static SharedPreferences spMNEPPreference = null;
     public static SharedPreferences.Editor editor = null;
+	public static String sDeviceId = null;
     
     public static long lPollInterval;
     
@@ -80,6 +81,27 @@ public class LoginService extends Service {
 		tLogin.start();			
 	}
 
+	public String getDeviceId(String sUsername, String sPassword, String sPhoneNumber, String sDeviceName) {
+    try {	
+	    InputStream isReader = null;
+	   	String sURL = "http://192.168.1.12/setup_deviceid.php?username=" + sUsername + "&password=" + sPassword + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
+		HttpClient hcHttpClient = new DefaultHttpClient();		    
+	    HttpPost hpHttpPost = new HttpPost(sURL);                           
+        HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpPost);
+		HttpEntity entity = hrHttpResponse.getEntity();
+	    isReader = entity.getContent();
+		BufferedReader brReader = new BufferedReader(new InputStreamReader(isReader,"iso-8859-1"),8);
+	    StringBuilder sbTemp = new StringBuilder();
+	    String sLine = brReader.readLine();;
+        return sLine;  
+	    } 
+		catch(Exception e){
+	 	   Log.e(TAG, "@fetchProjects() : error - "+e.getMessage());
+	 	   e.printStackTrace(); 
+	        return "Error in connection";
+	    }
+	}
+	
 	// login to web server, database server
 	public boolean executeLogin(Context cContext) {
 		if(MNEPApplication.bDebug)  Log.i(TAG, "@executeLogin() : start");
@@ -92,6 +114,11 @@ public class LoginService extends Service {
 	       
 	       long now = 0;
 	       try {
+			TelephonyManager tmTelephoneManager = (TelephonyManager)(MNEPApplication.getCustomAppContext()).getSystemService(Context.TELEPHONY_SERVICE);
+		 	sPhoneNumber = tmTelephoneManager.getLine1Number();
+			 getDeviceId(sUserName, sPassword, sPhoneNumber, "Google Nexus");
+		   
+		   
 	    	   MNEPLocation mLocation = new MNEPLocation();
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MNEPApplication.getCustomAppContext());
@@ -108,7 +135,7 @@ public class LoginService extends Service {
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
    	    	   	    // "&networktype="+MNEPUtilities.getNetworkType(cContext)+"&city="+mLocation.getCity(cContext);
    	    	   	    "&networktype=wifi"+ //+MNEPUtilities.getNetworkType(cContext)+
-   	    	   	    "&city=Bozeman&deviceid="+sPhoneNumber+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1];
+   	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1];
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();		    
                HttpPost hpHttpPost = new HttpPost(sURL);                           
@@ -149,7 +176,6 @@ public class LoginService extends Service {
 	               for(int i=0;i<jaPendingTransfers.length();i++){
                        JSONObject json_data = jaPendingTransfers.getJSONObject(i);
                        tPendingTransfers[i] = new Transfer();
-                       tPendingTransfers[i].setsLocation(json_data.getString("location"));
                        tPendingTransfers[i].setiBytes(json_data.getInt("bytes"));
                        tPendingTransfers[i].setsServerIP(json_data.getString("destinationip"));
                        tPendingTransfers[i].setsSourceIP(json_data.getString("sourceip"));

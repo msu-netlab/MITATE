@@ -96,7 +96,7 @@ public class Measurement extends Thread {
 				
 				bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
 						direction+":;:"+lClientOffsetFromNTP+":;:"+packetdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-						":;:"+portnumber+":;:"+contenttype+":;:"+sPhoneNumber+":;:"+content+"\n"); 
+						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+content+"\n"); 
 				
 				bwWriteToClient.flush();
 				
