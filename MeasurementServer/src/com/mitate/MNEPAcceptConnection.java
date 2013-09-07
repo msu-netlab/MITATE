@@ -22,7 +22,6 @@ public class MNEPAcceptConnection {
     }
     
     public static void main(String arg[]) {
-    	System.out.println("\n".getBytes().length);
         MNEPAcceptConnection macClientConnection = new MNEPAcceptConnection();
 
             try {
@@ -49,4 +48,5 @@ public class MNEPAcceptConnection {
             }
        
     }
+    
 }
