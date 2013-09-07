@@ -16,7 +16,7 @@ $con = mysql_connect("localhost","root","root");
   $change=rand(10, 10000);
   $deviceid = substr(time(), 0, 10);
   
-  $sql="INSERT INTO userdevice (username, devicename, pollinterval, datacap, availabledata, wificap, availablewifi, deviceid, devicetype, minbatterypower) VALUES ('$_COOKIE[username]', '$_POST[devicename]', $_POST[pollinterval], $_POST[datacap], $_POST[datacap], $_POST[wificap], $_POST[wificap], $deviceid, '', $_POST[minbatterypower])";
+  $sql="INSERT INTO userdevice (username, devicename, pollinterval, datacap, availabledata, wificap, availablewifi, deviceid, minbatterypower) VALUES ('$_COOKIE[username]', '$_POST[devicename]', $_POST[pollinterval], $_POST[datacap], $_POST[datacap], $_POST[wificap], $_POST[wificap], $deviceid, $_POST[minbatterypower])";
   
   if (!mysql_query($sql,$con))
   {

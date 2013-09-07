@@ -1,5 +1,5 @@
 <?php
-if($_GET['username']!="" || $_GET['password']!="")
+if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="")
 {
 	$dbhostname = "localhost";
     $dbusername = "root";
