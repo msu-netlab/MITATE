@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<entry>
+	<defines>
+		<contentdefine>
+			<content>
+				<contentid>content1</contentid>
+				<protocol>SIP</protocol>
+				<data><![CDATA[SIP/2.0 200 OK\r\nVia: SIP/2.0/UDP 192.168.1.30:5060;received=66.87.48.68\r\nFrom: sip:sip2@iptel.org\r\nTo: sip:sip2@iptel.org;tagi=794fe65c16edfdf45da4fc39a5d2867c.b713\r\nCall-ID: 2443936363@192.168.1.30\r\nCSeqi: 63629 REGISTER\r\nContact: Msip:sip2@66.87.48.68:5060;transport=udp>;q=0.00;expires=120\r\nServer: Sip EXpress router (0.8.11pre21xrc (i386/linux))\r\nContent-Length: 0\r\nWarning: 392 195.37.77.101:5060 "Noisy feedback tells:pid=5110 req_src_ip=66.87.48.68 req_src_port=5060 in_uri=sip:iptel.org\r\nout_uri=sip:iptel.org via_cnt==1"\r\n]]></data>
+				<contenttype>ASCII</contenttype>
+			</content>
+			<content>
+				<contentid>content2</contentid>
+				<protocol>HTTP</protocol>
+				<data><![CDATA[HTTP/1.1 200 OKVary: Authorization,Accept\r\nTransfer-Encoding: chunked\r\nEtag: "fa2ba873343ba638123b7671c8c09998"\r\nContent-Type: application/vnd.bonfire+xml; charset=utf-8\r\nDate: Wed, 01 Jun 2011 14:59:30 GMT\r\nServer: thin 1.2.11 codename Bat-Shit Crazy\r\nAllow: GET,OPTIONS,HEAD\r\nCache-Control: public,max-age=120\r\nConnection: close]]></data>
+				<contenttype>ASCII</contenttype>
+			</content>
+			<content>
+				<contentid>content3</contentid>
+				<protocol>BitTorrent</protocol>
+				<data><![CDATA[0100be07de559e401806a55d000400006267b28d89e4ec40f024e8b38179cdab9c5c1e28bae52af9540bbc26b036adf2336a936858c3172638a5366115e03a93e9f8ea4c9b393c23bb03a35c8f7b6a589cf2ea9497d1facc9e58b154dbad92105ba73a677174ce0a81a90aeffaa7144527b71828f39478f6f200d2bb6aca65cd73c316a7c0581caaf79f8ff7c7d13b5c0d7caa12d58e09c282c41b4fbcc78393f89eddf1d65445ef4e301ef05be6c6c8fae910c4c4572c830989f87c6722bec8b3980248fbe3b20da996ef2edd54b7a830ed2c6447453840daa1865002623ca918211ff852f3dbf880eb5182f2582ec8ff465d90deec95c96e99ff9c7cda582bab870cd02c37849e61ae5fcbf64582b38fcd19657178a65827c879c194b44a635aa59e18968ae8f70f1911e2ef5caf00276c10499e503d1a751064a04dd1d2bb1b6efb991fd33f2c7711f1579ed6abc1e58d8386c9d330f8802430d5474b1633d4e5d563da53855156988ec5cdf61fa77fced44f96364349709e1ad682220e2179240e429c1fd7a28469a378a02227c0ab50aac16874e8283d109a585863be125c04071e2eb53a7e34d790e019ad8e958696778885b5f6db3a1cb8d731995e788f4b33a838e74cd457daf4c8e87abd7cdcc5a15b87bdc87fb20f610357a728f1d7b171d60b6a499608e3445005c52ac277d06f638fe5dd9bed18a92498861e7099c90c8c25566379e15a1e5a6b7d89ba9deb1642f7e1984f981f]]></data>
+				<contenttype>HEX</contenttype>
+			</content>
+			<content>
+				<contentid>content4</contentid>
+				<protocol>Skype</protocol>
+				<data><![CDATA[e1e23df8c5e70948e1244333a01b8046001afe33b7c113586f467e9ca00e0c71d9c60161b45754f78c6f0cc18ceb81744d5da0864cc2b23aa77c5eaf03162ac27d7958357c08899c5260e057d4a8b22a2bebbb21e918e3aadc82339effb3c23504ef0b68bfa229a1398ae4dd15a8c046054b6ec9bfa8bfa347bd11403bfdd36a69f3b5cb44d86f793956312e24f5b448a734ed804517d5bb37e04ea697ee92e87eabb26ac7118817a1e0fd9b2cf2de6aae249671645b9b00c32e4dfb374dfdaf4cef9d60cff0e97be4758ce32ed877da073ce7b4e3f4916f07e9a4f23c118e99f58b1d54ac0721faa385dfe788fb7c15f248d0f9b923565fe904cb4b98037c60c6a63ea8a22d7914b7b626d063e44e9bc11ded6532b4d60cdddba8d003443abbb7634ecaac0daa8203c5996973834c39c3c9c4661f879460f9b493412195a46d66dc5b8cd72f8792e6a92d6a4d21b23c9d4ae504e6a088e3920ee9f54dd21b66d7483798d0abb923c435af205d918a1615c4be1f83e198ab734c5f9cbe58d94dc2927d1de7ca1e3256e58d187d2e640482954e08db9b2e5d65b4c9a5d2961aa571faa9fbecd5b69ba25b706a881f28635c707e4ea400a89411750de8c5573dba928d8042e5c24bea3ce60bf4b095fd920d7965a3116661518af0f0b66e94aa839ccb812f5622eed02f84a0a858481e1f3bd058c0f25033b1e5525cb159a0e240e5e06e6232]]></data>
+				<contenttype>HEX</contenttype>
+			</content>
+			<content>
+				<contentid>content5</contentid>
+				<protocol>HTTP</protocol>
+				<data><![CDATA[GET /images/cdn.jpg HTTP/1.1\r\nHost: 192.168.1.12\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nConnection: keep-alive\r\n]]></data>
+				<contenttype>ASCII</contenttype>
+			</content>
+		</contentdefine>
+		<transferdefine>
+			<transfer>
+				<id>t1</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>2</type>
+				<portnumber>80</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content5</contentid>
+				</bytes>
+				<noofpackets>2</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t2</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>5061</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content1</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t3</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>2</type>
+				<portnumber>8080</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content2</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t4</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>6969</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content3</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t5</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>23399</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content4</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>			
+			<transfer>
+				<id>t6</id>
+				<sourceip>192.168.1.12</sourceip>
+				<destinationip>client</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>5061</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content1</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t7</id>
+				<sourceip>192.168.1.12</sourceip>
+				<destinationip>client</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>8080</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content2</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t8</id>
+				<sourceip>192.168.1.12</sourceip>
+				<destinationip>client</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>6969</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content3</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t9</id>
+				<sourceip>192.168.1.12</sourceip>
+				<destinationip>client</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>23399</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>1</explicit>
+					<noofbytes></noofbytes>
+					<contentid>content4</contentid>
+				</bytes>
+				<noofpackets>10</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t10</id>
+				<sourceip>192.168.1.12</sourceip>
+				<destinationip>client</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>32163</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>0</explicit>
+					<noofbytes>1000</noofbytes>
+					<contentid></contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t11</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.12</destinationip>
+				<packetdelay>10</packetdelay>
+				<type>0</type>
+				<portnumber>32164</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>0</explicit>
+					<noofbytes>1000</noofbytes>
+					<contentid></contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+		</transferdefine>
+		<criteriadefine>
+			<criteria>
+				<id>c1</id>
+				<latitude>52.949504</latitude>
+				<longitude>-18.056939</longitude>
+				<radius>5000</radius>
+				<networktype>wifi</networktype>
+				<starttime>000001</starttime>
+				<endtime>235959</endtime>
+				<deviceid>abc, def</deviceid>
+			</criteria>
+			<criteria>
+				<id>c2</id>
+				<latitude>55.949504</latitude>
+				<longitude>68.056939</longitude>
+				<radius>5000</radius>
+				<networktype>wifi</networktype>
+				<starttime>000001</starttime>
+				<endtime>235959</endtime>
+			</criteria>			
+		</criteriadefine>
+	</defines>
+	<transactions>
+		<transaction count="2">
+			<transfers>
+				<transfer repeat="1">
+					<transferid>t1</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t2</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t3</transferid>
+				</transfer >
+				<transfer repeat="1">
+					<transferid>t6</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t7</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t10</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t11</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t8</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t9</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t4</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t5</transferid>
+				</transfer>
+			</transfers>
+			<criteria>
+				<criteriaid>c1</criteriaid>
+			</criteria>
+		</transaction>
+		<transaction count="1">
+			<transfers>
+				<transfer repeat="1">
+					<transferid>t1</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t2</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t3</transferid>
+				</transfer >
+				<transfer repeat="2">
+					<transferid>t6</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t7</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t10</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t11</transferid>
+				</transfer>
+				<transfer repeat="3">
+					<transferid>t8</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t9</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t4</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t5</transferid>
+				</transfer>
+			</transfers>
+			<criteria>
+				<criteriaid>c2</criteriaid>
+			</criteria>
+		</transaction>
+	</transactions>
+</entry>
+			
