@@ -1,4 +1,4 @@
-package com.mitate;
+//package com.mitate;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

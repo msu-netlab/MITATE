@@ -1,4 +1,4 @@
-package com.mitate;
+//package com.mitate;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
