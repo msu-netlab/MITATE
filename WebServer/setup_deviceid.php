@@ -40,7 +40,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['phone_number']!="" &
 			}	
 		}
 		else
-			echo "Invalid access";
+			echo "InvalidLogin";
 	}
 }
 ?>

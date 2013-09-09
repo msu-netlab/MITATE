@@ -53,14 +53,14 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 				}							
 			}
              else {
-				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as location, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
+				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as content, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
 				$pendingtestrow=mysql_fetch_assoc($pendingtestset);
 				$output[]=$pendingtestrow;
 				print(json_encode($output));
 			}
 		}				
         else if ($loginresultrow['status'] == "0") {
-            $pendingtestset = mysql_query("SELECT 'InvalidLogin' as location, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
+            $pendingtestset = mysql_query("SELECT 'InvalidLogin' as content, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
             $pendingtestrow=mysql_fetch_assoc($pendingtestset);
             $output[]=$pendingtestrow;
             print(json_encode($output));

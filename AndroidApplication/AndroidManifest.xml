@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mnep.service"
+    package="com.mitate.service"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -19,9 +19,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" 
-        android:name="com.mnep.MNEPApplication">
+        android:name="com.mitate.MITATEApplication">
         <activity
-            android:name="com.mnep.service.MNEPActivity"
+            android:name="com.mitate.service.MITATEActivity"
             android:label="@string/app_name" 
              android:screenOrientation="portrait"
             >
@@ -33,17 +33,17 @@
         </activity>
 
         <receiver
-            android:name="com.mnep.service.MNEPReceiver"
+            android:name="com.mitate.service.MITATEReceiver"
             class=".MNEPReceiver"
             android:enabled="true"
             android:process=":remote" >
         </receiver>
 
-        <service android:name="com.mnep.service.LoginService" >
+        <service android:name="com.mitate.service.LoginService" >
         </service>
 
         <activity
-            android:name="com.mnep.service.LoginActivity"
+            android:name="com.mitate.service.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
     </application>

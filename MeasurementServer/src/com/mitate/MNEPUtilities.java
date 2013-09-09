@@ -1,4 +1,4 @@
-package com.mitate;
+//package com.mitate;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
