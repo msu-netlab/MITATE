@@ -95,7 +95,6 @@ public class TCPTestRun {
                     	char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes + 12];
                         brReadFromClient.read(buf);
                         String sFromClient = new String(buf);
-                        System.out.println(sFromClient);
                         long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = sFromClient.getBytes().length;
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;
