@@ -89,7 +89,8 @@ public class MNEPServer {
             }
             sContentType = saClientParameters[12];
 			sDeviceId = saClientParameters[13];
-            sContent = saClientParameters[14];           
+			sDeviceName = saClientParameters[14];
+            sContent = saClientParameters[15];           
             if(iExplicit == 0) {
             	if(iPacketType == 0 ) {
             			iUDPBytes = iNumberOfBytes/iUDPPackets;
@@ -284,8 +285,6 @@ public class MNEPServer {
 					fTotalTimeForTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
 				if(iTCPBytes > 0 && iUDPBytes > 0 && iUplinkOrDownlink == 1 )
 					fTotalTimeForTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
-				
-				System.out.println("++++++++++" + fTotalTimeForTransfer + "+++++++++");
 				
 				double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (fTotalTimeForTransfer / 1000.0);
 				
