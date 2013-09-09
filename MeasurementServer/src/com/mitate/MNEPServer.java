@@ -1,4 +1,4 @@
-package com.mitate;
+//package com.mitate;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -267,24 +267,25 @@ public class MNEPServer {
 				psInsertStmt.setString(9, sDeviceId);
            
 				int t = psInsertStmt.executeUpdate();
-				System.out.println("number of records inserted - "+t);
+				System.out.println("number of records inserted - " + t);
 				
-				double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * ACos( Cos( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Cos( sLatitudeAfterTransferExecution ) * Cos(( sLongitudeAfterTransferExecution - sLongitudeBeforeTransferExecution) * (22/(180*7)) ) + Sin( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Sin( sLatitudeAfterTransferExecution ) * (22/(180*7)) );
-				float fAverageTimeFOrTransfer = 0.0;
+				double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * Math.acos( Math.cos( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Math.cos( Double.parseDouble(sLatitudeAfterTransferExecution) * (22/(180*7))  ) * Math.cos(( Double.parseDouble(sLongitudeAfterTransferExecution) - Double.parseDouble(sLongitudeBeforeTransferExecution)) * (22/(180*7)) ) + Math.sin( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Math.sin( Double.parseDouble(sLatitudeAfterTransferExecution) * (22/(180*7)) ));
+				
+				float fTotalTimeForTransfer = 0.0f;
 				if(iUDPBytes > 0 && iUplinkOrDownlink == 0 && iTCPBytes == 0 )
-					fTotalTimeFOrTransfer = fUDPUplinkMeanLatency;
+					fTotalTimeForTransfer = fUDPUplinkMeanLatency;
 				if(iUDPBytes > 0 && iUplinkOrDownlink == 1 && iTCPBytes == 0 )
-					fTotalTimeFOrTransfer = fUDPDownlinkMeanLatency;
+					fTotalTimeForTransfer = fUDPDownlinkMeanLatency;
 				if(iTCPBytes > 0 && iUplinkOrDownlink == 0 && iUDPBytes == 0 )
-					fTotalTimeFOrTransfer = fTCPUplinkMeanLatency;
+					fTotalTimeForTransfer = fTCPUplinkMeanLatency;
 				if(iTCPBytes > 0 && iUplinkOrDownlink == 1 && iUDPBytes == 0 )
-					fTotalTimeFOrTransfer = fTCPDownlinkMeanLatency;
+					fTotalTimeForTransfer = fTCPDownlinkMeanLatency;
 				if(iTCPBytes > 0 && iUDPBytes > 0 && iUplinkOrDownlink == 0 )
-					fTotalTimeFOrTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
+					fTotalTimeForTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
 				if(iTCPBytes > 0 && iUDPBytes > 0 && iUplinkOrDownlink == 0 )
-					fTotalTimeFOrTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
+					fTotalTimeForTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
 				
-				double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (Double.parseDouble(fTotalTimeFOrTransfer) / 1000.0);
+				double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (fTotalTimeForTransfer / 1000.0);
 				
         	   //s.execute("update metricdata set value = 1 where metricid = 9999 and transferid = " + iTransferId + " and transactionid = " + iTransactionId);
         	   //s.execute("update metricdata set transferfinished = '" + sClientTime + "' where transferid = " + iTransferId + " and transactionid = " + iTransactionId);
