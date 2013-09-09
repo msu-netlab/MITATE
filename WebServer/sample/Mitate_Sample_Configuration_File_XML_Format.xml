@@ -29,7 +29,7 @@
 			<content>
 				<contentid>content5</contentid>
 				<protocol>HTTP</protocol>
-				<data><![CDATA[GET /images/cdn.jpg HTTP/1.1\r\nHost: 192.168.1.12\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nConnection: keep-alive\r\n]]></data>
+				<data><![CDATA[GET /images/cdn.jpg HTTP/1.1\r\nHost: 192.168.1.4\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nConnection: keep-alive\r\n]]></data>
 				<contenttype>ASCII</contenttype>
 			</content>
 		</contentdefine>
@@ -37,7 +37,7 @@
 			<transfer>
 				<id>t1</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>80</portnumber>
@@ -52,7 +52,7 @@
 			<transfer>
 				<id>t2</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>5061</portnumber>
@@ -67,7 +67,7 @@
 			<transfer>
 				<id>t3</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>8080</portnumber>
@@ -82,7 +82,7 @@
 			<transfer>
 				<id>t4</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6969</portnumber>
@@ -97,7 +97,7 @@
 			<transfer>
 				<id>t5</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>23399</portnumber>
@@ -111,7 +111,7 @@
 			</transfer>			
 			<transfer>
 				<id>t6</id>
-				<sourceip>192.168.1.12</sourceip>
+				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -126,7 +126,7 @@
 			</transfer>
 			<transfer>
 				<id>t7</id>
-				<sourceip>192.168.1.12</sourceip>
+				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -141,7 +141,7 @@
 			</transfer>
 			<transfer>
 				<id>t8</id>
-				<sourceip>192.168.1.12</sourceip>
+				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -156,7 +156,7 @@
 			</transfer>
 			<transfer>
 				<id>t9</id>
-				<sourceip>192.168.1.12</sourceip>
+				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -171,7 +171,7 @@
 			</transfer>
 			<transfer>
 				<id>t10</id>
-				<sourceip>192.168.1.12</sourceip>
+				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -187,7 +187,7 @@
 			<transfer>
 				<id>t11</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.12</destinationip>
+				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
@@ -203,13 +203,13 @@
 		<criteriadefine>
 			<criteria>
 				<id>c1</id>
-				<latitude>52.949504</latitude>
-				<longitude>-18.056939</longitude>
+				<latitude>45.66962856799364</latitude>
+				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
-				<deviceid>abc, def</deviceid>
+				<deviceid>client</deviceid>
 			</criteria>
 			<criteria>
 				<id>c2</id>
@@ -219,6 +219,7 @@
 				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
+				<deviceid>abc,def</deviceid>
 			</criteria>			
 		</criteriadefine>
 	</defines>
