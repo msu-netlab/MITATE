@@ -104,9 +104,8 @@ public class UDPTestRun {
                     if(iUplinkOrDownlink == 0) {		
                         baReceivedData = new byte[iUDPBytes < 27 ? 27 : iUDPBytes];
                         dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length);
-                        dsUDPSocket.receive(dpUDPRecvPacket);
-			   // System.out.println("Packet Add: " + dpUDPRecvPacket.getSocketAddress() + "---Remote Add: " + dsUDPSocket.getRemoteSocketAddress() + "----Local Add: " + dsUDPSocket.getLocalSocketAddress() );               
-			   long lTimeOnServer = System.currentTimeMillis();
+                        dsUDPSocket.receive(dpUDPRecvPacket);            
+						long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = dpUDPRecvPacket.getLength();
                         iUDPTotalBytesReceivedFromClient += iNoOfBytesReceived;
                         int iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
