@@ -39,7 +39,7 @@
             android:process=":remote" >
         </receiver>
 
-        <service android:name="com.mitate.service.LoginServicevice" >
+        <service android:name="com.mitate.service.LoginService" >
         </service>
 
         <activity

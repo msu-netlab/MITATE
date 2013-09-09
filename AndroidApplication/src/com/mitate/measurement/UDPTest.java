@@ -8,6 +8,7 @@ import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
 
 import com.mitate.MITATEApplication;
+import com.mitate.utilities.MITATEUtilities;
 
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -63,16 +64,12 @@ public class UDPTest {
 			iaUDPBytes = new int[iUDPPackets];
 			
 			InetAddress iaServerAddress = InetAddress.getByName(sServerIP);
-			// dsUDPSocket = new DatagramSocket();
 			dsUDPSocket = new DatagramSocket(iUDPPort);
-			// dsUDPSocket.bind(localAddr)
 			dsUDPSocket.setSoTimeout(iPacketDelay + 8000);
 			dpUDPSendPacket = new DatagramPacket(new byte[10], 1, iaServerAddress, iUDPPort);
 			
-			for(int k =0;k <5; k++) {
-				if(MITATEApplication.bDebug) Log.d(TAG, "@runUDPTest : Demo packet sent - B "+k+", socket - "+dsUDPSocket.getLocalSocketAddress()+", "+dsUDPSocket.getRemoteSocketAddress());
+			for(int k=0;k <5; k++) {
 				dsUDPSocket.send(dpUDPSendPacket);	
-				if(MITATEApplication.bDebug) Log.d(TAG, "@runUDPTest : Demo packet sent - A "+k+", socket - "+dsUDPSocket.getLocalSocketAddress()+", "+dsUDPSocket.getRemoteSocketAddress());
 			}
 			
 			if(MITATEApplication.bDebug) Log.i(TAG, "@runUDPTest : UDP Transactions " + iUDPPackets + " packets");
@@ -95,10 +92,16 @@ public class UDPTest {
 					}
 					
 					// sContent = new String(DatatypeConverter.parseHexBinary(sContent));
-					System.out.println("udp - hex hex --- >"+sContent);
+					// sContent = MITATEUtilities.parseHexString(sContent);
+					// System.out.println("content from hex string - "+sContent);
 				} else if(sContentType.equals("BINARY")) {
-					// bExtraBytes
-					
+					// int iContentLengthToAdd = (8 - sContent.length() % 8);
+					// while (iContentLengthToAdd-- > 0) {
+						// sContent += "0";						
+					// }					
+					// sContent = MITATEUtilities.parseBinaryString(sContent);
+					// System.out.println("content from binary string - "+sContent);
+					sContent = sContent;
 				} else {
 					
 				}
