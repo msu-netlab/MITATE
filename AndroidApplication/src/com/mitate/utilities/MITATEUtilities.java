@@ -20,29 +20,6 @@ public class MITATEUtilities {
 		
 	}
 	
-	// convert hex into string
-	public static String parseHexString(String sHexString) {
-		  StringBuilder sb = new StringBuilder();
-		  for( int i=0; i<sHexString.length(); i+=2 ){
-		      String output = sHexString.substring(i, (i + 2));
-		      int decimal = Integer.parseInt(output, 16);
-		      sb.append((char)decimal);
-		  }
-		  return sb.toString();
-	}
-	
-	// convert hex into string
-	public static String parseBinaryString(String sBinaryString) {
-		  StringBuilder sb = new StringBuilder();
-		  for( int i=0; i<sBinaryString.length(); i+=8 ){
-		      String output = sBinaryString.substring(i, (i + 8));
-		      int decimal = Integer.parseInt(output, 2);
-		      sb.append((char)decimal);
-		  }
-		  return sb.toString();
-	}	
-	
-	// get network type
 	public static String getNetworkType(Context cContext) {
 		if(MITATEApplication.bDebug) Log.i("MITATEUtilities","@getNetworkType Start");
 

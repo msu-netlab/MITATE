@@ -24,7 +24,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 
 	String TAG = "MITATEActivity";
 	public static boolean bStopTransactionExecution = false;
-	long iPollingInterval = 180000;
+	long iPollingInterval = 18000;
 	
 	TextView tvUsername = null;
 	TextView tvPassword = null;
@@ -231,7 +231,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 			// ajay@thinkpadmsu:~/software/technical/android/android-sdk-linux/platform-tools$ ./adb shell dumpsys alarm | grep -A 2 com.mitate.service
 			piCheckPendingTests = PendingIntent.getBroadcast(getApplicationContext(), 12345, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	        amCheckPendingTests.cancel(piCheckPendingTests);
-	        amCheckPendingTests.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+iPollingInterval, iPollingInterval, piCheckPendingTests);
+	        amCheckPendingTests.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, iPollingInterval, piCheckPendingTests);
 
 	        editor.putLong("pollinginterval", iPollingInterval);
 	        editor.commit();

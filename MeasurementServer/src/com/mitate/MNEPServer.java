@@ -56,7 +56,7 @@ public class MNEPServer {
     
     String tsaTCPPacketReceivedTimes_Client = "", iaTCPBytes_Client = "", sTCPBytesReceived_Client = "", sTCPBytesSent_Client = "";
     String tsaUDPPacketReceivedTimes_Client = "", iaUDPBytes_Client = "", sUDPBytesReceived_Client;
-    String sClientTime="", sLatitudeBeforeTransferExecution = "", sLongitudeBeforeTransferExecution = "", sLatitudeAfterTransferExecution = "", sLongitudeAfterTransferExecution = "";    
+    String sClientTime="", sLatitudeBeforeTransferExecution = "", sLongitudeBeforeTransferExecution = "", sLatitudeAfterTransferExecution = "", sLongitudeAfterTransferExecution = "", sMobileSignalStrength = "", sAccelerometerReading = "";    
 
     private boolean receiveAndSendConnectionParameters() {     
         boolean bParametersReceivedSent = false;
@@ -146,7 +146,7 @@ public class MNEPServer {
             System.out.println(sTCPConnectionSocket.getRemoteSocketAddress());		
             brReadFromClient = new BufferedReader(new InputStreamReader(sTCPConnectionSocket.getInputStream(), "UTF-8"));
             String sDataFromClient = "";           
-            for (int i=0; i<12; i++){
+            for (int i=0; i<14; i++){
                 sDataFromClient = brReadFromClient.readLine();
                 switch(i) {
                     case 0: tsaTCPPacketReceivedTimes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
@@ -185,6 +185,12 @@ public class MNEPServer {
 							break;
 					case 11: sLongitudeAfterTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
 							System.out.println("sLongitudeAfterTransferExecution" + sLongitudeAfterTransferExecution);
+							break;
+					case 12: sMobileSignalStrength = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sMobileSignalStrength" + sMobileSignalStrength);
+							break;
+					case 13: sAccelerometerReading = (sDataFromClient == null ? new String() : sDataFromClient);
+							System.out.println("sAccelerometerReading" + sAccelerometerReading);
 							break;
                 }
             }
@@ -290,11 +296,13 @@ public class MNEPServer {
 				
         	   //s.execute("update metricdata set value = 1 where metricid = 9999 and transferid = " + iTransferId + " and transactionid = " + iTransactionId);
         	   //s.execute("update metricdata set transferfinished = '" + sClientTime + "' where transferid = " + iTransferId + " and transactionid = " + iTransactionId);
-			   s.execute("insert into metricdata values(10030, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLatitudeBeforeTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10031, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeBeforeTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10032, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLatitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10030, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLatitudeBeforeTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10031, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLongitudeBeforeTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10032, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLatitudeAfterTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 			   s.execute("insert into metricdata values(10033, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10034, " + iTransferId + ", " + iTransactionId + ", '" + dDeviceTravelSpeedInMeterPerSecond + "', '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10034, " + iTransferId + ", " + iTransactionId + ", " + dDeviceTravelSpeedInMeterPerSecond + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10035, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sMobileSignalStrength) + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10036, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading) + ", '" + sClientTime + "', '" + sDeviceId + "')");
         	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
         	   conn.close();
         	   System.out.println ("Entry made in Database");  

@@ -51,7 +51,7 @@
 <?php
   if($_POST["susername"]!="" || $_POST["spassword"]!="")
   {
-   $con = mysql_connect("localhost","root","root");
+   $con = mysql_connect("localhost","mitate","Database4Mitate");
   if (!$con)
   {
   die('Could not connect: ' . mysql_error());

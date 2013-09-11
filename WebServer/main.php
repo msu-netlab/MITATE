@@ -21,6 +21,7 @@
 		</table>
 	</form>
 <?php
+$current_time = time();
 $yesdone = 0;
 if($_FILES["file"]["name"] != "")
 {
@@ -32,14 +33,13 @@ if($_FILES["file"]["name"] != "")
 	{
 		$file_extension = end(explode(".", $_FILES["file"]["name"]));
 		$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
-		$current_time = time();
 		$final_file_path = $file_name_without_extension . $current_time . "." . $file_extension;
 		move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/" . $_COOKIE["username"] . "/" . $final_file_path);		
 		$yesdone = 1;
 	}
 }
 
-$con = mysql_connect("localhost","root","root");
+$con = mysql_connect("localhost","mitate","Database4Mitate");
 if (!$con)
 {
 	die('Could not connect: ' . mysql_error());
@@ -49,6 +49,9 @@ $username = $_COOKIE[username];
 $filepath = "user_accounts/" . $username . "/" . $final_file_path;
 $xml = simplexml_load_file("$filepath");
 
+$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'public')";
+if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+
 foreach($xml->transactions->transaction as $temptransaction) {
 	$order=1;
 	$changeagain = rand(10, 10000);
@@ -56,11 +59,11 @@ foreach($xml->transactions->transaction as $temptransaction) {
 	$transactionid = time() + ($change * 9655) - $changeagain;
 	$transaction_count = $temptransaction["count"];
 	if($transaction_count != "") { 
-		$sql="INSERT INTO transaction1 (transactionid, username, count, original_count) VALUES($transactionid, '$username', $transaction_count, $transaction_count)";
+		$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $current_time)";
 		if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 	}
 	if($transaction_count == ""){
-		$sql="INSERT INTO transaction1 (transactionid, username) VALUES($transactionid,'$username')";
+		$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $current_time)";
 		if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 	}
 	foreach($xml->defines->criteriadefine->criteria as $tempcriteria)

@@ -14,7 +14,7 @@ printf("<script>location.href = 'deletemobile.php'</script>");
 <th align="center">Device Name</th><th align="center">Poll Interval (min)</th><th align="center">Mobile Data Cap (MB/mo)</th><th align="center">AvailableMobile Data Cap (MB/mo)</th><th align="center">WiFi Data Cap (MB/mo)</th><th align="center">Available WiFi Data Cap (MB/mo)</th><th align="center">Battery Limit (%)</th>
 
 <?php
-$con = mysql_connect("localhost","root","root");
+$con = mysql_connect("localhost","mitate","Database4Mitate");
   if (!$con)
   {
   die('Could not connect: ' . mysql_error());
