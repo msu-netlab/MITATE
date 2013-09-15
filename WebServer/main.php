@@ -34,7 +34,8 @@ if($_FILES["file"]["name"] != "")
 		$file_extension = end(explode(".", $_FILES["file"]["name"]));
 		$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
 		$final_file_path = $file_name_without_extension . $current_time . "." . $file_extension;
-		move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/" . $_COOKIE["username"] . "/" . $final_file_path);		
+		mkdir("user_accounts/$_COOKIE[username]/$current_time", 0777);
+		move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/" . $_COOKIE["username"] . "/$current_time/" . $final_file_path);		
 		$yesdone = 1;
 	}
 }
@@ -46,7 +47,7 @@ if (!$con)
 }
 mysql_select_db("mitate", $con);
 $username = $_COOKIE[username];
-$filepath = "user_accounts/" . $username . "/" . $final_file_path;
+$filepath = "user_accounts/" . $username . "/$current_time/" . $final_file_path;
 $xml = simplexml_load_file("$filepath");
 
 $sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'public')";
