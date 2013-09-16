@@ -27,7 +27,9 @@ public class CDNTest {
 	PrintWriter pwWriteRequest;
 	BufferedReader brReadResponse;
 	
-	String sServerName = "192.168.1.4";
+	// String sServerName = "192.168.1.4";
+	
+	String sServerName = "mitate.cs.montana.edu";
 	String sResponse;	
 	Socket sConnectionSocket;
 	
@@ -60,10 +62,14 @@ public class CDNTest {
 			sHTTPRequest = sHTTPRequest+"\r\n";
 			sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
 			
+			System.out.println(sHTTPRequest.toString()+"------i-->"+sCDNName+"--"+iPortNo);
+			
 			sConnectionSocket = new Socket(sCDNName, Integer.parseInt(iPortNo));
 			pwWriteRequest = new PrintWriter(sConnectionSocket.getOutputStream(), true);
 			brReadResponse = new BufferedReader(new InputStreamReader(sConnectionSocket.getInputStream()));		
 
+			
+			
 			start = System.currentTimeMillis();
 			
 			for(int i=0; i<iRepeat; i++) {
