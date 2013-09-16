@@ -12,6 +12,9 @@ then
 elif [ "$1" == 'query' ]
 then
 	curl -k -ssl3 -F "username=test" -F "password=test" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_query_experiment.php
+elif [ "$1" == 'init' ]
+then
+	curl -k -ssl3 -F "username=test" -F "password=test" https://mitate.cs.montana.edu/mitate_initialize_db.php
 else
 	echo "Missing operation";
 fi
