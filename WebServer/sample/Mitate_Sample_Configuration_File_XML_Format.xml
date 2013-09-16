@@ -227,6 +227,9 @@
 		<transaction count="2">
 			<transfers>
 				<transfer repeat="1">
+					<transferid>t1</transferid>
+				</transfer>
+				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
 				<transfer repeat="1">
@@ -263,6 +266,9 @@
 		</transaction>
 		<transaction count="1">
 			<transfers>
+				<transfer repeat="1">
+					<transferid>t1</transferid>
+				</transfer>
 				<transfer repeat="1">
 					<transferid>t2</transferid>
 				</transfer>
