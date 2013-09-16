@@ -9,8 +9,8 @@
 
 <?php
     $dbhostname = "localhost";
-    $dbusername = "root";
-    $dbpassword = "root";
+    $dbusername = "mitate";
+    $dbpassword = "Database4Mitate";
     $dbschemaname = "mitate";
     
     $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);

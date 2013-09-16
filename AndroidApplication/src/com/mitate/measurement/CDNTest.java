@@ -11,23 +11,16 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import org.apache.http.HttpResponse;
-import org.apache.http.MethodNotSupportedException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.os.Build;
-
-import com.mitate.MITATEApplication;
-import com.mitate.service.LoginService;
 
 public class CDNTest {
 
 	PrintWriter pwWriteRequest;
 	BufferedReader brReadResponse;
 	
-	String sServerName = "192.168.1.4";
 	String sResponse;	
 	Socket sConnectionSocket;
 	
@@ -98,16 +91,17 @@ public class CDNTest {
 		try {
 			
 		   sClientTime = sClientTime.substring(0, sClientTime.indexOf(46)).replaceAll("(\\s)", "T");
-	   	   String sURL = "http://"+sServerName+"/cdn.php?" +
-	   			"username="+LoginService.sUserName+"&mobilecarrier="+(MITATEApplication.getTelephonyManager().getNetworkOperatorName().replaceAll("\\s", ""))+
-	   			"&transferid="+iTransferId+"&transactionid="+iTransacationId+"&size="+iBytesRead+"&oneway="+Oneway+
-	   			"&rtt="+RTT+"&time="+sClientTime+"&deviceid="+LoginService.sDeviceId+"&devicename="+Build.MODEL.replaceAll("\\s", "");
+	   	   String sURL = "http://192.168.1.12/cdn.php?" +
+	   			"transferid="+iTransferId+"&transactionid="+iTransacationId+"&size="+iBytesRead+"&oneway="+Oneway+"&rtt="+RTT+"&time="+sClientTime;
    	   
 	   	   System.out.println(sURL);
 	   	   
 	   	   HttpClient hcHttpClient = new DefaultHttpClient();		    
 	   	   HttpGet hpHttpGet = new HttpGet(sURL);    
 	   	   HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpGet);
+	   	   
+	   	   /* HttpPost hpHttpPost = new HttpPost(sURL);    
+	   	   HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpPost); */
 	   	   
 		} catch(Exception e) {
 			e.printStackTrace();

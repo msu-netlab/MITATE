@@ -2,8 +2,8 @@
 if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="")
 {
 	$dbhostname = "localhost";
-    $dbusername = "root";
-    $dbpassword = "root";
+    $dbusername = "mitate";
+    $dbpassword = "Database4Mitate";
     $dbschemaname = "mitate";
     $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
     if (!$dbconnection)	{
@@ -44,15 +44,16 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             if($output) {
 				$temp_count = count(array_unique($transaction_id_array));
 				print(json_encode($output));
+				$final_transaction_id_array = array_unique($transaction_id_array);
 				while($temp_count > 0) {
-					$transaction_count_reduce = array_unique($transaction_id_array)[$temp_count - 1];
+					$transaction_count_reduce = $final_transaction_id_array[$temp_count - 1];
 					$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
 					if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
 					mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
 					$temp_count = $temp_count - 1;
 				}							
 			}
-             else {
+            else {
 				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as content, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
 				$pendingtestrow=mysql_fetch_assoc($pendingtestset);
 				$output[]=$pendingtestrow;

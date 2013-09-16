@@ -1,8 +1,8 @@
 <?php
 if($_GET['username']!="" && $_GET['password']!="" && $_GET['phone_number']!="" && $_GET['device_name']!="") {
 	$dbhostname = "localhost";
-	$dbusername = "root";
-    $dbpassword = "root";
+	$dbusername = "mitate";
+    $dbpassword = "Database4Mitate";
     $dbschemaname = "mitate";
     $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
     if (!$dbconnection)	{

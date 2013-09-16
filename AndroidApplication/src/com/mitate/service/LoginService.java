@@ -33,7 +33,7 @@ public class LoginService extends Service {
 
 	String TAG = "LoginService";
 	
-	public static String sWebServerName = "192.168.1.4";
+	public static String sWebServerName = "192.168.1.12";
 	public static String sUserName;
 	public static String sPassword;
 	public static String sDeviceId;
@@ -58,15 +58,15 @@ public class LoginService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		if(MITATEApplication.bDebug) Log.i(TAG, "@onCreate - start");
-		if(MITATEApplication.bDebug) Log.i(TAG, "@onClick - login button - calling @executelogisn");		
+		if(MITATEApplication.bDebug) Log.i(TAG, "@onClick - login button - calling @executelogin");		
 		
 		spMNEPPreference = MITATEApplication.getCustomAppContext().getSharedPreferences(sPreferenceName, 0);	
 		lPollInterval = spMNEPPreference.getLong("pollinginterval", 100000);
 		
 		Thread tLogin =  new Thread(new Runnable() {
 			public void run() {
-				Log.i(TAG, "Active Thread Count = "+Thread.activeCount());
-				if(Thread.activeCount() > 10) {
+				
+				if(Thread.activeCount() > 1) {
 					Log.i(TAG, "Active Thread Count = "+Thread.activeCount());
 					return;
 				}
@@ -74,7 +74,7 @@ public class LoginService extends Service {
 				if(MITATEApplication.bDebug) Log.i(TAG, "@onClick - login button - calling @executelogin");
 				executeLogin(getApplicationContext());
 				
-				/* if(!tPendingTransfers[0].getsContent().equals("NoPendingTransactions")) {
+				if(!tPendingTransfers[0].getsContent().equals("NoPendingTransactions")) {
 					tMeasurement = new Measurement();		            
 					tMeasurement.start();
 		            try {
@@ -82,7 +82,7 @@ public class LoginService extends Service {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-				} */				
+				}				
 				
 			}
 		});
@@ -114,9 +114,8 @@ public class LoginService extends Service {
 	       try {
 	    	   String sPhoneNumber = MITATEApplication.getTelephonyManager().getLine1Number();
 	    	   String sDeviseModel = Build.MODEL.replaceAll("\\s", "");
-	    	   if((sDeviceId = getDeviceId(sUserName, sPassword, sPhoneNumber, sDeviseModel)).equals("InvalidLogin")) {
+	    	   if((sDeviceId = getDeviceId(sUserName, sPassword, sPhoneNumber, sDeviseModel)) == "InvalidLogin") {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
-            	   tPendingTransfers = new Transfer[1];
             	   tPendingTransfers[0] = new Transfer();
             	   tPendingTransfers[0].setsContent("InvalidLogin");
             	   return false;	    		   
@@ -126,7 +125,7 @@ public class LoginService extends Service {
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
 	    	   
-    	   	   /// String sURL = "http://54.243.186.107/mobilelogin.php?" +
+    	   	   // String sURL = "http://54.243.186.107/mobilelogin.php?" +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
     	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
     	   			// "http://10.0.2.2/mnep/mobilelogin.php?" +
@@ -159,9 +158,7 @@ public class LoginService extends Service {
                JSONArray jaPendingTransfers = new JSONArray(sResult);
                tPendingTransfers = new Transfer[jaPendingTransfers.length()];
                
-               System.out.println("_------------->"+(jaPendingTransfers.getJSONObject(0)).getString("content"));
-               
-               // set invalid login to content attributes
+               // set invalid login to content attribute
                if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("InvalidLogin")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
             	   tPendingTransfers[0] = new Transfer();
@@ -208,18 +205,6 @@ public class LoginService extends Service {
          	   tPendingTransfers[0].setsContent(e.getClass().toString().substring(e.getClass().toString().lastIndexOf(".") + 1).replace("Exception", "").replaceAll("(.)([A-Z])", "$1 $2"));
 	           return false;
 	       }	       
-	       
-	       
-	       if(!tPendingTransfers[0].getsContent().equals("NoPendingTransactions")) {
-	    	   tMeasurement = new Measurement();		            
-	    	   tMeasurement.start();
-	           try {
-	           	tMeasurement.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-	       } 	
-	       
 	       if(MITATEApplication.bDebug) Log.i(TAG, "@executeLogin() : end");
 	       return true;
 	} 	

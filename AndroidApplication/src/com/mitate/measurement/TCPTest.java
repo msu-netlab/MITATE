@@ -9,7 +9,6 @@ import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
 
 import com.mitate.MITATEApplication;
-import com.mitate.utilities.MITATEUtilities;
 
 import android.util.Log;
 
@@ -102,18 +101,13 @@ public class TCPTest {
 				if(sContentType.equals("HEX")) {
 					if(sContent.length() % 2 != 0) {
 						sContent = sContent+"0";
-					}					
-					// sContent = MITATEUtilities.parseHexString(sContent);
-					// System.out.println("content from hex string - "+sContent);
-					// sContent = new String(DatatypeConverter.parseHexBinary(sContent));
+					}
+					
+					sContent = new String(DatatypeConverter.parseHexBinary(sContent));
+
+					System.out.println("tcp -hex hex --- >"+sContent);
 				} else if(sContentType.equals("BINARY")) {
-					// int iContentLengthToAdd = 8 - (sContent.length() % 8);
-					// while (iContentLengthToAdd-- > 0) {
-						// sContent += "0";						
-					// }					
-					// sContent = MITATEUtilities.parseBinaryString(sContent);
-					// System.out.println("content from binary string - "+sContent);	
-					sContent = sContent;
+					
 				} else {
 					
 				}

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -57,7 +56,9 @@ public class Measurement extends Thread {
 			sServerIP = serverip;
 			
 			try{
-			    String sCarrierName = (MITATEApplication.getTelephonyManager()).getNetworkOperatorName();
+			    TelephonyManager telephonyManager = (TelephonyManager) MITATEApplication.getCustomAppContext().getSystemService(Context.TELEPHONY_SERVICE);
+			    // String sPhoneNumber = telephonyManager.getLine1Number();
+			    String sCarrierName = telephonyManager.getNetworkOperatorName();
 			    
 			    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 			    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);
@@ -96,7 +97,7 @@ public class Measurement extends Thread {
 				
 				bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
 						direction+":;:"+lClientOffsetFromNTP+":;:"+packetdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+Build.MODEL.replaceAll("\\s", "")+":;:"+content+"\n"); 
+						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+content+"\n"); 
 				
 				bwWriteToClient.flush();
 				
@@ -186,7 +187,7 @@ public class Measurement extends Thread {
 						);
 				bwWriteToClient.flush();
 				
-				/* if(MITATEApplication.bDebug) {dsjysd
+				/* if(MITATEApplication.bDebug) {
 						System.out.println("client times sent to server - \n"+
 						Arrays.toString(ttTCPTest.laTCPPacketReceivedTimes)  + "\n"+
 						Arrays.toString(ttTCPTest.iaTCPBytes)  + "\n"+								
@@ -261,7 +262,7 @@ public class Measurement extends Thread {
 				
 				System.out.println("----------------?"+LoginService.tPendingTransfers[j].getsContent());
 				// System.out.println("current- "+System.currentTimeMillis()+", start- "+lStartTime+", poll- "+LoginService.lPollInterval+", calc- "+(System.currentTimeMillis() - lStartTime + 15000));
-				if(bGotVars) { // && (System.currentTimeMillis() - lStartTime + 15000) < LoginService.lPollInterval) {
+				if(bGotVars && (System.currentTimeMillis() - lStartTime + 15000) < LoginService.lPollInterval) {
 					
 					ttTCPTest =  null;
 					utUDPTest = null;
@@ -284,10 +285,10 @@ public class Measurement extends Thread {
 							}
 					
 				} 
-				/* else if((System.currentTimeMillis() - lStartTime + 15000) > LoginService.lPollInterval) {
+				else if((System.currentTimeMillis() - lStartTime + 15000) > LoginService.lPollInterval) {
 					System.out.println("Stopping thread --- time for another thread : "+((System.currentTimeMillis() - lStartTime + 15000) < LoginService.lPollInterval));
 					break;
-				} */
+				}
 			// }
 			}
 		}

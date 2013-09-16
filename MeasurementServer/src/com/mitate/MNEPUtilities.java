@@ -19,9 +19,9 @@ public class MNEPUtilities {
     public static long lServerOffsetWithNTP = 0;
 	
     static {
-       sUsername = "root";
-       sPassword = "root";
-       sDatabaseServerName = "127.0.0.1";
+       sUsername = "mitate";
+       sPassword = "Database4Mitate";
+       sDatabaseServerName = "nl.cs.montana.edu";
       
        sDatabaseName = "mitate";
        
