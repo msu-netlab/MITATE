@@ -39,12 +39,24 @@ public class MITATELocation implements LocationListener {
 	}
 	
 	public String getCoordinates(Context mContext) {
-		return getLatLong(mContext).getLatitude()+":"+getLatLong(mContext).getLongitude();
+		
+		LocationManager lm = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE); 
+		Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if(location == null) {
+			return 45.66962856799364+":"+(-111.06049848720431);
+		}
+		double longitude = location.getLongitude();
+		double latitude = location.getLatitude();
+		
+		return latitude+":"+longitude;
+		
+		// return getLatLong(mContext).getLatitude()+":"+getLatLong(mContext).getLongitude();
 	}
 	
 	public Location getLatLong(Context mContext) {
 		try {
 		Log.i("TAG", "@getLatLong - start");
+		System.out.println("----------->>1");
 		// Get the location manager
 		locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
 
@@ -53,7 +65,7 @@ public class MITATELocation implements LocationListener {
 		for (String provider : providers) {
 			printProvider(provider);
 		}
-
+		System.out.println("----------->>2");
 		Criteria criteria = new Criteria();
 		bestProvider = locationManager.getBestProvider(criteria, false);
 
@@ -63,8 +75,10 @@ public class MITATELocation implements LocationListener {
 		return location;
 		}
 		catch(Exception e) {
+			System.out.println("----------->>3");
 			e.printStackTrace();
 		}
+		System.out.println("----------->>");
 		return null;
 	}
 

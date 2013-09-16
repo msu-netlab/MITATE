@@ -5,6 +5,7 @@ import java.util.Date;
 import com.mitate.MITATEApplication;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
