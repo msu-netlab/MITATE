@@ -7,21 +7,28 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrengthLte;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
 import com.mitate.MITATEApplication;
 import com.mitate.service.LoginService;
 import com.mitate.service.MITATEActivity;
 import com.mitate.utilities.MITATELocation;
 import com.mitate.utilities.MITATEUtilities;
 
-public class Measurement extends Thread {
+@TargetApi(17)
+public class Measurement extends Thread implements SensorEventListener {
 	
 	static int iUDPBytes, iUDPPackets, iUDPPort;
  	static int iTCPBytes, iTCPPackets, iTCPPort;
@@ -32,6 +39,12 @@ public class Measurement extends Thread {
  	static String sPhoneNumber;
  	String sAfterExecCoordinates;
  	String sBeforeExecCoordinates;
+ 	
+ 	String sAccelerometerReading;
+ 	String sSignalStrength;
+ 	
+	Sensor sSensor;
+	SensorManager smManager;
  	
  	long lStartTime;
 
@@ -51,6 +64,12 @@ public class Measurement extends Thread {
 	
 	String TAG = "Measurement";
 		
+	public Measurement() {
+		smManager = (SensorManager)MITATEApplication.getCustomAppContext().getSystemService(Context.SENSOR_SERVICE);
+		sSensor = smManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		smManager.registerListener(this, sSensor, SensorManager.SENSOR_DELAY_NORMAL);
+	}
+	
 		private boolean sendAndReceiveParameters(String serverip, int packetype, String sUserName, int bytes, int transferid, int transactionid, 
 				int direction, int packetdelay, int noofpackets, int explicit, String content, String portnumber, String contenttype) {
 			boolean done = false;
@@ -182,7 +201,9 @@ public class Measurement extends Thread {
 						sBeforeExecCoordinates.split(":")[0]+"\n"+
 						sBeforeExecCoordinates.split(":")[1]+"\n"+
 						sAfterExecCoordinates.split(":")[0]+"\n"+
-						sAfterExecCoordinates.split(":")[1]+"\n"
+						sAfterExecCoordinates.split(":")[1]+"\n"+
+						sSignalStrength+"\n"+
+						sAccelerometerReading+"\n"
 						);
 				bwWriteToClient.flush();
 				
@@ -258,6 +279,15 @@ public class Measurement extends Thread {
 					);
 		
  
+		           TelephonyManager telephonyManager = MITATEApplication.getTelephonyManager();
+			        // for example value of first element
+		           
+		           // API Min 17
+			        CellInfoLte cellinfolte = (CellInfoLte)telephonyManager.getAllCellInfo().get(0);
+			        CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
+			        // System.out.println("------------>///`"+cellSignalStrengthlte.getDbm()+"-"+cellSignalStrengthlte.getLevel()+"-"+cellSignalStrengthlte.getAsuLevel());		    	   
+			        sSignalStrength = ""+cellSignalStrengthlte.getAsuLevel();
+				
 				
 				System.out.println("----------------?"+LoginService.tPendingTransfers[j].getsContent());
 				// System.out.println("current- "+System.currentTimeMillis()+", start- "+lStartTime+", poll- "+LoginService.lPollInterval+", calc- "+(System.currentTimeMillis() - lStartTime + 15000));
@@ -273,7 +303,7 @@ public class Measurement extends Thread {
 						
 						if(LoginService.tPendingTransfers[j].getiPacketType() == 2 || LoginService.tPendingTransfers[j].getiPacketType() == 0) {
 							ttTCPTest = new TCPTest(sServerIP, iTCPPort, iTCPBytes, iTCPPackets, iDirection, lServerOffsetFromNTP, iPacketDelay, iExplicit, sContent, sContentType);
-							ttTCPTest.runTCPTest();  // if test fails do something
+							ttTCPTest.runTCPTest();  // if test fails do something1
 						}
 						
 						sAfterExecCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
@@ -292,4 +322,18 @@ public class Measurement extends Thread {
 			}
 		}
 	}
+
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			sAccelerometerReading = event.values[0]+":"+event.values[1]+":"+event.values[2];
+			// System.out.println("---------------->"+event.values[0]+", ====="+event.values[1]+", ==="+event.values[2]);
+		}
 }
