@@ -50,7 +50,7 @@ $username = $_COOKIE[username];
 $filepath = "user_accounts/" . $username . "/$current_time/" . $final_file_path;
 $xml = simplexml_load_file("$filepath");
 
-$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'public')";
+$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'private')";
 if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 
 foreach($xml->transactions->transaction as $temptransaction) {

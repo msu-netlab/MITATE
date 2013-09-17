@@ -15,6 +15,14 @@ then
 elif [ "$1" == 'init' ]
 then
 	curl -k -ssl3 -F "username=test" -F "password=test" https://mitate.cs.montana.edu/mitate_initialize_db.php
+elif [ "$1" == 'update' ]
+then
+	echo "This experiment will be made public. Are you sure?(y/n))";
+	read update_response;
+	if [ $update_response == 'y' ]
+	then
+		curl -k -ssl3 -F "username=test" -F "password=test" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_update_experiment.php
+	fi
 else
 	echo "Missing operation";
 fi

@@ -10,9 +10,10 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 if ($loginresultset) {
     $loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == "1") {
+		echo "Logged in. Please wait...\n";
 		$get_user_list = mysql_query("select * from userinfo where username = '$_POST[username]'");
 		while($get_user = mysql_fetch_assoc($get_user_list)) {
-			echo "insert into userinfo (fname, lname, username, password, email) values ('$get_user[fname]', '$get_user[lname]', '$get_user[username]', '$get_user[password]', '$get_user[email]');";
+			echo "insert into userinfo (fname, lname, username, email) values ('$get_user[fname]', '$get_user[lname]', '$get_user[username]', '$get_user[email]');";
 		}
 		$get_metric_list = mysql_query("select * from metric");
 		while($get_metric = mysql_fetch_assoc($get_metric_list)) {
