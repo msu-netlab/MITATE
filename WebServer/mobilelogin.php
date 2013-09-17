@@ -10,7 +10,8 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
         die('Could not connect: ' . mysql_error());
     }
     mysql_select_db($dbschemaname, $dbconnection);
-    $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$_GET[password]'");
+    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_GET[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+	$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$encrypted_password'");
     if ($loginresultset) {
         $loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == "1") {

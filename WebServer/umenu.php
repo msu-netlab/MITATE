@@ -12,9 +12,10 @@ if (isset($_COOKIE["username"]))
   mysql_select_db("mitate", $con);
   $result = mysql_query("SELECT * FROM userinfo");
   $k=0;
+  $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[spassword], MCRYPT_MODE_CBC, md5(md5("mitate"))));
   while(($row = mysql_fetch_array($result)) && $k==0 )
   {
-  if(($row['username'] == $_POST["susername"] || $row['email'] == $_POST["susername"]) && $row['password'] == $_POST["spassword"])
+  if(($row['username'] == $_POST["susername"] || $row['email'] == $_POST["susername"]) && $row['password'] == $encrypted_password)
   {
   $k=1;
  

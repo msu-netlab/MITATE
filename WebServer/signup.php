@@ -39,9 +39,8 @@ while($row = mysql_fetch_array($result))
 
    if($k == 0)
   {
-  $sql="INSERT INTO userinfo (fname, lname, username, password, email)
-VALUES
-('$_POST[fname]','$_POST[lname]','$_POST[username]','$_POST[pass1]','$_POST[email]')";
+  $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[pass1], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+  $sql="INSERT INTO userinfo (fname, lname, username, password, email) VALUES ('$_POST[fname]','$_POST[lname]','$_POST[username]','$encrypted_password','$_POST[email]')";
 
 if (!mysql_query($sql,$con))
   {
