@@ -210,6 +210,8 @@
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
 				<deviceid>client</deviceid>
+				<minimumbatterypower>50</minimumbatterypower>
+				<minimumsignalstrength>40</minimumsignalstrength>
 			</criteria>
 			<criteria>
 				<id>c2</id>
@@ -220,6 +222,8 @@
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
 				<deviceid>abc,def</deviceid>
+				<minimumbatterypower>50</minimumbatterypower>
+				<minimumsignalstrength>40</minimumsignalstrength>
 			</criteria>			
 		</criteriadefine>
 	</defines>

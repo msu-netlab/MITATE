@@ -75,7 +75,7 @@ foreach($xml->transactions->transaction as $temptransaction) {
 			$changeagain = rand(10, 10000);
 			$change=rand(10, 10000);
 			$criteriaid = time()+ ($change * 6546) - $changeagain;
-			$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime;
+			$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime . ";" . $tempcriteria->minimumbatterypower . ";" . $tempcriteria->minimumsignalstrength;
 			$criteria_device_id = $tempcriteria->deviceid;
 			if($tempcriteria->deviceid != '') { 
 				$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$tempcriteria->deviceid')";
