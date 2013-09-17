@@ -12,8 +12,14 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
     if ($loginresultset) {
 		$loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == 1) {	
-			echo "Logged in. Please wait...\n";
-			$current_time = time();
+			echo "Logged in. Please wait...\n";	
+			$start_value = 1000000000;
+			$experiment_id = $start_value;
+			$get_experiment_id_counts = mysql_query("SELECT count(*) as count, max(experiment_id) as maxval from experiment");
+			while($get_experiment_id_count = mysql_fetch_assoc($get_experiment_id_counts)) {
+				if($get_experiment_id_count[count] > 0)
+					$experiment_id = $get_experiment_id_count[maxval] + 1;
+			}
 			$yesdone = 0;
 			if($_FILES["file"]["name"] != "") {
 				if ($_FILES["file"]["error"] > 0) {
@@ -22,37 +28,43 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 				else {
 					$file_extension = end(explode(".", $_FILES["file"]["name"]));
 					$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
-					$final_file_path = $file_name_without_extension . $current_time . "." . $file_extension;
-					mkdir("user_accounts/$username/$current_time", 0777);
-					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$current_time/" . $final_file_path);		
+					$final_file_path = $file_name_without_extension . $experiment_id . "." . $file_extension;
+					mkdir("user_accounts/$username/$experiment_id", 0777);
+					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$experiment_id/" . $final_file_path);		
 					$yesdone = 1;
 				}
 			}
 			else echo "Error: File not specified";
-			$filepath = "user_accounts/" . $username . "/$current_time/" . $final_file_path;
+			$filepath = "user_accounts/" . $username . "/$experiment_id/" . $final_file_path;
 			$xml = simplexml_load_file("$filepath");
-			$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'private')";
+			$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
 			if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 			foreach($xml->transactions->transaction as $temptransaction) {
 				$order=1;
-				$changeagain = rand(10, 10000);
-				$change=rand(10, 10000);
-				$transactionid = time() + ($change * 9655) - $changeagain;
+				$transactionid = $start_value;
+				$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transaction1");
+				while($get_transactionid_count = mysql_fetch_assoc($get_transactionid_counts)) {
+					if($get_transactionid_count[count] > 0)
+						$transactionid = $get_transactionid_count[maxval] + 1;
+				}
 				$transaction_count = $temptransaction["count"];
 				if($transaction_count != "") { 
-					$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $current_time)";
+					$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
 					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				}
 				if($transaction_count == ""){
-					$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $current_time)";
+					$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
 					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				}
 				foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {
 					$ccheck = $tempcriteria->id;
 					if(!strcmp($ccheck, $temptransaction->criteria->criteriaid)) { 
-						$changeagain = rand(10, 10000);
-						$change=rand(10, 10000);
-						$criteriaid = time()+ ($change * 6546) - $changeagain;
+						$criteriaid = $start_value;
+						$get_criteriaid_counts = mysql_query("SELECT count(*) as count, max(criteriaid) as maxval from criteria");
+						while($get_criteriaid_count = mysql_fetch_assoc($get_criteriaid_counts)) {
+							if($get_criteriaid_count[count] > 0)
+								$criteriaid = $get_criteriaid_count[maxval] + 1;
+						}
 						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime . ";" . $tempcriteria->minimumbatterypower . ";" . $tempcriteria->minimumsignalstrength;
 						$criteria_device_id = $tempcriteria->deviceid;
 						if($tempcriteria->deviceid != '') { 
@@ -75,9 +87,12 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 						foreach($xml->defines->transferdefine->transfer as $temptransfer) {
 							$tcheck = $temptransfer->id;
 							if(!strcmp($tcheck, $temptransferid)) { 
-								$changeagain = rand(10, 10000);
-								$change=rand(10, 10000);
-								$transferid= time()+ ($change * 9742) -$changeagain;
+								$transferid = $start_value;
+								$get_transferid_counts = mysql_query("SELECT count(*) as count, max(transferid) as maxval from transfer");
+								while($get_transferid_count = mysql_fetch_assoc($get_transferid_counts)) {
+									if($get_transferid_count[count] > 0)
+										$transferid = $get_transferid_count[maxval] + 1;
+								}
 								$datetime = idate("Y") . "-" . idate("m") . "-" . idate("d") . " " .  idate("H") . ":" . idate("i") . ":" . idate("s"); 
 								if($temptransfer->bytes->explicit == 0) {
 									$bytestostore = $temptransfer->bytes->noofbytes;
@@ -121,7 +136,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 				}
 			}
 			if($yesdone == 1)
-			echo "Your file with ID: $current_time has been uploaded successfully. ";
+			echo "Your file with ID: $experiment_id has been uploaded successfully. ";
 		}
 		else
 		echo "Invalid account credentials.";

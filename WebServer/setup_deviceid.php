@@ -27,8 +27,8 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['phone_number']!="" &
 				}
 			}
 			if($record_found == 0) {
-				$get_random_string_counts = mysql_query("SELECT count(*) as count, max(random_string) as maxval from userdevice");
 				$random_string = 1000000000;
+				$get_random_string_counts = mysql_query("SELECT count(*) as count, max(random_string) as maxval from userdevice");
 				while($fetch_random_string_count = mysql_fetch_assoc($get_random_string_counts)) {
 					if($fetch_random_string_count[count] > 0)
 						$random_string = $fetch_random_string_count[maxval] + 1;
