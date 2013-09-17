@@ -1,5 +1,5 @@
 <?php
-if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="")
+if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="" && $_GET['batterypower']!="" && $_GET['signalstrength']!="")
 {
 	$dbhostname = "localhost";
     $dbusername = "mitate";
