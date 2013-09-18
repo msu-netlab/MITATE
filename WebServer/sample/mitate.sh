@@ -2,19 +2,24 @@
 userLoggedIn=1
 if [ "$1" == 'logout' ]
 then
+	touch user.txt
+	chmod 777 user.txt
 	echo "" > user.txt
 	echo "You are now logged out."
 	userLoggedIn=0
 fi
 if [ "$userLoggedIn" == 1 ]
 then
+	touch user.txt
 	value=`cat user.txt`;
 	username=`echo $value | cut -d \: -f 1`
 	password=`echo $value | cut -d \: -f 2`
 	ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 	if [ "$ifUserIsValid" == 'true' ]
 	then
+		chmod 777 user.txt
 		echo "$username:$password" > user.txt;
+		chmod 444 user.txt
 		isValid=1;
 	else
 		isValid=0;
@@ -25,7 +30,9 @@ then
 		ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 		if [ "$ifUserIsValid" == 'true' ]
 		then
+			chmod 777 user.txt
 			echo "$username:$password" > user.txt;
+			chmod 444 user.txt
 			isValid=1;
 		else
 			isValid=0;
