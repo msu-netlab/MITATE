@@ -10,15 +10,24 @@ then
 fi
 if [ "$userLoggedIn" == 1 ]
 then
+	ifUserIsValid='false'
 	touch user.txt
 	value=`cat user.txt`;
-	username=`echo $value | cut -d \: -f 1`
-	password=`echo $value | cut -d \: -f 2`
+	encrypted_username=`echo $value | cut -d \: -f 1`
+	encrypted_password=`echo $value | cut -d \: -f 2`
+	if [ "$encrypted_username" != '' -a "$encrypted_password" != '' ]
+	then
+		username=`curl -k -ssl3 -F "string=$encrypted_username" https://mitate.cs.montana.edu/decrypt_user.php`
+		password=`curl -k -ssl3 -F "string=$encrypted_password" https://mitate.cs.montana.edu/decrypt_user.php`
+	else
+		username=$encrypted_username
+		password=$encrypted_password
+	fi
 	ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 	if [ "$ifUserIsValid" == 'true' ]
 	then
 		chmod 777 user.txt
-		echo "$username:$password" > user.txt;
+		echo "$encrypted_username:$encrypted_password" > user.txt;
 		chmod 444 user.txt
 		isValid=1;
 	else
@@ -30,8 +39,10 @@ then
 		ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 		if [ "$ifUserIsValid" == 'true' ]
 		then
+			encrypted_username=`curl -k -ssl3 -F "string=$username" https://mitate.cs.montana.edu/encrypt_user.php`
+			encrypted_password=`curl -k -ssl3 -F "string=$password" https://mitate.cs.montana.edu/encrypt_user.php`
 			chmod 777 user.txt
-			echo "$username:$password" > user.txt;
+			echo "$encrypted_username:$encrypted_password" > user.txt;
 			chmod 444 user.txt
 			isValid=1;
 		else
