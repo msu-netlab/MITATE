@@ -68,7 +68,7 @@ then
 			then
 				curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_delete_experiment.php
 			fi
-		elif [ "$1" == 'query' -a "$2" != '' ]
+		elif [ "$1" == 'query' -a "$2" != '' -a "$3" != '' ]
 		then
 			echo "Please wait while we gather your data..."
 			while read line           
@@ -76,11 +76,11 @@ then
 				experiment_result=`curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$line https://mitate.cs.montana.edu/mitate_query_experiment.php`
 				if [ "$experiment_result" == 'Permission denied' ]
 				then
-					echo "Permission denied for experiment ID: $line"
+					echo "Can not retrieve data for experiment ID: $line"
 				else
-					echo $experiment_result >> $2
+					echo $experiment_result >> $3
 				fi
-			done < user_experiment_list.txt
+			done < $2
 			echo "All the results are appended in $2 file."
 		elif [ "$1" == 'init' ]
 		then
