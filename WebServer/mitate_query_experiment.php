@@ -11,7 +11,6 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 if ($loginresultset) {
     $loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == "1") {
-		echo "Logged in. Please wait...\n";
 		$experiment_count = 0;
 		$device_id_array = "";
 		$get_experiment_list = mysql_query("select * from experiment where experiment_id = $_POST[experiment_id] and ((username = '$_POST[username]' and permission = 'private') or permission = 'public')");

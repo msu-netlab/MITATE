@@ -51,6 +51,7 @@ public class TCPTestRun {
             	else 
             		baExtraBytes = new byte[iTCPBytes - (sContent+":;:"+String.valueOf(1)+":;:"+System.currentTimeMillis()+":;:\n").length()];
             }
+			/*
             if(sContentType.equals("HEX")){
             	if(sContent.length()%2 != 0)
             		sContent.concat("0");
@@ -71,7 +72,7 @@ public class TCPTestRun {
             	}            	
             	sContent = s2;
             }
-
+*/
             for (int i = 0; i < iTCPPackets; i++) {
                 try{
                     if(iUplinkOrDownlink == 1) {
@@ -95,6 +96,7 @@ public class TCPTestRun {
                     	char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes + 12];
                         brReadFromClient.read(buf);
                         String sFromClient = new String(buf);
+						System.out.println(sFromClient);
                         long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = sFromClient.getBytes().length;
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;

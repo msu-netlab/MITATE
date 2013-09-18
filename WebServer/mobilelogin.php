@@ -28,8 +28,8 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and trs.transactionid not in (select transactionid from transaction_fetched where deviceid = '$_GET[deviceid]')
 			and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 5), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 6), ';', -1)
 			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]'
-			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 7), ';', -1) >= $_GET[batterypower]
-			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 8), ';', -1) >= $_GET[signalstrength]
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 7), ';', -1) <= $_GET[batterypower]
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 8), ';', -1) <= $_GET[signalstrength]
 			and ((6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) <= (cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as decimal)*(22/(180*7))) 
 			or (6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) = 0 )
 			order by ttl.orderno"); 
@@ -39,7 +39,10 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             while($pendingtestrow=mysql_fetch_assoc($pendingtestset))
      		{
 				$output[]= $pendingtestrow;
-				$output[$i][content] = str_replace("/", "/", $output[$i][content]);
+				$output[$i][content] = str_replace("\'", "'", $output[$i][content]);
+				if($output[$i][contenttype] == "HEX") {
+					$output[$i][content] = base64_encode(hex2bin($output[$i][content]));
+				}
 				$output_transaction_id = $output[$i][transactionid];
 				$transaction_id_array[$i] = $output_transaction_id;
 				$i = $i + 1;
@@ -71,5 +74,11 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
         }				
     }
     mysql_close();
+}
+
+function hex2bin($h){
+	$r='';
+	for ($a=0; $a<strlen($h); $a+=2) { $r.=chr(hexdec($h{$a}.$h{($a+1)})); }
+	return $r;
 }
 ?>

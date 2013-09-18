@@ -12,7 +12,6 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
     if ($loginresultset) {
 		$loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == 1) {	
-			echo "Logged in. Please wait...\n";	
 			$start_value = 1000000000;
 			$experiment_id = $start_value;
 			$get_experiment_id_counts = mysql_query("SELECT count(*) as count, max(experiment_id) as maxval from experiment");
@@ -106,7 +105,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 										$contentcheck = $tempcontent->contentid;	
 										if(!strcmp($contentcheck, $tempcontentid)) { 
 											$contenttostore = (string)$tempcontent->data;
-											$bytestostore = mb_strlen($contenttostore, '8bit') + 26;
+											$bytestostore = mb_strlen($contenttostore, '8bit');
 											$protocoltype = $tempcontent->protocol;
 											$contenttype = $tempcontent->contenttype;
 										}
@@ -114,12 +113,11 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								}
 								$tempexplicit = $temptransfer->bytes->explicit;
 								$contenttostore = str_replace("'", "\'", $contenttostore);
-								//if($contenttype == "HEX")
-								//$bytestostore = ceil($bytestostore/2) + 26;
-								//else if($contenttype == "BINARY")
-								//$bytestostore = ceil($bytestostore/8) + 26;
-								//else
-								//$bytestostore = $bytestostore + 26;
+								if($contenttype == "HEX")
+									$bytestostore = ceil($bytestostore/2);
+								else if($contenttype == "BINARY")
+									$bytestostore = ceil($bytestostore/8);
+								$bytestostore = $bytestostore + 26;
 								$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				
@@ -136,7 +134,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 				}
 			}
 			if($yesdone == 1)
-			echo "Your file with ID: $experiment_id has been uploaded successfully. ";
+			echo "$experiment_id";
 		}
 		else
 		echo "Invalid account credentials.";

@@ -60,6 +60,7 @@ public class UDPTestRun {
                 bExtraBytes = new byte[1];
             
             String sData = "";
+			/*
             if(sContentType.equals("HEX")){
             	if(sContent.length()%2 != 0)
             		sContent += "0";
@@ -81,7 +82,7 @@ public class UDPTestRun {
             	
             	sContent = s2;
             }
-           
+           */
             for (int i = 0; i < iUDPPackets; i++){
                 try {
                     
@@ -108,6 +109,7 @@ public class UDPTestRun {
 						long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = dpUDPRecvPacket.getLength();
                         iUDPTotalBytesReceivedFromClient += iNoOfBytesReceived;
+						System.out.println(new String(dpUDPRecvPacket.getData()));
                         int iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(new String(dpUDPRecvPacket.getData()).split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient; 
