@@ -22,7 +22,7 @@ public class MNEPServer {
     public int iTCPPackets, iTCPBytes, iTCPPort;
     public int iTransferId, iTransactionId, iExplicit;
     public static int iPacketDelay = 300;
-    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "", sDeviceId = "";
+    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "", sDeviceId = "", isDeviceInCall = "";
     public static long lServerOffsetFromNTP;
     public long lClientOffsetFromNTP;
     
@@ -146,7 +146,7 @@ public class MNEPServer {
             System.out.println(sTCPConnectionSocket.getRemoteSocketAddress());		
             brReadFromClient = new BufferedReader(new InputStreamReader(sTCPConnectionSocket.getInputStream(), "UTF-8"));
             String sDataFromClient = "";           
-            for (int i=0; i<14; i++){
+            for (int i=0; i<15; i++){
                 sDataFromClient = brReadFromClient.readLine();
                 switch(i) {
                     case 0: tsaTCPPacketReceivedTimes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
@@ -191,6 +191,9 @@ public class MNEPServer {
 							break;
 					case 13: sAccelerometerReading = (sDataFromClient == null ? new String() : sDataFromClient);
 							//System.out.println("sAccelerometerReading" + sAccelerometerReading);
+							break;
+					case 14: isDeviceInCall = (sDataFromClient == null ? new String() : sDataFromClient);
+							//System.out.println("isDeviceInCall" + isDeviceInCall);
 							break;
                 }
             }
@@ -305,6 +308,7 @@ public class MNEPServer {
 			   s.execute("insert into metricdata values(10036, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[0]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 			   s.execute("insert into metricdata values(10037, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[1]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 			   s.execute("insert into metricdata values(10038, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[2]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10039, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(isDeviceInCall) + ", '" + sClientTime + "', '" + sDeviceId + "')");
         	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
         	   conn.close();
         	   System.out.println ("Entry made in Database");  
