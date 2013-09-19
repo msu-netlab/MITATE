@@ -212,6 +212,8 @@
 				<deviceid>client</deviceid>
 				<minimumbatterypower>10</minimumbatterypower>
 				<minimumsignalstrength>10</minimumsignalstrength>
+				<networkcarrier>Verizon Wireless</networkcarrier>
+				<devicemodelname>Samsung Galaxy S3</devicemodelname>
 			</criteria>
 			<criteria>
 				<id>c2</id>
@@ -224,6 +226,8 @@
 				<deviceid>abc,def</deviceid>
 				<minimumbatterypower>10</minimumbatterypower>
 				<minimumsignalstrength>10</minimumsignalstrength>
+				<networkcarrier>Verizon Wireless</networkcarrier>
+				<devicemodelname>Samsung Galaxy S3</devicemodelname>
 			</criteria>			
 		</criteriadefine>
 	</defines>

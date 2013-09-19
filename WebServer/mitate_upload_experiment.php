@@ -64,7 +64,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							if($get_criteriaid_count[count] > 0)
 								$criteriaid = $get_criteriaid_count[maxval] + 1;
 						}
-						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime . ";" . $tempcriteria->minimumbatterypower . ";" . $tempcriteria->minimumsignalstrength;
+						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime . ";" . $tempcriteria->minimumbatterypower . ";" . $tempcriteria->minimumsignalstrength. ";" . $tempcriteria->networkcarrier. ";" . $tempcriteria->devicemodelname;
 						$criteria_device_id = $tempcriteria->deviceid;
 						if($tempcriteria->deviceid != '') { 
 							$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$tempcriteria->deviceid')";

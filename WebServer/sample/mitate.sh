@@ -35,7 +35,7 @@ then
 		echo "Enter your MITATE username: ";
 		read username;
 		echo "Enter your password: ";
-		read password;
+		read -s password;
 		ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 		if [ "$ifUserIsValid" == 'true' ]
 		then
@@ -54,6 +54,7 @@ then
 	then
 		if [ "$1" == 'upload' -a "$2" != '' ] 
 		then
+			echo "Please wait while we process your file..."
 			result=`curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_upload_experiment.php`
 			if [ "$result" != 'Invalid account credentials.' ]
 			then
@@ -62,11 +63,15 @@ then
 			fi
 		elif [ "$1" == 'delete' -a "$2" != '' ] 
 		then
-			echo "This experiment will be deleted. Are you sure?(y/n))";
+			echo "This experiment will be deleted. Are you sure?(y/n)";
 			read delete_response;
 			if [ $delete_response == 'y' ]
 			then
 				curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_delete_experiment.php
+				touch temp_user_delete_experiment.txt
+				grep -v $2 user_experiment_list.txt > temp_user_delete_experiment.txt
+				cp temp_user_delete_experiment.txt user_experiment_list.txt
+				rm temp_user_delete_experiment.txt
 			fi
 		elif [ "$1" == 'query' -a "$2" != '' -a "$3" != '' ]
 		then
