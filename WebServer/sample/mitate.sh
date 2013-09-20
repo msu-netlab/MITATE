@@ -87,9 +87,11 @@ then
 				fi
 			done < $2
 			echo "All the results are appended in $2 file."
-		elif [ "$1" == 'init' ]
+		elif [ "$1" == 'init' -a "$2" != '' ]
 		then
-			curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/mitate_initialize_db.php
+			echo "Please wait while we generate initialization scripts..."
+			echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/mitate_initialize_db.php` > $2
+			echo "Scripts are stored in $2 file"
 		elif [ "$1" == 'update' -a "$2" != '' ]
 		then
 			echo "This experiment will be made public. Are you sure?(y/n))";
