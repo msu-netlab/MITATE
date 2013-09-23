@@ -7,12 +7,18 @@ if (!$con)
 mysql_select_db("mitate", $con);
 $username = $_POST[username];
 $password = $_POST[password];
-$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$password'");
+$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $password, MCRYPT_MODE_CBC, md5(md5("mitate"))));
+$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password'");
     if ($loginresultset) {
 		$loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == 1) {	
-			echo "Logged in. Please wait...\n";
-			$current_time = time();
+			$start_value = 1000000000;
+			$experiment_id = $start_value;
+			$get_experiment_id_counts = mysql_query("SELECT count(*) as count, max(experiment_id) as maxval from experiment");
+			while($get_experiment_id_count = mysql_fetch_assoc($get_experiment_id_counts)) {
+				if($get_experiment_id_count[count] > 0)
+					$experiment_id = $get_experiment_id_count[maxval] + 1;
+			}
 			$yesdone = 0;
 			if($_FILES["file"]["name"] != "") {
 				if ($_FILES["file"]["error"] > 0) {
@@ -21,47 +27,70 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 				else {
 					$file_extension = end(explode(".", $_FILES["file"]["name"]));
 					$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
-					$final_file_path = $file_name_without_extension . $current_time . "." . $file_extension;
-					mkdir("user_accounts/$username/$current_time", 0777);
-					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$current_time/" . $final_file_path);		
+					$final_file_path = $file_name_without_extension . $experiment_id . "." . $file_extension;
+					mkdir("user_accounts/$username/$experiment_id", 0777);
+					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$experiment_id/" . $final_file_path);		
 					$yesdone = 1;
 				}
 			}
 			else echo "Error: File not specified";
-			$filepath = "user_accounts/" . $username . "/$current_time/" . $final_file_path;
+			$filepath = "user_accounts/" . $username . "/$experiment_id/" . $final_file_path;
 			$xml = simplexml_load_file("$filepath");
-			$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($current_time, '$username', 'public')";
+			$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
 			if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 			foreach($xml->transactions->transaction as $temptransaction) {
 				$order=1;
-				$changeagain = rand(10, 10000);
-				$change=rand(10, 10000);
-				$transactionid = time() + ($change * 9655) - $changeagain;
+				$transactionid = $start_value;
+				$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transaction1");
+				while($get_transactionid_count = mysql_fetch_assoc($get_transactionid_counts)) {
+					if($get_transactionid_count[count] > 0)
+						$transactionid = $get_transactionid_count[maxval] + 1;
+				}
 				$transaction_count = $temptransaction["count"];
 				if($transaction_count != "") { 
-					$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $current_time)";
+					$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
 					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				}
 				if($transaction_count == ""){
-					$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $current_time)";
+					$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
 					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				}
 				foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {
 					$ccheck = $tempcriteria->id;
 					if(!strcmp($ccheck, $temptransaction->criteria->criteriaid)) { 
-						$changeagain = rand(10, 10000);
-						$change=rand(10, 10000);
-						$criteriaid = time()+ ($change * 6546) - $changeagain;
-						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime;
-						$criteria_device_id = $tempcriteria->deviceid;
-						if($tempcriteria->deviceid != '') { 
-							$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$tempcriteria->deviceid')";
-							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-						}
-						if($tempcriteria->deviceid == '') {
-							$sql="INSERT INTO criteria (criteriaid, specification) VALUES($criteriaid,'$cstring')";
-							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-						}
+						$criteriaid = $start_value;
+						$get_criteriaid_counts = mysql_query("SELECT count(*) as count, max(criteriaid) as maxval from criteria");
+						while($get_criteriaid_count = mysql_fetch_assoc($get_criteriaid_counts)) {
+							if($get_criteriaid_count[count] > 0)
+								$criteriaid = $get_criteriaid_count[maxval] + 1;
+						}		
+						$criteria_devicemodelname = $tempcriteria->devicemodelname;
+						if($criteria_devicemodelname == '')
+							$criteria_devicemodelname = 'allDeviceModelNames';
+						$criteria_networkcarrier = $tempcriteria->networkcarrier;
+						if($criteria_networkcarrier == '')
+							$criteria_networkcarrier = 'allNetworkCarriers';
+						$criteria_minimumsignalstrength = $tempcriteria->minimumsignalstrength;
+						if($criteria_minimumsignalstrength == '')
+							$criteria_minimumsignalstrength = '0';
+						$criteria_minimumbatterypower = $tempcriteria->minimumbatterypower;
+						if($criteria_minimumbatterypower == '')
+							$criteria_minimumbatterypower = '0';
+						$criteria_deviceid = $tempcriteria->deviceid;
+						if($criteria_deviceid == '')
+							$criteria_deviceid = 'client';
+						$criteria_networktype = $tempcriteria->networktype;
+						if($criteria_networktype == '')
+							$criteria_networktype = 'allNetworkTypes';
+						$criteria_starttime = $tempcriteria->starttime;
+						if($criteria_starttime == '')
+							$criteria_starttime = '000001';
+						$criteria_endtime = $tempcriteria->endtime;
+						if($criteria_endtime == '')
+							$criteria_endtime = '235959';
+						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $criteria_networktype . ";" . $criteria_starttime . ";" . $criteria_endtime . ";" . $criteria_minimumbatterypower . ";" . $criteria_minimumsignalstrength . ";" . $criteria_networkcarrier . ";" . $criteria_devicemodelname;	 
+						$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$criteria_deviceid')";
+						if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 					}
 				}
 				$sql="INSERT INTO trans_criteria_link (criteriaid, transactionid) VALUES($criteriaid, $transactionid)";
@@ -74,9 +103,12 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 						foreach($xml->defines->transferdefine->transfer as $temptransfer) {
 							$tcheck = $temptransfer->id;
 							if(!strcmp($tcheck, $temptransferid)) { 
-								$changeagain = rand(10, 10000);
-								$change=rand(10, 10000);
-								$transferid= time()+ ($change * 9742) -$changeagain;
+								$transferid = $start_value;
+								$get_transferid_counts = mysql_query("SELECT count(*) as count, max(transferid) as maxval from transfer");
+								while($get_transferid_count = mysql_fetch_assoc($get_transferid_counts)) {
+									if($get_transferid_count[count] > 0)
+										$transferid = $get_transferid_count[maxval] + 1;
+								}
 								$datetime = idate("Y") . "-" . idate("m") . "-" . idate("d") . " " .  idate("H") . ":" . idate("i") . ":" . idate("s"); 
 								if($temptransfer->bytes->explicit == 0) {
 									$bytestostore = $temptransfer->bytes->noofbytes;
@@ -90,7 +122,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 										$contentcheck = $tempcontent->contentid;	
 										if(!strcmp($contentcheck, $tempcontentid)) { 
 											$contenttostore = (string)$tempcontent->data;
-											$bytestostore = mb_strlen($contenttostore, '8bit') + 26;
+											$bytestostore = mb_strlen($contenttostore, '8bit') - (3 * substr_count($contenttostore, '\r\n')) ;
 											$protocoltype = $tempcontent->protocol;
 											$contenttype = $tempcontent->contenttype;
 										}
@@ -98,20 +130,16 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								}
 								$tempexplicit = $temptransfer->bytes->explicit;
 								$contenttostore = str_replace("'", "\'", $contenttostore);
-								//if($contenttype == "HEX")
-								//$bytestostore = ceil($bytestostore/2) + 26;
-								//else if($contenttype == "BINARY")
-								//$bytestostore = ceil($bytestostore/8) + 26;
-								//else
-								//$bytestostore = $bytestostore + 26;
+								if($contenttype == "HEX")
+									$bytestostore = ceil($bytestostore/2);
+								else if($contenttype == "BINARY")
+									$bytestostore = ceil($bytestostore/8);
+								$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
 								$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				
 								$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-  
-								//$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value) VALUES(9999, $transferid, $transactionid, 0)";
-								//if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 								$order++;
 							}
 						}
@@ -120,9 +148,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 				}
 			}
 			if($yesdone == 1)
-			echo "Your file with ID: $current_time has been uploaded successfully. ";
+			echo "$experiment_id";
 		}
 		else
-		echo "Invalid account credentials.";
+			echo "Invalid account credentials.";
 	}	
 ?>

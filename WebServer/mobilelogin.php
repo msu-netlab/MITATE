@@ -1,5 +1,5 @@
 <?php
-if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="")
+if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="" && $_GET['batterypower']!="" && $_GET['signalstrength']!="" && $_GET['networkcarrier'] !="" && $_GET['devicemodelname'] != "")
 {
 	$dbhostname = "localhost";
     $dbusername = "mitate";
@@ -10,7 +10,8 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
         die('Could not connect: ' . mysql_error());
     }
     mysql_select_db($dbschemaname, $dbconnection);
-    $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$_GET[password]'");
+    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_GET[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+	$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$encrypted_password'");
     if ($loginresultset) {
         $loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == "1") {
@@ -26,7 +27,11 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and ttl.transactionid = trs.transactionid
 			and trs.transactionid not in (select transactionid from transaction_fetched where deviceid = '$_GET[deviceid]')
 			and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 5), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 6), ';', -1)
-			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]'	
+			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = 'allNetworkTypes')
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 7), ';', -1) <= $_GET[batterypower]
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 8), ';', -1) <= $_GET[signalstrength]
+			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = '$_GET[networkcarrier]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = 'allNetworkCarriers')
+			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 10), ';', -1) = '$_GET[devicemodelname]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 10), ';', -1) = 'allDeviceModelNames')
 			and ((6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) <= (cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as decimal)*(22/(180*7))) 
 			or (6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) = 0 )
 			order by ttl.orderno"); 
@@ -36,7 +41,10 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             while($pendingtestrow=mysql_fetch_assoc($pendingtestset))
      		{
 				$output[]= $pendingtestrow;
-				$output[$i][content] = str_replace("/", "/", $output[$i][content]);
+				if($output[$i][contenttype] == "HEX") {
+					if(strlen($output[$i][content]) % 2 != 0)
+						$output[$i][content] = $output[$i][content] . "0";
+				}
 				$output_transaction_id = $output[$i][transactionid];
 				$transaction_id_array[$i] = $output_transaction_id;
 				$i = $i + 1;
@@ -69,4 +77,6 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
     }
     mysql_close();
 }
+else
+	echo "Missing arguments";
 ?>

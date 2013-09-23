@@ -160,7 +160,13 @@ public class MITATEActivity extends Activity implements OnClickListener {
 			
 			editor.putString("username", etUsername.getText().toString().trim());
 			editor.putString("password", etPassword.getText().toString().trim());
+
+			
+	    	editor.putString("startbutton", "disabled");
+	    	editor.putString("stopbutton", "enabled");
 			editor.commit();
+		    btStartService.setEnabled(false);
+		    btStopService.setEnabled(true);
 			
 			new ExecuteLogin().execute();
 			break;
@@ -219,8 +225,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 			
 			editor.putString("username", etUsername.getText().toString().trim());
 			editor.putString("password", etPassword.getText().toString().trim());
-	    	editor.putString("startbutton", "disabled");
-	    	editor.putString("stopbutton", "enabled");
+
 	    	editor.commit();
 	    	
 			Intent intent = new Intent(getApplicationContext(), MITATEReceiver.class);
@@ -239,9 +244,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 	        
 	        // amCheckPendingTests.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, 9000000, piCheckPendingTests);
 	        if(MITATEApplication.bDebug) Log.i(TAG, "@onCreate() : pending intentt created - "+new Timestamp(System.currentTimeMillis()+10000).getMinutes()+", "+new Date(System.currentTimeMillis()+60000+30000).getMinutes());
-	        
-		    btStartService.setEnabled(false);
-		    btStopService.setEnabled(true);
+	       
 		    
 		}
 		
