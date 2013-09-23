@@ -118,8 +118,8 @@ public class UDPTest {
 
 						baSendData = sData.getBytes();
 						
-						System.out.println("--------->"+sData+">>>"+sData.length());
-						System.out.println("--------------->"+new String(baSendData)+"-------->>>>>"+baSendData.length+">>>"+new String(baSendData).length());
+						// System.out.println("--------->"+sData+">>>"+sData.length()+">>"+iUDPBytes);
+						// System.out.println("--------------->"+new String(baSendData)+"-------->>>>>"+baSendData.length+">>>"+new String(baSendData).length());
 						
 
 						iUDPBytesSentToServer += sData.getBytes().length;
@@ -129,7 +129,7 @@ public class UDPTest {
 					
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : C->S Packet1- " + i + " sent"+", packet delay - "+iPacketDelay+", client time - "+lClientTime);
 						
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : C2S s" + i);
+						if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : C2S s" + i);
 						Thread.sleep(iPacketDelay);
 					}
 					if(iDirection == 1) {		
@@ -139,7 +139,7 @@ public class UDPTest {
 						dsUDPSocket.receive(dpUDPRecvPacket);
 						long lTimeOnClient = System.currentTimeMillis();
 						
-						Log.v(TAG,  new String(dpUDPRecvPacket.getData()));
+						// Log.v(TAG,  new String(dpUDPRecvPacket.getData()));
 						
 						int iUDPBytesReceived = dpUDPRecvPacket.getData().length;
 						iUDPBytesReceivedFromServer += iUDPBytesReceived;
@@ -155,7 +155,7 @@ public class UDPTest {
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : S->C Packet " + iPacketNumber + " received"); //, Total bytes received - "+iUDPBytesReceivedFromServer+", stime - "+lTimeOnServer+", ctime - "+lTimeOnClient+", diff - "+(lTimeOnClient-lTimeOnServer)); // +", dpUDPPacket data - "+new String(dpUDPPacket.getData()));
 						// Log.d(TAG, "--->remote - "+dsUDPSocket.getRemoteSocketAddress()+", local - "+dsUDPSocket.getLocalSocketAddress());
 						// Log.d(TAG, "--->remote - "+dpUDPRecvPacket.getSocketAddress());
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : S2C " + iPacketNumber);
+						if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : S2C " + iPacketNumber);
 					}
 				} catch(Exception e){
 					if(++iTimeOutPackets > 3) break;

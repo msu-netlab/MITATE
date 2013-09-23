@@ -73,6 +73,7 @@ public class Measurement extends Thread implements SensorEventListener {
 	
 		private boolean sendAndReceiveParameters(String serverip, int packetype, String sUserName, int bytes, int transferid, int transactionid, 
 				int direction, int packetdelay, int noofpackets, int explicit, String content, String portnumber, String contenttype) {
+			
 			boolean done = false;
 			sServerIP = serverip;
 			
@@ -90,16 +91,17 @@ public class Measurement extends Thread implements SensorEventListener {
 					Log.v(TAG, content+"<<<<<<<--------------->"+content.length()); */
 					
 					String sTempContent = "";
-					Log.v(TAG, "-------++++-------->"+content);
+					// Log.v(TAG, "-------++++-------->"+content);
 					for(int k=0; k<content.length(); k+=2) {
 						sTempContent += (char)(Integer.parseInt(content.substring(k,k+2), 16));
 					}
 					
 					content = sTempContent;
 
-					Log.v(TAG, "---------------->"+content);
+					Log.v(TAG, "hex---------------->"+content+">>"+bytes+">>"+content.length()+">>"+content.getBytes().length);
 				}
 			    
+				
 		        int iTCPConnectionRetryCount = 0;
 		        
 				while(++iTCPConnectionRetryCount < 6) {
@@ -128,11 +130,12 @@ public class Measurement extends Thread implements SensorEventListener {
 				
 				/* bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
 				direction+":;:"+lClientOffsetFromNTP+":;:"+p						bwWriteToServer.write()acketdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-				":;:"+content+":;:"+portnumber+":;:"+contenttype+"\n"); //+":"+MITATEUtilities.lTimeDifference+"\n"); */
+				":;:"+content+":;:"+portnumber+":;:"+contenttype+"\n"); //+":"+MITATEUtilities.lTimeDifference+"\n"); */ 
+				
 				
 				bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
 						direction+":;:"+lClientOffsetFromNTP+":;:"+packetdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+Build.MODEL.replaceAll("\\s", "")+":;:"+(content.getBytes().length+26)+":;:"+content+"\n"); 
+						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+Build.MODEL+":;:"+(content.getBytes().length+26)+":;:"+content+":;:"); 
 				
 				bwWriteToClient.flush();
 				
@@ -158,7 +161,7 @@ public class Measurement extends Thread implements SensorEventListener {
 				iTCPPort = Integer.parseInt(saParameters[5].trim());				
 				lServerOffsetFromNTP = Long.parseLong(saParameters[6].trim());
 				
-				Log.v(TAG, "port num from server - udp : "+iUDPPort+", tcp : "+iTCPPort);
+				// Log.v(TAG, "port num from server - udp : "+iUDPPort+", tcp : "+iTCPPort);
 
 				done = true;
 				sConnectionSocket.close();
@@ -262,10 +265,6 @@ public class Measurement extends Thread implements SensorEventListener {
 
 			for(int j=0; j<LoginService.tPendingTransfers.length && !MITATEActivity.bStopTransactionExecution; j++) {
 				if(MITATEApplication.bDebug)  Log.d(TAG, "@run : request parameters");
-				
-				System.out.println("detination - "+LoginService.tPendingTransfers[j].getsSourceIP());
-				
-				System.out.println("response = "+LoginService.tPendingTransfers[j].getiResponse());
 				
 				if(LoginService.tPendingTransfers[j].getiResponse() == 1) {
 					System.out.println("response = 1"); 

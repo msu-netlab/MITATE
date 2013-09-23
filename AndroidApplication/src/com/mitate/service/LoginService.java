@@ -207,7 +207,7 @@ public class LoginService extends Service {
                        tPendingTransfers[i].setsServerIP(json_data.getString("destinationip"));
                        tPendingTransfers[i].setsSourceIP(json_data.getString("sourceip"));
                        tPendingTransfers[i].setiTransactionid(json_data.getInt("transactionid"));
-                       tPendingTransfers[i].setiTransferid(json_data.getInt("transferid"));
+                       tPendingTransfers[i].setiTransferid(json_data.getInt("transferid")); 
                        tPendingTransfers[i].setiPacketType(json_data.getInt("type"));
                        tPendingTransfers[i].setiPacketDelay(json_data.getInt("packetdelay"));
                        tPendingTransfers[i].setiExplicit(json_data.getInt("explicit"));
@@ -219,7 +219,7 @@ public class LoginService extends Service {
                        if(tPendingTransfers[i].getsContent().trim().length() == 0) {
                     	   tPendingTransfers[i].setsContent("null");
                        } else {
-                    	   tPendingTransfers[i].setsContent(tPendingTransfers[i].getsContent().replaceAll("\t", " ").trim());
+                    	   tPendingTransfers[i].setsContent(tPendingTransfers[i].getsContent().replaceAll("\t", " "));
                        }
                    	   // Log.v(TAG,json_data.getInt("bytes")+">>"+(json_data.getString("content").length()-json_data.getString("content").replaceAll("[^\r]", "").length())+">>"+json_data.getString("content").replace('\r', '*').replace('\n', '+'));
                    	   // Log.v(TAG,Base64.decode(json_data.getString("content"), Base64.DEFAULT).length+">>"+Base64.decode(json_data.getString("content"), Base64.DEFAULT));
@@ -227,7 +227,7 @@ public class LoginService extends Service {
                    	   // String test = json_data.getString("content");
                    	   // Log.v(TAG, Base64.decode(test, Base64.DEFAULT).length+">>"+Base64.decode(test, Base64.DEFAULT));
 	               }
-	               System.out.println("-------------------------------");
+	               // System.out.println("-------------------------------");
                	   // System.exit(0);  
                }
 	       } 

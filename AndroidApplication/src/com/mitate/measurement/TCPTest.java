@@ -132,7 +132,7 @@ public class TCPTest {
 							// sBuffer=  sContent+":;:"+String.valueOf(i)+":;:"+lClientTime+":;:\n";
 						}
 
-						Log.v(TAG, sBuffer+"->"+sBuffer.length());
+						// Log.v(TAG, sBuffer+"->"+sBuffer.length());
 						
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						bwWriteToServer.write(sBuffer); 
@@ -146,9 +146,9 @@ public class TCPTest {
 						}
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : +"+", packet delay - "+iPacketDelay+", Sent - " + i+", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPBytesSentToServer);
 
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i+);
+						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i);
 						Thread.sleep(iPacketDelay);
-						System.out.println("sent-"+i+", chars - "+sBuffer.length()+", bytes - "+sBuffer.getBytes().length);
+						// System.out.println("sent-"+i+", chars - "+sBuffer.length()+", bytes - "+sBuffer.getBytes().length);
 						// bwWriteToServer.close();
 					}
 					if(iDirection == 1) {
@@ -160,7 +160,7 @@ public class TCPTest {
 						
 						// String sFromServer = brReadFromServer.readLine();
 
-						Log.v(TAG, sFromServer+">>"+sFromServer.length()+">>>"+sFromServer.getBytes().length);
+						// Log.v(TAG, sFromServer+">>"+sFromServer.length()+">>>"+sFromServer.getBytes().length);
 							
 						long lTimeOnClient = System.currentTimeMillis();
 						int iNumberOfBytesReceived = 0;
@@ -184,6 +184,7 @@ public class TCPTest {
 
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;
 						iaTCPBytes[i] = iNumberOfBytesReceived;
+						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i);
 						// brReadFromServer.close();
 					}
 				}
