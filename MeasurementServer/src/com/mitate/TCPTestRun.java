@@ -46,8 +46,8 @@ public class TCPTestRun {
             String sBuffer = "";
             byte[] baExtraBytes = null;
             if(iExplicit == 0) {
-            	if(iTCPBytes-(":;:11111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
-            		baExtraBytes = new byte[iTCPBytes-(":;:11111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
+            	if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
+            		baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
             }
 			/*
             if(sContentType.equals("HEX")){
@@ -78,13 +78,13 @@ public class TCPTestRun {
                     	long lServerTime =  System.currentTimeMillis() - MNEPServer.lServerOffsetFromNTP;
                         if(iExplicit == 0)
 						{
-                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + i+":;:"+lServerTime+":;:";
+                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":;:";
                         }
 						else if(iExplicit == 1)
 						{
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
 						}
-						//System.out.println(sBuffer);
+						System.out.println(sBuffer);
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
                         iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
@@ -95,6 +95,7 @@ public class TCPTestRun {
                     	char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];
                         brReadFromClient.read(buf);
                         String sFromClient = new String(buf);
+						System.out.println(sFromClient);
                         long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = sFromClient.getBytes().length;
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;

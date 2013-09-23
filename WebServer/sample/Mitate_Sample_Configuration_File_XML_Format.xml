@@ -5,17 +5,7 @@
 			<content>
 				<contentid>content1</contentid>
 				<protocol>SIP</protocol>
-				<data><![CDATA[SIP/2.0 200 OK
-Via: SIP/2.0/UDP 192.168.1.30:5060;received=66.87.48.68
-From: sip:sip2@iptel.org
-To: sip:sip2@iptel.org;tagi=794fe65c16edfdf45da4fc39a5d2867c.b713
-Call-ID: 2443936363@192.168.1.30
-CSeqi: 63629 REGISTER
-Contact: Msip:sip2@66.87.48.68:5060;transport=udp>;q=0.00;expires=120
-Server: Sip EXpress router (0.8.11pre21xrc (i386/linux))
-Content-Length: 0
-Warning: 392 195.37.77.101:5060 "Noisy feedback tells:pid=5110 req_src_ip=66.87.48.68 req_src_port=5060 in_uri=sip:iptel.org
-out_uri=sip:iptel.org via_cnt==1"]]></data>
+				<data><![CDATA[SIP/2.0 200 OK\r\nVia: SIP/2.0/UDP 192.168.1.30:5060;received=66.87.48.68\r\nFrom: sip:sip2@iptel.org\r\nTo: sip:sip2@iptel.org;tagi=794fe65c16edfdf45da4fc39a5d2867c.b713\r\nCall-ID: 2443936363@192.168.1.30\r\nCSeqi: 63629 REGISTER\r\nContact: Msip:sip2@66.87.48.68:5060;transport=udp>;q=0.00;expires=120\r\nServer: Sip EXpress router (0.8.11pre21xrc (i386/linux))\r\nContent-Length: 0\r\nWarning: 392 195.37.77.101:5060 "Noisy feedback tells:pid=5110 req_src_ip=66.87.48.68 req_src_port=5060 in_uri=sip:iptel.org\r\nout_uri=sip:iptel.org via_cnt==1"]]></data>
 				<contenttype>ASCII</contenttype>
 			</content>
 			<content>
@@ -223,7 +213,7 @@ out_uri=sip:iptel.org via_cnt==1"]]></data>
 		<transaction count="2">
 			<transfers>
 				<transfer repeat="1">
-					<transferid>t6</transferid>
+					<transferid>t10</transferid>
 				</transfer>
 			</transfers>
 			<criteria>

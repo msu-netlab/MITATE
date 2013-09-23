@@ -54,8 +54,8 @@ public class UDPTestRun {
             int iTimeOutPackets = 0;
             
             byte[] bExtraBytes;
-            if(iUDPBytes-(":;:11111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
-                bExtraBytes = new byte[iUDPBytes-(":;:11111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
+            if(iUDPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
+                bExtraBytes = new byte[iUDPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
             else 
                 bExtraBytes = new byte[1];
             
@@ -89,13 +89,13 @@ public class UDPTestRun {
                 if(iUplinkOrDownlink == 1) {         
 					long lServerTime = System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP;                
 					if(iExplicit == 0) {
-						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.valueOf(i)+":;:"+lServerTime+":;:";
+						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":;:";
 					}
 					else if(iExplicit == 1)	{
 						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
 					}					
 					baSendData = sData.getBytes();
-					//System.out.println(sData);
+					System.out.println(sData);
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);
@@ -110,6 +110,7 @@ public class UDPTestRun {
 						long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = dpUDPRecvPacket.getLength();
                         iUDPTotalBytesReceivedFromClient += iNoOfBytesReceived;
+						System.out.println(new String(dpUDPRecvPacket.getData()));
                         int iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(new String(dpUDPRecvPacket.getData()).split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient; 
