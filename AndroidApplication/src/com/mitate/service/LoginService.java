@@ -20,7 +20,9 @@ import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,6 +34,7 @@ import android.telephony.CellSignalStrengthLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -134,9 +137,20 @@ public class LoginService extends Service {
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
 	    	   
+			    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+			    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);
+			    int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 	    	   
-   
-    	   	   /// String sURL = "http://54.243.186.107/mobilelogin.php?" +
+	           TelephonyManager telephonyManager = MITATEApplication.getTelephonyManager();
+		        // for example value of first element
+	           
+	           // API Min 17
+		        CellInfoLte cellinfolte = (CellInfoLte)telephonyManager.getAllCellInfo().get(0);
+		        CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
+		        // System.out.println("------------>///`"+cellSignalStrengthlte.getDbm()+"-"+cellSignalStrengthlte.getLevel()+"-"+cellSignalStrengthlte.getAsuLevel());		    	   
+		        int iSignalStrength = cellSignalStrengthlte.getAsuLevel();			    
+			    
+    	   	   /// String esURL = "http://54.243.186.107/mobilelogin.php?"  +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
     	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
     	   			// "http://10.0.2.2/mnep/mobilelogin.php?" +
@@ -145,7 +159,9 @@ public class LoginService extends Service {
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
    	    	   	    // "&networktype="+MITATEUtilities.getNetworkType(cContext)+"&city="+mLocation.getCity(cContext);
    	    	   	    "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
-   	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1];
+   	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
+   	    	   	    "&batterypower="+status+"&signalstrength="+iSignalStrength+
+   	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
    		   	   HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
@@ -169,8 +185,6 @@ public class LoginService extends Service {
                JSONArray jaPendingTransfers = new JSONArray(sResult);
                tPendingTransfers = new Transfer[jaPendingTransfers.length()];
                
-               System.out.println("_------------->"+(jaPendingTransfers.getJSONObject(0)).getString("content"));
-               
                // set invalid login to content attributes
                if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("InvalidLogin")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
@@ -193,7 +207,7 @@ public class LoginService extends Service {
                        tPendingTransfers[i].setsServerIP(json_data.getString("destinationip"));
                        tPendingTransfers[i].setsSourceIP(json_data.getString("sourceip"));
                        tPendingTransfers[i].setiTransactionid(json_data.getInt("transactionid"));
-                       tPendingTransfers[i].setiTransferid(json_data.getInt("transferid"));
+                       tPendingTransfers[i].setiTransferid(json_data.getInt("transferid")); 
                        tPendingTransfers[i].setiPacketType(json_data.getInt("type"));
                        tPendingTransfers[i].setiPacketDelay(json_data.getInt("packetdelay"));
                        tPendingTransfers[i].setiExplicit(json_data.getInt("explicit"));
@@ -205,9 +219,16 @@ public class LoginService extends Service {
                        if(tPendingTransfers[i].getsContent().trim().length() == 0) {
                     	   tPendingTransfers[i].setsContent("null");
                        } else {
-                    	   tPendingTransfers[i].setsContent(tPendingTransfers[i].getsContent().replaceAll("\t", " ").trim());
+                    	   tPendingTransfers[i].setsContent(tPendingTransfers[i].getsContent().replaceAll("\t", " "));
                        }
+                   	   // Log.v(TAG,json_data.getInt("bytes")+">>"+(json_data.getString("content").length()-json_data.getString("content").replaceAll("[^\r]", "").length())+">>"+json_data.getString("content").replace('\r', '*').replace('\n', '+'));
+                   	   // Log.v(TAG,Base64.decode(json_data.getString("content"), Base64.DEFAULT).length+">>"+Base64.decode(json_data.getString("content"), Base64.DEFAULT));
+                   	   
+                   	   // String test = json_data.getString("content");
+                   	   // Log.v(TAG, Base64.decode(test, Base64.DEFAULT).length+">>"+Base64.decode(test, Base64.DEFAULT));
 	               }
+	               // System.out.println("-------------------------------");
+               	   // System.exit(0);  
                }
 	       } 
 	       catch(Exception e){
@@ -222,13 +243,6 @@ public class LoginService extends Service {
 	       
 	       
 	       if(!tPendingTransfers[0].getsContent().equals("NoPendingTransactions")) {
-	    	   
-	    	   // MITATEUtilities muSignalStrength = new MITATEUtilities();	    	      
-	    	   // MITATEApplication.getTelephonyManager().listen(muSignalStrength, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-	    	   
-	    	   // test t = new test();
-	    	   // MITATEApplication.getTelephonyManager().listen(t, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-	    	      	   
 	    	   
 	    	   tMeasurement = new Measurement();		            
 	    	   tMeasurement.start();
@@ -245,26 +259,6 @@ public class LoginService extends Service {
 	       
 	       if(MITATEApplication.bDebug) Log.i(TAG, "@executeLogin() : end");
 	       return true;
-	} 	
-	
-	class test extends PhoneStateListener {
-		
-		int iSignalStrength;
-		private Handler handler;
-		
-		test() {
-			handler = new Handler();
-			Looper.myLooper().prepare();			
-		}
-		
-	    @Override
-	    public void onSignalStrengthsChanged(SignalStrength signalStrength)
-	    {
-	       super.onSignalStrengthsChanged(signalStrength);
-	       iSignalStrength = signalStrength.getGsmSignalStrength();
-	       System.out.println("------------>q"+iSignalStrength);
-	       Toast.makeText(MITATEApplication.getCustomAppContext(), "Go to Firstdroid!!! GSM Cinr = "+ String.valueOf(signalStrength.getGsmSignalStrength()), Toast.LENGTH_SHORT).show();
-	    }
-	}
+	} 
 	
 }
