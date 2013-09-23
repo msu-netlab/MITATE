@@ -18,7 +18,7 @@ public class MNEPServer {
 	static String TAG = "MNEPServer";   
     static String sNTPServer = "us.pool.ntp.org"; 
     public int iUplinkOrDownlink;
-    public int iUDPPackets, iUDPBytes, iUDPPort; 
+    public int iUDPPackets, iUDPBytes, iUDPPort, iUdpHexBytes; 
     public int iTCPPackets, iTCPBytes, iTCPPort;
     public int iTransferId, iTransactionId, iExplicit;
     public static int iPacketDelay = 300;
@@ -68,7 +68,7 @@ public class MNEPServer {
             brReadFromClient.read(buf);
             sClientParameters = new String(buf);
             System.out.println(sClientParameters);
-            String[] saClientParameters = sClientParameters.trim().split(":;:");
+            String[] saClientParameters = sClientParameters.split(":;:");
             sUsername = saClientParameters[0];
             iPacketType = Integer.parseInt(saClientParameters[1]);
             iNumberOfBytes = Integer.parseInt(saClientParameters[2]);                       
@@ -90,7 +90,8 @@ public class MNEPServer {
             sContentType = saClientParameters[12];
 			sDeviceId = saClientParameters[13];
 			sDeviceName = saClientParameters[14];
-            sContent = saClientParameters[15];           
+			iUdpHexBytes = Integer.parseInt(saClientParameters[15]);
+            sContent = saClientParameters[16];           
             if(iExplicit == 0) {
             	if(iPacketType == 0 ) {
             			iUDPBytes = iNumberOfBytes/iUDPPackets;
@@ -334,7 +335,7 @@ public class MNEPServer {
         System.out.println("Variables sent: " + receiveAndSendConnectionParameters());
         if(iUDPBytes > 0) {
             uTestRun = new UDPTestRun(iUDPBytes, iUDPPackets, iUDPPort);                 
-            uTestRun.runUDPTest(iUplinkOrDownlink, iExplicit, sContent, sContentType);
+            uTestRun.runUDPTest(iUplinkOrDownlink, iExplicit, sContent, sContentType, iUdpHexBytes);
         }
         if(iTCPBytes > 0) {
             tTestRun = new TCPTestRun(iTCPBytes, iTCPPackets, iTCPPort);

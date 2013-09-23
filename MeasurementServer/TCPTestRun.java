@@ -49,28 +49,6 @@ public class TCPTestRun {
             	if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
             		baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
             }
-			/*
-            if(sContentType.equals("HEX")){
-            	if(sContent.length()%2 != 0)
-            		sContent.concat("0");
-            	sContent = new String(DatatypeConverter.parseHexBinary(sContent));
-            }
-            else if(sContentType.equals("BINARY")){
-            	int end = sContent.length()%8;
-            	if(end != 0){
-            		for(int istart = 0; istart<end; istart++)
-            		sContent.concat("0");
-            	}
-            	String s2 = "";   
-            	char nextChar;
-            	for(int iParse = 0; iParse < sContent.length()-8; iParse += 9)
-            	{
-            	     nextChar = (char)Integer.parseInt(sContent.substring(iParse, iParse+7), 2);
-            	     s2 += nextChar;
-            	}            	
-            	sContent = s2;
-            }
-*/
             for (int i = 0; i < iTCPPackets; i++) {
                 try{
                     if(iUplinkOrDownlink == 1) {
@@ -84,7 +62,7 @@ public class TCPTestRun {
 						{
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
 						}
-						System.out.println(sBuffer);
+						//System.out.println(sBuffer);
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
 						if(sContentType.equalsIgnoreCase("HEX"))
@@ -98,7 +76,7 @@ public class TCPTestRun {
                     	char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];
                         brReadFromClient.read(buf);
                         String sFromClient = new String(buf);
-						System.out.println(sFromClient);
+						//System.out.println(sFromClient);
                         long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = sFromClient.getBytes().length;
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;
