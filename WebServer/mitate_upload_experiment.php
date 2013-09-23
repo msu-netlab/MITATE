@@ -63,17 +63,34 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 						while($get_criteriaid_count = mysql_fetch_assoc($get_criteriaid_counts)) {
 							if($get_criteriaid_count[count] > 0)
 								$criteriaid = $get_criteriaid_count[maxval] + 1;
-						}
-						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $tempcriteria->networktype . ";" . $tempcriteria->starttime . ";" . $tempcriteria->endtime . ";" . $tempcriteria->minimumbatterypower . ";" . $tempcriteria->minimumsignalstrength. ";" . $tempcriteria->networkcarrier. ";" . $tempcriteria->devicemodelname;
-						$criteria_device_id = $tempcriteria->deviceid;
-						if($tempcriteria->deviceid != '') { 
-							$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$tempcriteria->deviceid')";
-							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-						}
-						if($tempcriteria->deviceid == '') {
-							$sql="INSERT INTO criteria (criteriaid, specification) VALUES($criteriaid,'$cstring')";
-							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-						}
+						}		
+						$criteria_devicemodelname = $tempcriteria->devicemodelname;
+						if($criteria_devicemodelname == '')
+							$criteria_devicemodelname = 'allDeviceModelNames';
+						$criteria_networkcarrier = $tempcriteria->networkcarrier;
+						if($criteria_networkcarrier == '')
+							$criteria_networkcarrier = 'allNetworkCarriers';
+						$criteria_minimumsignalstrength = $tempcriteria->minimumsignalstrength;
+						if($criteria_minimumsignalstrength == '')
+							$criteria_minimumsignalstrength = '0';
+						$criteria_minimumbatterypower = $tempcriteria->minimumbatterypower;
+						if($criteria_minimumbatterypower == '')
+							$criteria_minimumbatterypower = '0';
+						$criteria_deviceid = $tempcriteria->deviceid;
+						if($criteria_deviceid == '')
+							$criteria_deviceid = 'client';
+						$criteria_networktype = $tempcriteria->networktype;
+						if($criteria_networktype == '')
+							$criteria_networktype = 'allNetworkTypes';
+						$criteria_starttime = $tempcriteria->starttime;
+						if($criteria_starttime == '')
+							$criteria_starttime = '000001';
+						$criteria_endtime = $tempcriteria->endtime;
+						if($criteria_endtime == '')
+							$criteria_endtime = '235959';
+						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $criteria_networktype . ";" . $criteria_starttime . ";" . $criteria_endtime . ";" . $criteria_minimumbatterypower . ";" . $criteria_minimumsignalstrength . ";" . $criteria_networkcarrier . ";" . $criteria_devicemodelname;	 
+						$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$criteria_deviceid')";
+						if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 					}
 				}
 				$sql="INSERT INTO trans_criteria_link (criteriaid, transactionid) VALUES($criteriaid, $transactionid)";
@@ -105,7 +122,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 										$contentcheck = $tempcontent->contentid;	
 										if(!strcmp($contentcheck, $tempcontentid)) { 
 											$contenttostore = (string)$tempcontent->data;
-											$bytestostore = mb_strlen($contenttostore, '8bit');
+											$bytestostore = mb_strlen($contenttostore, '8bit') - (3 * substr_count($contenttostore, '\r\n')) ;
 											$protocoltype = $tempcontent->protocol;
 											$contenttype = $tempcontent->contenttype;
 										}
@@ -117,15 +134,12 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 									$bytestostore = ceil($bytestostore/2);
 								else if($contenttype == "BINARY")
 									$bytestostore = ceil($bytestostore/8);
-								$bytestostore = $bytestostore + 26;
+								$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
 								$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				
 								$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-  
-								//$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value) VALUES(9999, $transferid, $transactionid, 0)";
-								//if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 								$order++;
 							}
 						}
@@ -137,6 +151,6 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 			echo "$experiment_id";
 		}
 		else
-		echo "Invalid account credentials.";
+			echo "Invalid account credentials.";
 	}	
 ?>
