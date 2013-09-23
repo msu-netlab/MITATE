@@ -29,7 +29,7 @@
 			<content>
 				<contentid>content5</contentid>
 				<protocol>HTTP</protocol>
-				<data><![CDATA[GET /images/cdn.jpg HTTP/1.1\r\nHost: 192.168.1.4\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nConnection: keep-alive\r\n]]></data>
+				<data><![CDATA[GET /images/cdn.jpg HTTP/1.1\r\nHost: mitate.cs.montana.edu\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-us,en;q=0.5\r\nAccept-Encoding: gzip,deflate\r\nConnection: keep-alive\r\n]]></data>
 				<contenttype>ASCII</contenttype>
 			</content>
 		</contentdefine>
@@ -37,7 +37,7 @@
 			<transfer>
 				<id>t1</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>mitate.cs.montana.edu</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>80</portnumber>
@@ -206,21 +206,7 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
-				<networktype>wifi</networktype>
-				<starttime>000001</starttime>
-				<endtime>235959</endtime>
-				<deviceid>client</deviceid>
-			</criteria>
-			<criteria>
-				<id>c2</id>
-				<latitude>55.949504</latitude>
-				<longitude>68.056939</longitude>
-				<radius>5000</radius>
-				<networktype>wifi</networktype>
-				<starttime>000001</starttime>
-				<endtime>235959</endtime>
-				<deviceid>abc,def</deviceid>
-			</criteria>			
+			</criteria>		
 		</criteriadefine>
 	</defines>
 	<transactions>
@@ -262,46 +248,6 @@
 			</transfers>
 			<criteria>
 				<criteriaid>c1</criteriaid>
-			</criteria>
-		</transaction>
-		<transaction count="1">
-			<transfers>
-				<transfer repeat="1">
-					<transferid>t1</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t2</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t3</transferid>
-				</transfer >
-				<transfer repeat="2">
-					<transferid>t6</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t7</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t10</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t11</transferid>
-				</transfer>
-				<transfer repeat="3">
-					<transferid>t8</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t9</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t4</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t5</transferid>
-				</transfer>
-			</transfers>
-			<criteria>
-				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
