@@ -107,7 +107,7 @@ public class CDNTest {
 	   	   String sURL = "http://"+sServerName+"/cdn.php?" +
 	   			"username="+LoginService.sUserName+"&mobilecarrier="+(MITATEApplication.getTelephonyManager().getNetworkOperatorName().replaceAll("\\s", ""))+
 	   			"&transferid="+iTransferId+"&transactionid="+iTransacationId+"&size="+iBytesRead+"&oneway="+Oneway+
-	   			"&rtt="+RTT+"&time="+sClientTime+"&deviceid="+LoginService.sDeviceId+"&devicename="+Build.MODEL.replaceAll("\\s", "");
+	   			"&rtt="+RTT+"&time="+sClientTime+"&deviceid="+LoginService.sDeviceId+"&devicename="+MITATEApplication.getDeviceModel();
    	   
 	   	   System.out.println(sURL);
 	   	   
