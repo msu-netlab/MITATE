@@ -99,7 +99,7 @@ public class UDPTestRun {
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);
-					System.out.println(TAG+": @UDPTest : Packet- " + i + " sent, Total bytes sennt - "+iUDPTotalBytesSentToClient);
+					System.out.println(TAG+": @UDPTest : Packet- " + i + " sent, Total bytes sent - "+iUDPTotalBytesSentToClient);
                     Thread.sleep(MNEPServer.iPacketDelay);
                         
                     }

@@ -41,9 +41,9 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             while($pendingtestrow=mysql_fetch_assoc($pendingtestset))
      		{
 				$output[]= $pendingtestrow;
-				//$output[$i][content] = str_replace("\/", "/", $output[$i][content]);
 				if($output[$i][contenttype] == "HEX") {
-					$output[$i][content] = base64_encode(hex2bin($output[$i][content]));
+					if(strlen($output[$i][content]) % 2 != 0)
+						$output[$i][content] = $output[$i][content] . "0";
 				}
 				$output_transaction_id = $output[$i][transactionid];
 				$transaction_id_array[$i] = $output_transaction_id;
@@ -79,10 +79,4 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 }
 else
 	echo "Missing arguments";
-
-function hex2bin($h){
-	$r='';
-	for ($a=0; $a<strlen($h); $a+=2) { $r.=chr(hexdec($h{$a}.$h{($a+1)})); }
-	return $r;
-}
 ?>

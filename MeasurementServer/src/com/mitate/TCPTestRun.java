@@ -87,7 +87,10 @@ public class TCPTestRun {
 						System.out.println(sBuffer);
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
-                        iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
+						if(sContentType.equalsIgnoreCase("HEX"))
+							iTCPTotalBytesSentToClient += sBuffer.length();
+						else
+							iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
                         System.out.println(TAG+"@runTCPTest : Sent - " + i +", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPTotalBytesSentToClient);	
                         Thread.sleep(MNEPServer.iPacketDelay);
                     }

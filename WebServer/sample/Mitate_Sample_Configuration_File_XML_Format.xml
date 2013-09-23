@@ -17,7 +17,7 @@
 			<content>
 				<contentid>content3</contentid>
 				<protocol>BitTorrent</protocol>
-				<data><![CDATA[0100be07de559e401806a55d000400006267b28d89e4ec40f024e8b38179cdab9c5c1e28bae52af9540bbc26b036adf2336a936858c3172638a5366115e03a93e9f8ea4c9b393c23bb03a35c8f7b6a589cf2ea9497d1facc9e58b154dbad92105ba73a677174ce0a81a90aeffaa7144527b71828f39478f6f200d2bb6aca65cd73c316a7c0581caaf79f8ff7c7d13b5c0d7caa12d58e09c282c41b4fbcc78393f89eddf1d65445ef4e301ef05be6c6c8fae910c4c4572c830989f87c6722bec8b3980248fbe3b20da996ef2edd54b7a830ed2c6447453840daa1865002623ca918211ff852f3dbf880eb5182f2582ec8ff465d90deec95c96e99ff9c7cda582bab870cd02c37849e61ae5fcbf64582b38fcd19657178a65827c879c194b44a635aa59e18968ae8f70f1911e2ef5caf00276c10499e503d1a751064a04dd1d2bb1b6efb991fd33f2c7711f1579ed6abc1e58d8386c9d330f8802430d5474b1633d4e5d563da53855156988ec5cdf61fa77fced44f96364349709e1ad682220e2179240e429c1fd7a28469a378a02227c0ab50aac16874e8283d109a585863be125c04071e2eb53a7e34d790e019ad8e958696778885b5f6db3a1cb8d731995e788f4b33a838e74cd457daf4c8e87abd7cdcc5a15b87bdc87fb20f610357a728f1d7b171d60b6a499608e3445005c52ac277d06f638fe5dd9bed18a92498861e7099c90c8c25566379e15a1e5a6b7d89ba9deb1642f7e1984f981f]]></data>
+				<data><![CDATA[0100be07de559e401806a55d000400006267b28d89e4ec40f024e8b38179cdab9c5c1e28bae52af9540bbc26b036adf2336a936858c3172638a5366115e03a93e9f8ea4c9b393c23bb03a35c8f7b6a589cf2ea9497d1facc9e58b154dbad92105ba73a677174ce0a81a90aeffaa7144527b71828f39478f6f200d2bb6aca65cd73c316a7c0581caaf79f8ff7c7d13b5c0d7caa12d58e09c282c41b4fbcc78393f89eddf1d65445ef4e301ef05be6c6c8fae910c4c4572c830989f87c6722bec8b3980248fbe3b20da996ef2edd54b7a830ed2c6447453840daa1865002623ca918211ff852f3dbf880eb5182f2582ec8ff465d90deec95c96e99ff9c7cda582bab870cd02c37849e61ae5fcbf64582b38fcd19657178a65827c879c194b44a635aa59e18968ae8f70f1911e2ef5caf00276c10499e503d1a751064a04dd1d2bb1b6efb991fd33f2c7711f1579ed6abc1e58d8386c9d330f8802430d5474b1633d4e5d563da53855156988ec5cdf61fa77fced44f96364349709e1ad682220e2179240e429c1fd7a28469a378a02227c0ab50aac16874e8283d109a585863be125c04071e2eb53a7e34d790e019ad8e958696778885b5f6db3a1cb8d731995e788f4b33a838e74cd457daf4c8e87abd7cdcc5a15b87bdc87fb20f610357a728f1d7b171d60b6a499608e3445005c52ac277d06f638fe5dd9bed18a92498861e7099c90c8c25566379e15a1e5a6b7d89ba9deb1642f7e1984f98f]]></data>
 				<contenttype>HEX</contenttype>
 			</content>
 			<content>
@@ -84,7 +84,7 @@
 				<sourceip>client</sourceip>
 				<destinationip>192.168.1.4</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>2</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
 				<bytes>
@@ -92,7 +92,7 @@
 					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
-				<noofpackets>10</noofpackets>
+				<noofpackets>2</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t5</id>
@@ -144,7 +144,7 @@
 				<sourceip>192.168.1.4</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>2</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
 				<bytes>
@@ -152,7 +152,7 @@
 					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
-				<noofpackets>10</noofpackets>
+				<noofpackets>2</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t9</id>
@@ -213,7 +213,7 @@
 		<transaction count="2">
 			<transfers>
 				<transfer repeat="1">
-					<transferid>t10</transferid>
+					<transferid>t4</transferid>
 				</transfer>
 			</transfers>
 			<criteria>
