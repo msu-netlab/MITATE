@@ -18,11 +18,11 @@ public class MNEPServer {
 	static String TAG = "MNEPServer";   
     static String sNTPServer = "us.pool.ntp.org"; 
     public int iUplinkOrDownlink;
-    public int iUDPPackets, iUDPBytes, iUDPPort; 
+    public int iUDPPackets, iUDPBytes, iUDPPort, iUdpHexBytes; 
     public int iTCPPackets, iTCPBytes, iTCPPort;
     public int iTransferId, iTransactionId, iExplicit;
     public static int iPacketDelay = 300;
-    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "", sDeviceId = "";
+    public String sMobileNetworkCarrier = "", sUsername = "", sDeviceName = "", sContent = "", sContentType = "", sDeviceId = "", isDeviceInCall = "";
     public static long lServerOffsetFromNTP;
     public long lClientOffsetFromNTP;
     
@@ -68,7 +68,7 @@ public class MNEPServer {
             brReadFromClient.read(buf);
             sClientParameters = new String(buf);
             System.out.println(sClientParameters);
-            String[] saClientParameters = sClientParameters.trim().split(":;:");
+            String[] saClientParameters = sClientParameters.split(":;:");
             sUsername = saClientParameters[0];
             iPacketType = Integer.parseInt(saClientParameters[1]);
             iNumberOfBytes = Integer.parseInt(saClientParameters[2]);                       
@@ -90,7 +90,8 @@ public class MNEPServer {
             sContentType = saClientParameters[12];
 			sDeviceId = saClientParameters[13];
 			sDeviceName = saClientParameters[14];
-            sContent = saClientParameters[15];           
+			iUdpHexBytes = Integer.parseInt(saClientParameters[15]);
+            sContent = saClientParameters[16];           
             if(iExplicit == 0) {
             	if(iPacketType == 0 ) {
             			iUDPBytes = iNumberOfBytes/iUDPPackets;
@@ -146,51 +147,54 @@ public class MNEPServer {
             System.out.println(sTCPConnectionSocket.getRemoteSocketAddress());		
             brReadFromClient = new BufferedReader(new InputStreamReader(sTCPConnectionSocket.getInputStream(), "UTF-8"));
             String sDataFromClient = "";           
-            for (int i=0; i<14; i++){
+            for (int i=0; i<15; i++){
                 sDataFromClient = brReadFromClient.readLine();
                 switch(i) {
                     case 0: tsaTCPPacketReceivedTimes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                            System.out.println("tts"+tsaTCPPacketReceivedTimes_Client);
+                            //System.out.println("tts"+tsaTCPPacketReceivedTimes_Client);
                             break;
                     case 1: iaTCPBytes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                    		System.out.println("tbytes-"+iaTCPBytes_Client);
+                    		//System.out.println("tbytes-"+iaTCPBytes_Client);
                     		break;				
                     case 2: sTCPBytesReceived_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                            System.out.println("tbyterec"+sTCPBytesReceived_Client);
+                            //System.out.println("tbyterec"+sTCPBytesReceived_Client);
                             break;
                     case 3: sTCPBytesSent_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                            System.out.println("tbytesent"+sTCPBytesSent_Client);
+                            //System.out.println("tbytesent"+sTCPBytesSent_Client);
                             break;
                     case 4: tsaUDPPacketReceivedTimes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                            System.out.println("uts"+tsaUDPPacketReceivedTimes_Client);
+                            //System.out.println("uts"+tsaUDPPacketReceivedTimes_Client);
                             break;
                     case 5: iaUDPBytes_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                    		System.out.println("tbytes"+iaUDPBytes_Client);
+                    		//System.out.println("tbytes"+iaUDPBytes_Client);
                     		break;				
                     case 6: sUDPBytesReceived_Client = (sDataFromClient == null ? new String() : sDataFromClient);
-                            System.out.println("tbyterec"+sUDPBytesReceived_Client);
+                            //System.out.println("tbyterec"+sUDPBytesReceived_Client);
                             break;
                     case 7: sClientTime = (sDataFromClient == null ? new String() : sDataFromClient);
                             sClientTime = sClientTime.substring(0, sClientTime.indexOf("."));
-                            System.out.println(sClientTime);
+                            //System.out.println(sClientTime);
                             break;	
 					case 8: sLatitudeBeforeTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sLatitudeBeforeTransferExecution" + sLatitudeBeforeTransferExecution);
+							//System.out.println("sLatitudeBeforeTransferExecution" + sLatitudeBeforeTransferExecution);
 							break;
 					case 9: sLongitudeBeforeTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sLongitudeBeforeTransferExecution" + sLongitudeBeforeTransferExecution);
+							//System.out.println("sLongitudeBeforeTransferExecution" + sLongitudeBeforeTransferExecution);
 							break;
 					case 10: sLatitudeAfterTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sLatitudeAfterTransferExecution" + sLatitudeAfterTransferExecution);
+							//System.out.println("sLatitudeAfterTransferExecution" + sLatitudeAfterTransferExecution);
 							break;
 					case 11: sLongitudeAfterTransferExecution = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sLongitudeAfterTransferExecution" + sLongitudeAfterTransferExecution);
+							//System.out.println("sLongitudeAfterTransferExecution" + sLongitudeAfterTransferExecution);
 							break;
 					case 12: sMobileSignalStrength = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sMobileSignalStrength" + sMobileSignalStrength);
+							//System.out.println("sMobileSignalStrength" + sMobileSignalStrength);
 							break;
 					case 13: sAccelerometerReading = (sDataFromClient == null ? new String() : sDataFromClient);
-							System.out.println("sAccelerometerReading" + sAccelerometerReading);
+							//System.out.println("sAccelerometerReading" + sAccelerometerReading);
+							break;
+					case 14: isDeviceInCall = (sDataFromClient == null ? new String() : sDataFromClient);
+							//System.out.println("isDeviceInCall" + isDeviceInCall);
 							break;
                 }
             }
@@ -305,6 +309,7 @@ public class MNEPServer {
 			   s.execute("insert into metricdata values(10036, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[0]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 			   s.execute("insert into metricdata values(10037, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[1]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 			   s.execute("insert into metricdata values(10038, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[2]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
+			   s.execute("insert into metricdata values(10039, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(isDeviceInCall) + ", '" + sClientTime + "', '" + sDeviceId + "')");
         	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
         	   conn.close();
         	   System.out.println ("Entry made in Database");  
@@ -330,7 +335,7 @@ public class MNEPServer {
         System.out.println("Variables sent: " + receiveAndSendConnectionParameters());
         if(iUDPBytes > 0) {
             uTestRun = new UDPTestRun(iUDPBytes, iUDPPackets, iUDPPort);                 
-            uTestRun.runUDPTest(iUplinkOrDownlink, iExplicit, sContent, sContentType);
+            uTestRun.runUDPTest(iUplinkOrDownlink, iExplicit, sContent, sContentType, iUdpHexBytes);
         }
         if(iTCPBytes > 0) {
             tTestRun = new TCPTestRun(iTCPBytes, iTCPPackets, iTCPPort);

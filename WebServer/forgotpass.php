@@ -72,7 +72,6 @@
 <body bgcolor="white" style="font-family: Calibri;">
 
 <?php include("umenu.php"); ?>
-
  <form action="" method="post" name="UserfpForm" >
     <table align="center" 
         
@@ -107,7 +106,9 @@
   if($row['username'] == $_POST["lusername"] || $row['email'] == $_POST["lemail"])
   {
   $k=1;
-  $msg="This is a recovery email for your account at MNEP System as requested by you. Your Account details are as follows:  Username - " . $row['username'] . ", Password - " . $row['pass'] . ", Email - " . $row['email'] ;
+  $decrypted_password = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), base64_decode($row[pass]), MCRYPT_MODE_CBC, md5(md5("mitate"))), "\0");
+
+  $msg="This is a recovery email for your account at MNEP System as requested by you. Your Account details are as follows:  Username - " . $row['username'] . ", Password - " . $decrypted_password . ", Email - " . $row['email'] ;
   mail($row['email'], "Password Recovery - NMEP", $msg);
   printf("<h4 >Email Sent</h4>");
    echo "An email has been sent to the email address you registered with the detail you provided." ;
