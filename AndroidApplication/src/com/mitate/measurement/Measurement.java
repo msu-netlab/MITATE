@@ -20,6 +20,7 @@ import android.os.Build;
 import android.telephony.CellInfoLte;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
 import com.mitate.MITATEApplication;
 import com.mitate.service.LoginService;
@@ -72,6 +73,7 @@ public class Measurement extends Thread implements SensorEventListener {
 	
 		private boolean sendAndReceiveParameters(String serverip, int packetype, String sUserName, int bytes, int transferid, int transactionid, 
 				int direction, int packetdelay, int noofpackets, int explicit, String content, String portnumber, String contenttype) {
+			
 			boolean done = false;
 			sServerIP = serverip;
 			
@@ -82,6 +84,23 @@ public class Measurement extends Thread implements SensorEventListener {
 			    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);
 			    int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 			    System.out.println("battery power - "+status);
+				
+				if(contenttype.equalsIgnoreCase("hex")) {
+					/* Log.v(TAG, content+"<<<--------------->"+content.length());
+					content = new String(Base64.decode(content, Base64.DEFAULT));
+					Log.v(TAG, content+"<<<<<<<--------------->"+content.length()); */
+					
+					String sTempContent = "";
+					// Log.v(TAG, "-------++++-------->"+content);
+					for(int k=0; k<content.length(); k+=2) {
+						sTempContent += (char)(Integer.parseInt(content.substring(k,k+2), 16));
+					}
+					
+					content = sTempContent;
+
+					Log.v(TAG, "hex---------------->"+content+">>"+bytes+">>"+content.length()+">>"+content.getBytes().length);
+				}
+			    
 				
 		        int iTCPConnectionRetryCount = 0;
 		        
@@ -110,12 +129,13 @@ public class Measurement extends Thread implements SensorEventListener {
 				// newcontent = content.replaceAll("\\n","newlinecharacter");
 				
 				/* bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
-				direction+":;:"+lClientOffsetFromNTP+":;:"+packetdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-				":;:"+content+":;:"+portnumber+":;:"+contenttype+"\n"); //+":"+MITATEUtilities.lTimeDifference+"\n"); */
+				direction+":;:"+lClientOffsetFromNTP+":;:"+p						bwWriteToServer.write()acketdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
+				":;:"+content+":;:"+portnumber+":;:"+contenttype+"\n"); //+":"+MITATEUtilities.lTimeDifference+"\n"); */ 
+				
 				
 				bwWriteToClient.write(sUserName+":;:"+packetype+":;:"+bytes+":;:"+transferid+":;:"+transactionid+":;:"+
 						direction+":;:"+lClientOffsetFromNTP+":;:"+packetdelay+":;:"+sCarrierName+":;:"+noofpackets+":;:"+explicit+
-						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+Build.MODEL.replaceAll("\\s", "")+":;:"+content+"\n"); 
+						":;:"+portnumber+":;:"+contenttype+":;:"+LoginService.sDeviceId+":;:"+Build.MODEL+":;:"+(content.getBytes().length+26)+":;:"+content+":;:"); 
 				
 				bwWriteToClient.flush();
 				
@@ -141,7 +161,7 @@ public class Measurement extends Thread implements SensorEventListener {
 				iTCPPort = Integer.parseInt(saParameters[5].trim());				
 				lServerOffsetFromNTP = Long.parseLong(saParameters[6].trim());
 				
-				Log.v(TAG, "port num from server - udp : "+iUDPPort+", tcp : "+iTCPPort);
+				// Log.v(TAG, "port num from server - udp : "+iUDPPort+", tcp : "+iTCPPort);
 
 				done = true;
 				sConnectionSocket.close();
@@ -174,7 +194,7 @@ public class Measurement extends Thread implements SensorEventListener {
 					} catch(Exception e) {						
 						Log.e(TAG, "@sendtimes : retry - "+iTCPConnectionRetryCount+", error - "+e.getMessage());
 						if(iTCPConnectionRetryCount == 5) {
-							Log.e(TAG, "@sendtimes : connection failed");
+							Log.e(TAG, "@sendtimes : connection failed");   
 							return 0;
 						}	
 					}
@@ -203,7 +223,8 @@ public class Measurement extends Thread implements SensorEventListener {
 						sAfterExecCoordinates.split(":")[0]+"\n"+
 						sAfterExecCoordinates.split(":")[1]+"\n"+
 						sSignalStrength+"\n"+
-						sAccelerometerReading+"\n"
+						sAccelerometerReading+"\n"+
+						MITATEApplication.isCallActive()+"\n"
 						);
 				bwWriteToClient.flush();
 				
@@ -245,12 +266,8 @@ public class Measurement extends Thread implements SensorEventListener {
 			for(int j=0; j<LoginService.tPendingTransfers.length && !MITATEActivity.bStopTransactionExecution; j++) {
 				if(MITATEApplication.bDebug)  Log.d(TAG, "@run : request parameters");
 				
-				System.out.println("detination - "+LoginService.tPendingTransfers[j].getsSourceIP());
-				
-				System.out.println("response = "+LoginService.tPendingTransfers[j].getiResponse());
-				
 				if(LoginService.tPendingTransfers[j].getiResponse() == 1) {
-					System.out.println("response = 1");
+					System.out.println("response = 1"); 
 					ctCDNTest = new CDNTest(LoginService.tPendingTransfers[j].getiTransferid(), LoginService.tPendingTransfers[j].getiTransactionid(), LoginService.tPendingTransfers[j].getsServerIP(),
 							LoginService.tPendingTransfers[j].getsPortNumber(), LoginService.tPendingTransfers[j].getsContent(), LoginService.tPendingTransfers[j].getiNoOfPackets());
 					ctCDNTest.runCDNTest();
@@ -289,13 +306,13 @@ public class Measurement extends Thread implements SensorEventListener {
 			        sSignalStrength = ""+cellSignalStrengthlte.getAsuLevel();
 				
 				
-				System.out.println("----------------?"+LoginService.tPendingTransfers[j].getsContent());
+				// System.out.println("----------------?"+LoginService.tPendingTransfers[j].getsContent());
 				// System.out.println("current- "+System.currentTimeMillis()+", start- "+lStartTime+", poll- "+LoginService.lPollInterval+", calc- "+(System.currentTimeMillis() - lStartTime + 15000));
 				if(bGotVars) { // && (System.currentTimeMillis() - lStartTime + 15000) < LoginService.lPollInterval) {
 					
 					ttTCPTest =  null;
 					utUDPTest = null;
-
+					
 						if(LoginService.tPendingTransfers[j].getiPacketType() == 1 || LoginService.tPendingTransfers[j].getiPacketType() == 0) {
 							utUDPTest = new UDPTest(sServerIP, iUDPPort, iUDPBytes, iUDPPackets, iDirection, lServerOffsetFromNTP, iPacketDelay, iExplicit, sContent, sContentType);
 							utUDPTest.runUDPTest();  // if test fails do something
