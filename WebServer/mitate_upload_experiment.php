@@ -1,5 +1,7 @@
 <?php
-$con = mysql_connect("localhost","mitate","Database4Mitate");
+libxml_use_internal_errors(true); 
+
+$con = mysql_connect("nl.cs.montana.edu","mitate","Database4Mitate");
 if (!$con)
 {
 	die('Could not connect: ' . mysql_error());
@@ -29,128 +31,165 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 					$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
 					$final_file_path = $file_name_without_extension . $experiment_id . "." . $file_extension;
 					mkdir("user_accounts/$username/$experiment_id", 0777);
-					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$experiment_id/" . $final_file_path);		
-					$yesdone = 1;
-				}
-			}
-			else echo "Error: File not specified";
-			$filepath = "user_accounts/" . $username . "/$experiment_id/" . $final_file_path;
-			$xml = simplexml_load_file("$filepath");
-			$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
-			if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-			foreach($xml->transactions->transaction as $temptransaction) {
-				$order=1;
-				$transactionid = $start_value;
-				$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transaction1");
-				while($get_transactionid_count = mysql_fetch_assoc($get_transactionid_counts)) {
-					if($get_transactionid_count[count] > 0)
-						$transactionid = $get_transactionid_count[maxval] + 1;
-				}
-				$transaction_count = $temptransaction["count"];
-				if($transaction_count != "") { 
-					$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
-					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-				}
-				if($transaction_count == ""){
-					$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
-					if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-				}
-				foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {
-					$ccheck = $tempcriteria->id;
-					if(!strcmp($ccheck, $temptransaction->criteria->criteriaid)) { 
-						$criteriaid = $start_value;
-						$get_criteriaid_counts = mysql_query("SELECT count(*) as count, max(criteriaid) as maxval from criteria");
-						while($get_criteriaid_count = mysql_fetch_assoc($get_criteriaid_counts)) {
-							if($get_criteriaid_count[count] > 0)
-								$criteriaid = $get_criteriaid_count[maxval] + 1;
-						}		
-						$criteria_devicemodelname = $tempcriteria->devicemodelname;
-						if($criteria_devicemodelname == '')
-							$criteria_devicemodelname = 'allDeviceModelNames';
-						$criteria_networkcarrier = $tempcriteria->networkcarrier;
-						if($criteria_networkcarrier == '')
-							$criteria_networkcarrier = 'allNetworkCarriers';
-						$criteria_minimumsignalstrength = $tempcriteria->minimumsignalstrength;
-						if($criteria_minimumsignalstrength == '')
-							$criteria_minimumsignalstrength = '0';
-						$criteria_minimumbatterypower = $tempcriteria->minimumbatterypower;
-						if($criteria_minimumbatterypower == '')
-							$criteria_minimumbatterypower = '0';
-						$criteria_deviceid = $tempcriteria->deviceid;
-						if($criteria_deviceid == '')
-							$criteria_deviceid = 'client';
-						$criteria_networktype = $tempcriteria->networktype;
-						if($criteria_networktype == '')
-							$criteria_networktype = 'allNetworkTypes';
-						$criteria_starttime = $tempcriteria->starttime;
-						if($criteria_starttime == '')
-							$criteria_starttime = '000001';
-						$criteria_endtime = $tempcriteria->endtime;
-						if($criteria_endtime == '')
-							$criteria_endtime = '235959';
-						$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $criteria_networktype . ";" . $criteria_starttime . ";" . $criteria_endtime . ";" . $criteria_minimumbatterypower . ";" . $criteria_minimumsignalstrength . ";" . $criteria_networkcarrier . ";" . $criteria_devicemodelname;	 
-						$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$criteria_deviceid')";
-						if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-					}
-				}
-				$sql="INSERT INTO trans_criteria_link (criteriaid, transactionid) VALUES($criteriaid, $transactionid)";
-				if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
- 
-				foreach($temptransaction->transfers[0]->transfer as $temptransferr) {
-					$temptransferid = $temptransferr->transferid;
-					$transfer_repeat = $temptransferr["repeat"];
-					while($transfer_repeat > 0) {
-						foreach($xml->defines->transferdefine->transfer as $temptransfer) {
-							$tcheck = $temptransfer->id;
-							if(!strcmp($tcheck, $temptransferid)) { 
-								$transferid = $start_value;
-								$get_transferid_counts = mysql_query("SELECT count(*) as count, max(transferid) as maxval from transfer");
-								while($get_transferid_count = mysql_fetch_assoc($get_transferid_counts)) {
-									if($get_transferid_count[count] > 0)
-										$transferid = $get_transferid_count[maxval] + 1;
+					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$experiment_id/" . $final_file_path);					
+					$filename_validate = 'sample/Mitate_Sample_Configuration_File_XML_Format.xml';
+					$xsd_document = 'sample/Mitate_Sample_Configuration_File_XML_Format.xsd';
+					$dom = new DomDocument(); 
+					if (!$dom->load($filename_validate)) 
+						echo "We detected errors in your XML file. It is recommended that you must open your XML in browser to check for any syntactical errors.";
+					else {
+						if (!$dom->schemaValidate($xsd_document)) 			
+							libxml_display_errors();  
+						else {	
+							$filepath = "user_accounts/" . $username . "/$experiment_id/" . $final_file_path;
+							$xml = simplexml_load_file("$filepath");
+							$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
+							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+							foreach($xml->transactions->transaction as $temptransaction) {
+								$order=1;
+								$transactionid = $start_value;
+								$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transaction1");
+								while($get_transactionid_count = mysql_fetch_assoc($get_transactionid_counts)) {
+									if($get_transactionid_count[count] > 0)
+										$transactionid = $get_transactionid_count[maxval] + 1;
 								}
-								$datetime = idate("Y") . "-" . idate("m") . "-" . idate("d") . " " .  idate("H") . ":" . idate("i") . ":" . idate("s"); 
-								if($temptransfer->bytes->explicit == 0) {
-									$bytestostore = $temptransfer->bytes->noofbytes;
-									$contenttostore = "";
-									$protocoltype = "";
-									$contenttype = "ASCII";
+								$transaction_count = $temptransaction["count"];
+								if($transaction_count != "") { 
+									$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
+									if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 								}
-								elseif($temptransfer->bytes->explicit == 1) {
-									$tempcontentid = $temptransfer->bytes->contentid;
-									foreach($xml->defines->contentdefine->content as $tempcontent) {
-										$contentcheck = $tempcontent->contentid;	
-										if(!strcmp($contentcheck, $tempcontentid)) { 
-											$contenttostore = (string)$tempcontent->data;
-											$bytestostore = mb_strlen($contenttostore, '8bit') - (3 * substr_count($contenttostore, '\r\n')) ;
-											$protocoltype = $tempcontent->protocol;
-											$contenttype = $tempcontent->contenttype;
-										}
+								if($transaction_count == ""){
+									$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
+									if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+								}
+								foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {
+									$ccheck = $tempcriteria->id;
+									if(!strcmp($ccheck, $temptransaction->criteria->criteriaid)) { 
+										$criteriaid = $start_value;
+										$get_criteriaid_counts = mysql_query("SELECT count(*) as count, max(criteriaid) as maxval from criteria");
+										while($get_criteriaid_count = mysql_fetch_assoc($get_criteriaid_counts)) {
+											if($get_criteriaid_count[count] > 0)
+												$criteriaid = $get_criteriaid_count[maxval] + 1;
+										}		
+										$criteria_devicemodelname = $tempcriteria->devicemodelname;
+										if($criteria_devicemodelname == '')
+											$criteria_devicemodelname = 'allDeviceModelNames';
+										$criteria_networkcarrier = $tempcriteria->networkcarrier;
+										if($criteria_networkcarrier == '')
+											$criteria_networkcarrier = 'allNetworkCarriers';
+										$criteria_minimumsignalstrength = $tempcriteria->minimumsignalstrength;
+										if($criteria_minimumsignalstrength == '')
+											$criteria_minimumsignalstrength = '0';
+										$criteria_minimumbatterypower = $tempcriteria->minimumbatterypower;
+										if($criteria_minimumbatterypower == '')
+											$criteria_minimumbatterypower = '0';
+										$criteria_deviceid = $tempcriteria->deviceid;
+										if($criteria_deviceid == '')
+											$criteria_deviceid = 'client';
+										$criteria_networktype = $tempcriteria->networktype;
+										if($criteria_networktype == '')
+											$criteria_networktype = 'allNetworkTypes';
+										$criteria_starttime = $tempcriteria->starttime;
+										if($criteria_starttime == '')
+											$criteria_starttime = '000001';
+										$criteria_endtime = $tempcriteria->endtime;
+										if($criteria_endtime == '')
+											$criteria_endtime = '235959';
+										$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $criteria_networktype . ";" . $criteria_starttime . ";" . $criteria_endtime . ";" . $criteria_minimumbatterypower . ";" . $criteria_minimumsignalstrength . ";" . $criteria_networkcarrier . ";" . $criteria_devicemodelname;	 
+										$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$criteria_deviceid')";
+										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 									}
 								}
-								$tempexplicit = $temptransfer->bytes->explicit;
-								$contenttostore = str_replace("'", "\'", $contenttostore);
-								if($contenttype == "HEX")
-									$bytestostore = ceil($bytestostore/2);
-								else if($contenttype == "BINARY")
-									$bytestostore = ceil($bytestostore/8);
-								$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
-								$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
+								$sql="INSERT INTO trans_criteria_link (criteriaid, transactionid) VALUES($criteriaid, $transactionid)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+ 
+								foreach($temptransaction->transfers[0]->transfer as $temptransferr) {
+									$temptransferid = $temptransferr->transferid;
+									$transfer_repeat = $temptransferr["repeat"];
+									while($transfer_repeat > 0) {
+										foreach($xml->defines->transferdefine->transfer as $temptransfer) {
+											$tcheck = $temptransfer->id;
+											if(!strcmp($tcheck, $temptransferid)) { 
+												$transferid = $start_value;
+												$get_transferid_counts = mysql_query("SELECT count(*) as count, max(transferid) as maxval from transfer");
+												while($get_transferid_count = mysql_fetch_assoc($get_transferid_counts)) {
+													if($get_transferid_count[count] > 0)
+														$transferid = $get_transferid_count[maxval] + 1;
+												}
+												$datetime = idate("Y") . "-" . idate("m") . "-" . idate("d") . " " .  idate("H") . ":" . idate("i") . ":" . idate("s"); 
+												if($temptransfer->bytes->explicit == 0) {
+													$bytestostore = $temptransfer->bytes->noofbytes;
+													$contenttostore = "";
+													$protocoltype = "";
+													$contenttype = "ASCII";
+												}
+												elseif($temptransfer->bytes->explicit == 1) {
+													$tempcontentid = $temptransfer->bytes->contentid;
+													foreach($xml->defines->contentdefine->content as $tempcontent) {
+														$contentcheck = $tempcontent->contentid;	
+														if(!strcmp($contentcheck, $tempcontentid)) { 
+															$contenttostore = (string)$tempcontent->data;
+															$bytestostore = mb_strlen($contenttostore, '8bit') - (3 * substr_count($contenttostore, '\r\n')) ;
+															$protocoltype = $tempcontent->protocol;
+															$contenttype = $tempcontent->contenttype;
+														}
+													}
+												}
+												$tempexplicit = $temptransfer->bytes->explicit;
+												$contenttostore = str_replace("'", "\'", $contenttostore);
+												if($contenttype == "HEX")
+													$bytestostore = ceil($bytestostore/2);
+												else if($contenttype == "BINARY")
+													$bytestostore = ceil($bytestostore/8);
+												$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
+												$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
+												if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				
-								$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
-								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
-								$order++;
-							}
+												$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
+												if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+												$order++;
+											}
+										}
+										$transfer_repeat = $transfer_repeat - 1;
+									}
+								}
+							}	
+							$yesdone = 1;
+							echo "$experiment_id";
 						}
-						$transfer_repeat = $transfer_repeat - 1;
-					}
+					}	
 				}
 			}
-			if($yesdone == 1)
-			echo "$experiment_id";
+			else 
+				echo "Error: File not specified";
 		}
 		else
 			echo "Invalid account credentials.";
-	}	
+		}	
+
+function libxml_display_error($error) { 
+	$return = "\n"; 
+	switch ($error->level) { 
+		case LIBXML_ERR_WARNING: $return .= "Warning $error->code: "; 
+								break; 
+		case LIBXML_ERR_ERROR: $return .= "Error $error->code: "; 
+								break; 
+		case LIBXML_ERR_FATAL: $return .= "Fatal Error $error->code: "; 
+								break; 
+	} 
+	$return .= trim($error->message); 
+	if ($error->file) { 
+		$return .= " in $error->file"; 
+	} 
+	$return .= " on line $error->line\n"; 
+	return $return; 
+} 
+
+function libxml_display_errors() { 
+	$errors = libxml_get_errors(); 
+	foreach ($errors as $error) { 
+		print libxml_display_error($error); 
+	} 
+	libxml_clear_errors(); 
+}
 ?>
