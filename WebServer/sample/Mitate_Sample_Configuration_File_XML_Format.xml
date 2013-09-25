@@ -44,7 +44,6 @@
 				<response>1</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content5</contentid>
 				</bytes>
 				<noofpackets>2</noofpackets>
@@ -59,7 +58,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content1</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -74,7 +72,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content2</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -89,7 +86,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -104,7 +100,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content4</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -119,7 +114,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content1</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -134,7 +128,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content2</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -149,7 +142,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -164,7 +156,6 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content4</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -180,7 +171,6 @@
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
-					<contentid></contentid>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
@@ -195,7 +185,6 @@
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
-					<contentid></contentid>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
@@ -206,7 +195,21 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
+				<networktype>wifi</networktype>
+				<starttime>000001</starttime>
+				<endtime>235959</endtime>
+				<deviceid>123, 456, 789, 1010299</deviceid>
+				<minimumbatterypower>10</minimumbatterypower>
+				<minimumsignalstrength>10</minimumsignalstrength>
+				<networkcarrier>Verizon Wireless</networkcarrier>
+				<devicemodelname>Galaxy Nexus</devicemodelname>
 			</criteria>		
+			<criteria>
+				<id>c2</id>
+				<latitude>45.66962856799364</latitude>
+				<longitude>-111.06049848720431</longitude>
+				<radius>5000</radius>
+			</criteria>	
 		</criteriadefine>
 	</defines>
 	<transactions>
@@ -248,6 +251,46 @@
 			</transfers>
 			<criteria>
 				<criteriaid>c1</criteriaid>
+			</criteria>
+		</transaction>
+		<transaction count="2">
+			<transfers>
+				<transfer repeat="1">
+					<transferid>t1</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t2</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t3</transferid>
+				</transfer >
+				<transfer repeat="1">
+					<transferid>t6</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t7</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t10</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t11</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t8</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t9</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t4</transferid>
+				</transfer>
+				<transfer repeat="1">
+					<transferid>t5</transferid>
+				</transfer>
+			</transfers>
+			<criteria>
+				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
