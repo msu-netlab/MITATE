@@ -215,37 +215,37 @@
 	<transactions>
 		<transaction count="2">
 			<transfers>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="10">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="2" delay="20">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="30">
 					<transferid>t3</transferid>
 				</transfer >
-				<transfer repeat="1">
+				<transfer repeat="1" delay="40">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="5" delay="50">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="60">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="70">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="80">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="90">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="100">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="110">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
@@ -255,37 +255,37 @@
 		</transaction>
 		<transaction count="2">
 			<transfers>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="10">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="20">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="30">
 					<transferid>t3</transferid>
 				</transfer >
-				<transfer repeat="1">
+				<transfer repeat="1" delay="40">
 					<transferid>t6</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="50">
 					<transferid>t7</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="60">
 					<transferid>t10</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="70">
 					<transferid>t11</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="80">
 					<transferid>t8</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="90">
 					<transferid>t9</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="100">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="110">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>

@@ -91,6 +91,7 @@
           <xs:element ref="noofpackets"/>
         </xs:sequence>
       </xs:choice>
+      <xs:attribute name="delay" type="xs:integer"/>
       <xs:attribute name="repeat" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
@@ -118,30 +119,32 @@
   <xs:element name="criteria">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" ref="criteriaid"/>
         <xs:sequence minOccurs="0">
           <xs:element ref="id"/>
           <xs:element ref="latitude"/>
           <xs:element ref="longitude"/>
           <xs:element ref="radius"/>
         </xs:sequence>
-        <xs:sequence minOccurs="0">
-          <xs:element ref="networktype"/>
-          <xs:element ref="starttime"/>
-          <xs:element ref="endtime"/>
-          <xs:element ref="deviceid"/>
-          <xs:element ref="minimumbatterypower"/>
-          <xs:element ref="minimumsignalstrength"/>
-          <xs:element ref="networkcarrier"/>
-          <xs:element ref="devicemodelname"/>
-        </xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="criteriaid"/>
+          <xs:sequence>
+            <xs:element ref="networktype"/>
+            <xs:element ref="starttime"/>
+            <xs:element ref="endtime"/>
+            <xs:element ref="deviceid"/>
+            <xs:element ref="minimumbatterypower"/>
+            <xs:element ref="minimumsignalstrength"/>
+            <xs:element ref="networkcarrier"/>
+            <xs:element ref="devicemodelname"/>
+          </xs:sequence>
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="criteriaid" type="xs:NCName"/>
   <xs:element name="latitude" type="xs:decimal"/>
   <xs:element name="longitude" type="xs:decimal"/>
   <xs:element name="radius" type="xs:integer"/>
+  <xs:element name="criteriaid" type="xs:NCName"/>
   <xs:element name="networktype" type="xs:NCName"/>
   <xs:element name="starttime" type="xs:integer"/>
   <xs:element name="endtime" type="xs:integer"/>

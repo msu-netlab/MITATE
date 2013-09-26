@@ -30,18 +30,22 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 					$file_extension = end(explode(".", $_FILES["file"]["name"]));
 					$file_name_without_extension = basename($_FILES["file"]["name"], ".xml");
 					$final_file_path = $file_name_without_extension . $experiment_id . "." . $file_extension;
-					mkdir("user_accounts/$username/$experiment_id", 0777);
-					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/$experiment_id/" . $final_file_path);					
-					$filename_validate = 'sample/Mitate_Sample_Configuration_File_XML_Format.xml';
+					mkdir("user_accounts/$username/experiments/$experiment_id", 0777);
+					move_uploaded_file($_FILES["file"]["tmp_name"],"user_accounts/$username/experiments/$experiment_id/" . $final_file_path);					
+					$filename_validate = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 					$xsd_document = 'sample/Mitate_Sample_Configuration_File_XML_Format.xsd';
 					$dom = new DomDocument(); 
-					if (!$dom->load($filename_validate)) 
+					if (!$dom->load($filename_validate)) { 
 						libxml_display_errors();
+						Delete("user_accounts/" . $username . "/experiments/" . $experiment_id);
+					}
 					else {
-						if (!$dom->schemaValidate($xsd_document)) 			
+						if (!$dom->schemaValidate($xsd_document)) {			
 							libxml_display_errors();  
+							Delete("user_accounts/" . $username . "/experiments/" . $experiment_id);
+						}
 						else {	
-							$filepath = "user_accounts/" . $username . "/$experiment_id/" . $final_file_path;
+							$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 							$xml = simplexml_load_file("$filepath");
 							$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
 							if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
@@ -106,6 +110,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								foreach($temptransaction->transfers[0]->transfer as $temptransferr) {
 									$temptransferid = $temptransferr->transferid;
 									$transfer_repeat = $temptransferr["repeat"];
+									$transfer_delay = $temptransferr["delay"];
+									if($trasnsfer_delay == "") 
+										$trasnsfer_delay = 0;
 									while($transfer_repeat > 0) {
 										foreach($xml->defines->transferdefine->transfer as $temptransfer) {
 											$tcheck = $temptransfer->id;
@@ -142,7 +149,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 												else if($contenttype == "BINARY")
 													$bytestostore = ceil($bytestostore/8);
 												$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
-												$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response)";
+												$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response, delay) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response, $transfer_delay)";
 												if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 				
 												$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
@@ -192,4 +199,19 @@ function libxml_display_errors() {
 	} 
 	libxml_clear_errors(); 
 }
+
+function Delete($path) {
+    if (is_dir($path) === true) {
+        $files = array_diff(scandir($path), array('.', '..'));
+        foreach ($files as $file) {
+            Delete(realpath($path) . '/' . $file);
+        }
+        return rmdir($path);
+    }
+    else if (is_file($path) === true) {
+        return unlink($path);
+    }
+    return false;
+}
+
 ?>
