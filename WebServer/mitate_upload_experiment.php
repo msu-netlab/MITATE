@@ -1,7 +1,7 @@
 <?php
 libxml_use_internal_errors(true); 
 
-$con = mysql_connect("nl.cs.montana.edu","mitate","Database4Mitate");
+$con = mysql_connect("localhost","mitate","Database4Mitate");
 if (!$con)
 {
 	die('Could not connect: ' . mysql_error());
@@ -36,7 +36,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 					$xsd_document = 'sample/Mitate_Sample_Configuration_File_XML_Format.xsd';
 					$dom = new DomDocument(); 
 					if (!$dom->load($filename_validate)) 
-						echo "We detected errors in your XML file. It is recommended that you must open your XML in browser to check for any syntactical errors.";
+						libxml_display_errors();
 					else {
 						if (!$dom->schemaValidate($xsd_document)) 			
 							libxml_display_errors();  
