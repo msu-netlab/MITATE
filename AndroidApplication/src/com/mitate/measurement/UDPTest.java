@@ -117,10 +117,6 @@ public class UDPTest {
 						}
 
 						baSendData = sData.getBytes();
-						
-						// System.out.println("--------->"+sData+">>>"+sData.length()+">>"+iUDPBytes);
-						// System.out.println("--------------->"+new String(baSendData)+"-------->>>>>"+baSendData.length+">>>"+new String(baSendData).length());
-						
 
 						iUDPBytesSentToServer += sData.getBytes().length;
 						

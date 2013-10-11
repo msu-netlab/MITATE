@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Arrays;
-import javax.xml.bind.DatatypeConverter;
-
+import java.util.Scanner;
 import com.mitate.MITATEApplication;
-import com.mitate.utilities.MITATEUtilities;
 
 import android.util.Log;
 
@@ -39,6 +37,7 @@ public class TCPTest {
 	Socket sConnectionSocket;
 	BufferedWriter bwWriteToServer;
 	BufferedReader brReadFromServer;
+	Scanner scReadFromServer;
 	
 	public TCPTest(String sServerIP, int iServerTCPPortNo, int iTCPBytes, int iTCPPackets, int iDirection, long lOffsetDifferenceClientAndServer, int iPacketDelay, int iExplicit, String sContent, String sContentType) {
 		this.sServerIP = sServerIP;
@@ -73,7 +72,7 @@ public class TCPTest {
 						break;
 					}
 				} catch(Exception e) {						
-					Log.e(TAG, "@sendtimes : retry - "+iTCPConnectionRetryCount+", error - "+e.getMessage());
+					Log.e(TAG, "@TCPTest : retry - "+iTCPConnectionRetryCount+", error - "+e.getMessage());
 					if(iTCPConnectionRetryCount > 5) {
 						Log.e(TAG, "@sendtimes : connection failed");
 						return false;
@@ -82,7 +81,7 @@ public class TCPTest {
 			}
 
 			brReadFromServer = new BufferedReader(new InputStreamReader(sConnectionSocket.getInputStream()));
-			
+			scReadFromServer = new Scanner(new BufferedReader(new InputStreamReader(sConnectionSocket.getInputStream())));
 			
 			laTCPPacketReceivedTimes = new long[iTCPPackets];
 			iaTCPBytes = new int[iTCPPackets];
@@ -91,8 +90,8 @@ public class TCPTest {
 			byte[] baExtraBytes = null;
 			
 			if(iExplicit == 0) {
-				if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
-					baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];				
+				if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length > 0)
+					baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length];				
 			} else {
 				
 				// baExtraBytes = new byte[iTCPBytes - (sContent+":;:"+String.valueOf(1)+":;:"+System.currentTimeMillis()+":;:").length()];
@@ -124,26 +123,29 @@ public class TCPTest {
 					if(iDirection == 0) {
 						long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
 						if(iExplicit == 0) {
-							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";							
+							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";							
 						} else {
 							// _sBuffer = sContent+(new char[5 - (i+"").length()]).length+":;:"+String.valueOf(i)+":;:"+lClientTime+":;:\n";
-							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";
+							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";
 									
 							// sBuffer=  sContent+":;:"+String.valueOf(i)+":;:"+lClientTime+":;:\n";
 						}
 
-						// Log.v(TAG, sBuffer+"->"+sBuffer.length());
+						Log.v(TAG, sBuffer+"--------------------->"+sBuffer.length()+"------------------------>"+sBuffer.getBytes().length+".......");
+						
 						
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						bwWriteToServer.write(sBuffer); 
 						bwWriteToServer.flush();
 						
-						// changes with paltform
+						// changes with platform
 						if(sContentType.equalsIgnoreCase("hex")) {
-							iTCPBytesSentToServer += sBuffer.length();
+							iTCPBytesSentToServer += sBuffer.getBytes().length;							
 						} else {
-							iTCPBytesSentToServer += sBuffer.getBytes().length;
+							iTCPBytesSentToServer += sBuffer.length();
 						}
+						
+						
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : +"+", packet delay - "+iPacketDelay+", Sent - " + i+", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPBytesSentToServer);
 
 						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i);
@@ -153,15 +155,11 @@ public class TCPTest {
 					}
 					if(iDirection == 1) {
 
-						char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];
+						char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];						
+						scReadFromServer.useDelimiter(":::");
 						
-						brReadFromServer.read(buf);
-						String sFromServer = new String(buf);
-						
-						// String sFromServer = brReadFromServer.readLine();
-
-						// Log.v(TAG, sFromServer+">>"+sFromServer.length()+">>>"+sFromServer.getBytes().length);
-							
+						String sFromServer = scReadFromServer.next();
+												
 						long lTimeOnClient = System.currentTimeMillis();
 						int iNumberOfBytesReceived = 0;
 						
@@ -183,7 +181,7 @@ public class TCPTest {
 						i= iTCPPacketNumber;
 
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;
-						iaTCPBytes[i] = iNumberOfBytesReceived;
+						iaTCPBytes[i] = iNumberOfBytesReceived + ":::".length();
 						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i);
 						// brReadFromServer.close();
 					}
