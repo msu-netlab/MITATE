@@ -290,11 +290,11 @@ public class Measurement extends Thread implements SensorEventListener {
 			for(int j=0; j<LoginService.tPendingTransfers.length && !MITATEActivity.bStopTransactionExecution; j++) {
 				if(MITATEApplication.bDebug)  Log.d(TAG, "@run : request parameters");
 				
-				if(LoginService.tPendingTransfers[j].getiResponse() == 1) {
+				if(LoginService.tPendingTransfers[j].getiResponse() == 1) { 
 					System.out.println("response = 1"); 
 					ctCDNTest = new CDNTest(LoginService.tPendingTransfers[j].getiTransferid(), LoginService.tPendingTransfers[j].getiTransactionid(), LoginService.tPendingTransfers[j].getsDestinationIP(),
 							LoginService.tPendingTransfers[j].getsPortNumber(), LoginService.tPendingTransfers[j].getsContent(), LoginService.tPendingTransfers[j].getiNoOfPackets());
-					ctCDNTest.runCDNTest();
+					ctCDNTest.runCDNTest(); 
 				} else { 
 				
 			Set<String> s = new HashSet<String>();	   
