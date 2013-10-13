@@ -1,11 +1,14 @@
+package com.mitate.service;
+
 import java.io.Serializable;
 
 public class Transfer implements Serializable {
+    String sUsername;
     String sSourceIP;
     String sServerIP;
     String sContent;
     int iBytes;
-    int iPacketType;
+    int iPacketType; 
     int iTransactionid;
     int iTransferid;
     int iPacketDelay;
@@ -14,7 +17,73 @@ public class Transfer implements Serializable {
     String sPortNumber;
     String sContentType;
     int iResponse;
+    int iTransferDelay;
 
+    String sDeviceName;
+    String sDeviceId;
+    String sNetworkCarrier;
+    long lClientOffsetFromNTP;
+    int iDirection;
+    
+    int iUDPHexBytes;
+    
+
+    public int getiUDPHexBytes() {
+        return iUDPHexBytes;
+    }
+    public void setiUDPHexBytes(int iUDPHexBytes) {
+        this.iUDPHexBytes = iUDPHexBytes;
+    }
+    public String getsServerIP() {
+        return sServerIP;
+    }
+    public void setsServerIP(String sServerIP) {
+        this.sServerIP = sServerIP;
+    }
+    public String getsDeviceName() {
+        return sDeviceName;
+    }
+    public void setsDeviceName(String sDeviceName) {
+        this.sDeviceName = sDeviceName;
+    }
+    public String getsDeviceId() {
+        return sDeviceId;
+    }
+    public void setsDeviceId(String sDeviceId) {
+        this.sDeviceId = sDeviceId;
+    }
+    public String getsNetworkCarrier() {
+        return sNetworkCarrier;
+    }
+    public void setsNetworkCarrier(String sNetWorkCarrier) {
+        this.sNetworkCarrier = sNetWorkCarrier;
+    }
+    public long getlClientOffsetFromNTP() {
+        return lClientOffsetFromNTP;
+    }
+    public void setlClientOffsetFromNTP(long lClientOffsetFromNTP) {
+        this.lClientOffsetFromNTP = lClientOffsetFromNTP;
+    }
+    public int getiDirection() {
+        return iDirection;
+    }
+    public void setiDirection(int iDirection) {
+        this.iDirection = iDirection;
+    }
+    
+    
+    public String getsUsername() {
+        return sUsername;
+    }
+    public void setsUsername(String sUsername) {
+        this.sUsername = sUsername;
+    }
+    public int getiTransferDelay() {
+        return iTransferDelay;
+    }
+    public void setiTransferDelay(int iTransferDelay) {
+        this.iTransferDelay = iTransferDelay;
+    }
     public int getiResponse() {
         return iResponse;
     }
@@ -69,10 +138,10 @@ public class Transfer implements Serializable {
     public void setsSourceIP(String sSourceIP) {
         this.sSourceIP = sSourceIP;
     }
-    public String getsServerIP() {
+    public String getsDestinationIP() {
         return sServerIP;
     }
-    public void setsServerIP(String sServerIP) {
+    public void setsDestinationIP(String sServerIP) {
         this.sServerIP = sServerIP;
     }
     public int getiBytes() {

@@ -65,12 +65,13 @@ public class TCPTestRun {
 						{
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":::";
 						}
+                        System.out.println(sBuffer.getBytes().length + "---" + sBuffer.length());
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
-						if(sContentType.equalsIgnoreCase("HEX"))
-							iTCPTotalBytesSentToClient += sBuffer.length();
-						else
-							iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
+						//if(sContentType.equalsIgnoreCase("HEX"))
+							//iTCPTotalBytesSentToClient += sBuffer.length();
+						//else
+						iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
                         System.out.println(TAG+"@runTCPTest : Sent - " + i +", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPTotalBytesSentToClient);	
                         Thread.sleep(MNEPServer.iPacketDelay);
                     }

@@ -109,6 +109,7 @@ public class MNEPServer {
 					smServerMetrics.iTCPTotalBytesSentToClient = tTestRun.iTCPTotalBytesSentToClient;
 					smServerMetrics.iTCPBytes = iTCPBytes;
 					smServerMetrics.iUDPBytes = iUDPBytes;
+					smServerMetrics.iUplinkOrDownlink = convertReceivedObjectFromClientIntoServerObject[iLoopAllTransfers].getiDirection();
 					smServerMetrics.iTransactionId = convertReceivedObjectFromClientIntoServerObject[iLoopAllTransfers].getiTransactionid();
 					hmServerMetrics.put(smServerMetrics.iTransferId, smServerMetrics);
 				}
@@ -198,21 +199,21 @@ public class MNEPServer {
                 sTCPConnectionSocket.close();
                 ssTCPServerSocket.close();
     			for(int iLoopAllClientTimes = 0; iLoopAllClientTimes < convertReceivedClientTimesObject.length; iLoopAllClientTimes++) {
-    				tsaTCPPacketReceivedTimes_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getLaTCPPacketReceivedTimes().toString();
-                    iaTCPBytes_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getIaTCPBytes().toString();	
+    				tsaTCPPacketReceivedTimes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getLaTCPPacketReceivedTimes());
+                    iaTCPBytes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getIaTCPBytes());	
                     sTCPBytesReceived_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getiTCPBytesReadFromServer() + "";
                     sTCPBytesSent_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getiTCPBytesSentToServer() + "";
-                    tsaUDPPacketReceivedTimes_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getlUDPPacketReceivedTimes().toString();
-                    iaUDPBytes_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getIaUDPBytes().toString();		
+                    tsaUDPPacketReceivedTimes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getlUDPPacketReceivedTimes());
+                    iaUDPBytes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getIaUDPBytes());		
                     sUDPBytesReceived_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getiUDPBytesReceivedFromServer() + "";
-                    sClientTime = convertReceivedClientTimesObject[iLoopAllClientTimes].getsClientTime().toString();
+                    sClientTime = convertReceivedClientTimesObject[iLoopAllClientTimes].getsClientTime();
                     sClientTime = sClientTime.substring(0, sClientTime.indexOf("."));
-					sLatitudeBeforeTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsBeforeExecCoordinates().split(":")[0].toString();
-					sLongitudeBeforeTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsBeforeExecCoordinates().split(":")[1].toString();
-					sLatitudeAfterTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAfterExecCoordinates().split(":")[0].toString();
-					sLongitudeAfterTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAfterExecCoordinates().split(":")[1].toString();
-					sMobileSignalStrength = convertReceivedClientTimesObject[iLoopAllClientTimes].getsSignalStrength().toString();
-					sAccelerometerReading = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAccelerometerReading().toString();
+					sLatitudeBeforeTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsBeforeExecCoordinates().split(":")[0];
+					sLongitudeBeforeTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsBeforeExecCoordinates().split(":")[1];
+					sLatitudeAfterTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAfterExecCoordinates().split(":")[0];
+					sLongitudeAfterTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAfterExecCoordinates().split(":")[1];
+					sMobileSignalStrength = convertReceivedClientTimesObject[iLoopAllClientTimes].getsSignalStrength();
+					sAccelerometerReading = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAccelerometerReading();
 					isDeviceInCall = convertReceivedClientTimesObject[iLoopAllClientTimes].getIsCallActive() + "";
 					
 					ServerMetrics currentTransferServerMetrics = hmServerMetrics.get(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
@@ -239,7 +240,7 @@ public class MNEPServer {
 				                fTCPUplinkMedianLatency = laTCPUplinkLatencies[laTCPUplinkLatencies.length/2];
 				                fTCPUplinkThroughput = MNEPUtilities.toKBps(currentTransferServerMetrics.iTCPTotalBytesReceivedFromClient, MNEPUtilities.getSum(laTCPUplinkLatencies));
 				                fTCPUplinkJitter = fTCPUplinkMaxLatency - fTCPUplinkMinLatency;
-				                fTCPUplinkPacketLoss = (Integer.parseInt(sTCPBytesSent_Client)/(float)currentTransferServerMetrics.iTCPBytes - currentTransferServerMetrics.iTCPTotalBytesReceivedFromClient/(float)currentTransferServerMetrics.iTCPBytes) * 100 / (Integer.parseInt(sTCPBytesSent_Client)/(float)currentTransferServerMetrics.iTCPBytes);				                
+				                fTCPUplinkPacketLoss = (float)(((Integer.parseInt(sTCPBytesSent_Client) - currentTransferServerMetrics.iTCPTotalBytesReceivedFromClient) * 100) / (Integer.parseInt(sTCPBytesSent_Client)));				                
 				                sMeasurements = String.format(
 				                    "----------TCP Network Metrics-------------\n" +
 				                    "Uplink TCP throughput:       \t%.2f Kbps \n"+
@@ -276,7 +277,9 @@ public class MNEPServer {
 				                fTCPDownlinkThroughput = MNEPUtilities.toKBps(Integer.parseInt(sTCPBytesReceived_Client), MNEPUtilities.getSum(laTCPDownlinkLatencies));
 				                fTCPDownlinkJitter = fTCPDownlinkMaxLatency - fTCPDownlinkMinLatency;
 				                
-				                fTCPDownlinkPacketLoss = ((((float)tTestRun.iTCPTotalBytesSentToClient/currentTransferServerMetrics.iTCPBytes) - ((float)Integer.parseInt(sTCPBytesReceived_Client)/currentTransferServerMetrics.iTCPBytes)) * 100) / ((float)currentTransferServerMetrics.iTCPTotalBytesSentToClient/currentTransferServerMetrics.iTCPBytes);
+				                fTCPDownlinkPacketLoss = (float)(((currentTransferServerMetrics.iTCPTotalBytesSentToClient - Integer.parseInt(sTCPBytesReceived_Client)) * 100) / currentTransferServerMetrics.iTCPTotalBytesSentToClient);
+				                System.out.println(currentTransferServerMetrics.iTCPTotalBytesSentToClient + "--" + sTCPBytesReceived_Client);
+				                
 				                sMeasurements = String.format(
 				                    "----------TCP Network Metrics-------------\n" +
 				                    "Downlink TCP throughput:     \t%.2f Kbps \n"+
@@ -330,7 +333,8 @@ public class MNEPServer {
 				                    System.out.println(sMeasurements);
 				                }
 				                if(currentTransferServerMetrics.iUplinkOrDownlink == 1){
-				                    laUDPDownlinkLatencies = MNEPUtilities.toTimeArray(tsaUDPPacketReceivedTimes_Client);
+				                	System.out.println(new String(tsaUDPPacketReceivedTimes_Client));
+				                    laUDPDownlinkLatencies = MNEPUtilities.toTimeArray(tsaUDPPacketReceivedTimes_Client);		                    
 				                    iaUDPDownBytes = MNEPUtilities.toNumberOfBytesArray(iaUDPBytes_Client);
 				                    faUDPDownThroughput = MNEPUtilities.calculateThroughput(laUDPDownlinkLatencies, iaUDPDownBytes); 
 				                    tmUDPTransferMetrics = new TransferMetrics(laUDPDownlinkLatencies.clone(), iaUDPDownBytes, faUDPDownThroughput);
