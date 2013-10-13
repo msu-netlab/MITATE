@@ -5,11 +5,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-import javax.xml.bind.DatatypeConverter;
-
 import com.mitate.MITATEApplication;
-import com.mitate.utilities.MITATEUtilities;
-
+ 
 import android.telephony.TelephonyManager;
 import android.util.Log;
 

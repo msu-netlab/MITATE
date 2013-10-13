@@ -93,27 +93,7 @@ public class TCPTest {
 				if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length > 0)
 					baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length];				
 			} else {
-				
-				// baExtraBytes = new byte[iTCPBytes - (sContent+":;:"+String.valueOf(1)+":;:"+System.currentTimeMillis()+":;:").length()];
-				
-				/* if(sContentType.equalsIgnoreCase("HEX")) {					
-					// sContent = MITATEUtilities.parseHexString(sContent);
-					// System.out.println("content from hex string - "+sContent);
-					// sContent = new String(DatatypeConverter.parseHexBinary(sContent));
-					
 
-					
-				}  else if(sContentType.equals("BINARY")) {
-					// int iContentLengthToAdd = 8 - (sContent.length() % 8);
-					// while (iContentLengthToAdd-- > 0) {
-						// sContent += "0";						
-					// }					
-					// sContent = MITATEUtilities.parseBinaryString(sContent);
-					// System.out.println("content from binary string - "+sContent);	
-					sContent = sContent;
-				} else {
-					
-				} */
 			}
 			
 			if(MITATEApplication.bDebug) Log.i(TAG, "@runTCPTest : TCP Transactionn - " + iTCPPackets + " Packets.");
@@ -125,53 +105,34 @@ public class TCPTest {
 						if(iExplicit == 0) {
 							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";							
 						} else {
-							// _sBuffer = sContent+(new char[5 - (i+"").length()]).length+":;:"+String.valueOf(i)+":;:"+lClientTime+":;:\n";
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";
-									
-							// sBuffer=  sContent+":;:"+String.valueOf(i)+":;:"+lClientTime+":;:\n";
 						}
 
-						Log.v(TAG, sBuffer+"--------------------->"+sBuffer.length()+"------------------------>"+sBuffer.getBytes().length+".......");
-						
-						
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						bwWriteToServer.write(sBuffer); 
 						bwWriteToServer.flush();
 						
 						// changes with platform
-						if(sContentType.equalsIgnoreCase("hex")) {
-							iTCPBytesSentToServer += sBuffer.getBytes().length;							
-						} else {
-							iTCPBytesSentToServer += sBuffer.length();
-						}
-						
+						int iTCPBytesSent = sBuffer.getBytes().length;
+						iTCPBytesSentToServer += iTCPBytesSent;							
 						
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : +"+", packet delay - "+iPacketDelay+", Sent - " + i+", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPBytesSentToServer);
 
-						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i);
+						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i+"------>"+sBuffer.getBytes().length+"--->"+sBuffer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"------>"+sBuffer);
 						Thread.sleep(iPacketDelay);
-						// System.out.println("sent-"+i+", chars - "+sBuffer.length()+", bytes - "+sBuffer.getBytes().length);
 						// bwWriteToServer.close();
 					}
 					if(iDirection == 1) {
 
-						char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];						
-						scReadFromServer.useDelimiter(":::");
-						
+						scReadFromServer.useDelimiter(":::");						
 						String sFromServer = scReadFromServer.next();
 												
 						long lTimeOnClient = System.currentTimeMillis();
 						int iNumberOfBytesReceived = 0;
 						
-						// changes with paltform
-						if(sContentType.equalsIgnoreCase("hex")) {
-							iNumberOfBytesReceived = sFromServer.length();
-							iTCPBytesReadFromServer += sFromServer.length();
-						} else {						
-							iNumberOfBytesReceived = sFromServer.getBytes().length;
-							iTCPBytesReadFromServer += sFromServer.getBytes().length;
-						}
-
+						iNumberOfBytesReceived = sFromServer.getBytes().length + ":::".getBytes().length;
+						iTCPBytesReadFromServer += iNumberOfBytesReceived;
+						
 						int iTCPPacketNumber = Integer.parseInt(sFromServer.split(":;:")[1]);
 						long lTimeOnServer = Long.parseLong(sFromServer.split(":;:")[2]);
 
@@ -181,8 +142,8 @@ public class TCPTest {
 						i= iTCPPacketNumber;
 
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;
-						iaTCPBytes[i] = iNumberOfBytesReceived + ":::".length();
-						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i);
+						iaTCPBytes[i] = iNumberOfBytesReceived;
+						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i+"--->"+iNumberOfBytesReceived+"--->"+sFromServer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"---------->"+sFromServer);
 						// brReadFromServer.close();
 					}
 				}

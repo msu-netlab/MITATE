@@ -76,7 +76,8 @@ public class Measurement extends Thread implements SensorEventListener {
 	
 	
 	private boolean sendAllTransferDetails(Transfer[] tForServer) {
-		sServerIP = tForServer[0].getsDestinationIP();
+		System.out.println(tForServer[0].getsDestinationIP()+"---------"+tForServer[0].getsSourceIP());
+		sServerIP = tForServer[0].getsDestinationIP().equalsIgnoreCase("client") ? tForServer[0].getsSourceIP() : tForServer[0].getsDestinationIP();
 		try {
 			System.out.println(sServerIP+"-"+Integer.parseInt(sServerTCPPort));
 			sConnectionSocket = new Socket(sServerIP, Integer.parseInt(sServerTCPPort));
@@ -205,7 +206,6 @@ public class Measurement extends Thread implements SensorEventListener {
 				ctTimes[index].iaUDPBytes = utUDPTest.iaUDPBytes;
 				ctTimes[index].iUDPBytesReceivedFromServer = utUDPTest.iUDPBytesReceivedFromServer;				
 				ctTimes[index].sClientTime = (new Timestamp(System.currentTimeMillis())).toString();   				
-				ctTimes[index].iaTCPBytes = ttTCPTest.iaTCPBytes;
 				ctTimes[index].sBeforeExecCoordinates = sBeforeExecCoordinates;
 				ctTimes[index].sAfterExecCoordinates = sAfterExecCoordinates;
 				ctTimes[index].sSignalStrength = MITATEApplication.getSignalStrength()+"";
@@ -356,7 +356,7 @@ public class Measurement extends Thread implements SensorEventListener {
 					ttTCPTest =  null;
 					utUDPTest = null;
 					try {
-						System.out.println("----------->"+temp[k].getiTransferDelay());
+						System.out.println("----------->"+temp[k].getiTransferDelay()+"-----"+temp[k].getiTransferid());
 						Thread.sleep(temp[k].getiTransferDelay()); 
 					} catch(Exception e) {
 						
