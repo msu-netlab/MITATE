@@ -78,31 +78,7 @@ public class MNEPUtilities {
     public static float toKB(long bytes){
         return (float)(bytes/1024.0);
     }
-    /*
-    // changes Timestamp array by offset value
-    public static void syncTimeArrays(Timestamp[] cSendTimes, Timestamp[] sReceiveTimes, Timestamp[] sSendTimes, Timestamp[] cReceiveTimes, int i){
-        long offset = 0;
-        for (int j = 0; j<i; j++){
-        	if(MNEPServer.iUplinkOrDownlink == 0){
-        		offset = (cSendTimes[j].getTime() - sReceiveTimes[j].getTime())/2;
-                        System.out.println("0 -- offset - "+offset);
-                        System.out.println("sReceiveTimes- b -"+Arrays.toString(sReceiveTimes));
-            syncTime(sReceiveTimes[j], offset);
-                        System.out.println("sReceiveTimes- a -"+Arrays.toString(sReceiveTimes));
-            System.out.println(Arrays.toString(sReceiveTimes));
-        	}
-            		
-        	if(MNEPServer.iUplinkOrDownlink == 1){
-        	offset = (cReceiveTimes[j].getTime() - sSendTimes[j].getTime())/2;
-                System.out.println("1 -- offset - "+offset);
-                System.out.println("sReceiveTimes- b -"+Arrays.toString(sSendTimes));
-        	syncTime(sSendTimes[j], offset);
-                System.out.println("sReceiveTimes- a -"+Arrays.toString(sSendTimes));
-                System.out.println(Arrays.toString(sReceiveTimes));
-        	}
-        }
-    } */
-
+ 
     //creates a Timestamp array from a String array of long values
     public static long[] toTimeArray(String timesStr){
         //remove extra characters and split into array
@@ -117,7 +93,6 @@ public class MNEPUtilities {
             times[i] = Long.parseLong(timeStr.trim());
             i++;
         }       
-        System.out.println("---------->>"+Arrays.toString(times));
         return times;
     }
     
@@ -170,7 +145,7 @@ public class MNEPUtilities {
         SNTPClient client = new SNTPClient();            
         if (client.requestTime(sNTPServer, 20000)) {
                // lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-            System.out.println("NTP - Server : "+sNTPServer+", Time : "+client.getNtpTime()+ ", System : "+System.currentTimeMillis()+", Diff : "+(client.getNtpTime() - System.currentTimeMillis()));
+            //System.out.println("NTP - Server : "+sNTPServer+", Time : "+client.getNtpTime()+ ", System : "+System.currentTimeMillis()+", Diff : "+(client.getNtpTime() - System.currentTimeMillis()));
             lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
         }
 

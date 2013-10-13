@@ -65,12 +65,8 @@ public class TCPTestRun {
 						{
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":::";
 						}
-                        System.out.println(sBuffer.getBytes().length + "---" + sBuffer.length());
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
-						//if(sContentType.equalsIgnoreCase("HEX"))
-							//iTCPTotalBytesSentToClient += sBuffer.length();
-						//else
 						iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
                         System.out.println(TAG+"@runTCPTest : Sent - " + i +", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPTotalBytesSentToClient);	
                         Thread.sleep(MNEPServer.iPacketDelay);
@@ -78,14 +74,13 @@ public class TCPTestRun {
                     if(iUplinkOrDownlink == 0) {                   	
                         scReadFromClient.useDelimiter(":::");
                         String sFromClient = scReadFromClient.next();
-                        //System.out.println(sFromClient);
                         long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = sFromClient.getBytes().length + ":::".length();
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;
                         int iPacketNumber = Integer.parseInt(sFromClient.split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(sFromClient.split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient;
-                        System.out.println(TAG+" : @runTCPTest : Received - " + iPacketNumber +" Total bytes received - "+iTCPTotalBytesReceivedFromClient /*+", stime - "+lTimeOnServer+", ctime - "+lTimeOnClient+", diff - "+(lTimeOnClient-lTimeOnServer)+", ntpd - "+MNEPServer.lServerOffsetFromNTP */);
+                        System.out.println(TAG+" : @runTCPTest : Received - " + iPacketNumber +" Total bytes received - "+iTCPTotalBytesReceivedFromClient);
                         laTCPPacketReceivedTimestamps[i] = lLatencyDownLink;
                         iaTCPBytes[i] = iNoOfBytesReceived;
                     }

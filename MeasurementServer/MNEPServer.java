@@ -90,7 +90,6 @@ public class MNEPServer {
 						uTestRun = new UDPTestRun(iUDPBytes, 0, 0);
 					}
 					if(iTCPBytes > 0) {
-						System.out.println(iTCPBytes + "--" + iTCPPackets);
 						tTestRun = new TCPTestRun(iTCPBytes, iTCPPackets, iTCPPort);
 						tTestRun.runTCPTest(iUplinkOrDownlink, iExplicit, sContent, sContentType);
 					}
@@ -216,6 +215,7 @@ public class MNEPServer {
 					sAccelerometerReading = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAccelerometerReading();
 					isDeviceInCall = convertReceivedClientTimesObject[iLoopAllClientTimes].getIsCallActive() + "";
 					
+					System.out.println(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
 					ServerMetrics currentTransferServerMetrics = hmServerMetrics.get(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
 					 if(currentTransferServerMetrics.iTCPBytes > 0)
 				        {			
@@ -278,8 +278,7 @@ public class MNEPServer {
 				                fTCPDownlinkJitter = fTCPDownlinkMaxLatency - fTCPDownlinkMinLatency;
 				                
 				                fTCPDownlinkPacketLoss = (float)(((currentTransferServerMetrics.iTCPTotalBytesSentToClient - Integer.parseInt(sTCPBytesReceived_Client)) * 100) / currentTransferServerMetrics.iTCPTotalBytesSentToClient);
-				                System.out.println(currentTransferServerMetrics.iTCPTotalBytesSentToClient + "--" + sTCPBytesReceived_Client);
-				                
+				        
 				                sMeasurements = String.format(
 				                    "----------TCP Network Metrics-------------\n" +
 				                    "Downlink TCP throughput:     \t%.2f Kbps \n"+
@@ -333,7 +332,6 @@ public class MNEPServer {
 				                    System.out.println(sMeasurements);
 				                }
 				                if(currentTransferServerMetrics.iUplinkOrDownlink == 1){
-				                	System.out.println(new String(tsaUDPPacketReceivedTimes_Client));
 				                    laUDPDownlinkLatencies = MNEPUtilities.toTimeArray(tsaUDPPacketReceivedTimes_Client);		                    
 				                    iaUDPDownBytes = MNEPUtilities.toNumberOfBytesArray(iaUDPBytes_Client);
 				                    faUDPDownThroughput = MNEPUtilities.calculateThroughput(laUDPDownlinkLatencies, iaUDPDownBytes); 
@@ -368,7 +366,6 @@ public class MNEPServer {
 				                    System.out.println(sMeasurements);
 				                }
 				            }
-				            //insertIntoDatabase();
 				            Connection conn = null;
 				            try{
 				    			conn = MNEPUtilities.getDBConnection();

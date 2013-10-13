@@ -48,7 +48,7 @@ public class UDPTestRun {
             dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length);
             for (int i=0; i<5; i++){
                 dsUDPSocket.receive(dpUDPRecvPacket);
-                System.out.println(TAG+" : @runUDPTest : Receiving demo packet - "+i+ "--" + dpUDPRecvPacket.getSocketAddress());
+                //System.out.println(TAG+" : @runUDPTest : Receiving demo packet - "+i+ "--" + dpUDPRecvPacket.getSocketAddress());
             }
             saClientAddress = dpUDPRecvPacket.getSocketAddress();                     
             int iTimeOutPackets = 0;
@@ -94,7 +94,7 @@ public class UDPTestRun {
                         laUDPPacketReceivedTimestamps[i] = lLatencyDownLink;
                         iaUDPBytes[i] = iNoOfBytesReceived;
                         i = iPacketNumber;
-                        System.out.println(TAG+": @UDPTest : Packet " + iPacketNumber  + " received, Total bytes received - "+iUDPTotalBytesReceivedFromClient+", ctime - "+lTimeOnClient ); 
+                        System.out.println(TAG+": @UDPTest : Packet " + iPacketNumber  + " received, Total bytes received - "+iUDPTotalBytesReceivedFromClient); 
                     }
                     
                 } catch (Exception e){
