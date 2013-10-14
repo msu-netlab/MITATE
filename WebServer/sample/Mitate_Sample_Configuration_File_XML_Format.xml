@@ -39,12 +39,11 @@
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.montana.edu</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>2</type>
+				<type>0</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content5</contentid>
 				</bytes>
 				<noofpackets>2</noofpackets>
@@ -52,14 +51,13 @@
 			<transfer>
 				<id>t2</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
-				<portnumber>5061</portnumber>
+				<portnumber>6061</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content1</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -67,14 +65,13 @@
 			<transfer>
 				<id>t3</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>2</type>
+				<type>0</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content2</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -82,14 +79,13 @@
 			<transfer>
 				<id>t4</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
@@ -97,36 +93,34 @@
 			<transfer>
 				<id>t5</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>192.168.1.6</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>23399</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content4</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>			
 			<transfer>
 				<id>t6</id>
-				<sourceip>192.168.1.4</sourceip>
+				<sourceip>153.90.118.234</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
-				<portnumber>5061</portnumber>
+				<portnumber>6061</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content1</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t7</id>
-				<sourceip>192.168.1.4</sourceip>
+				<sourceip>192.168.1.6</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -134,14 +128,13 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content2</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t8</id>
-				<sourceip>192.168.1.4</sourceip>
+				<sourceip>192.168.1.6</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -149,14 +142,13 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content3</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t9</id>
-				<sourceip>192.168.1.4</sourceip>
+				<sourceip>153.90.118.234</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -164,14 +156,13 @@
 				<response>0</response>
 				<bytes>
 					<explicit>1</explicit>
-					<noofbytes></noofbytes>
 					<contentid>content4</contentid>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t10</id>
-				<sourceip>192.168.1.4</sourceip>
+				<sourceip>153.90.118.234</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -180,14 +171,13 @@
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
-					<contentid></contentid>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t11</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.4</destinationip>
+				<destinationip>192.168.1.6</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
@@ -195,7 +185,20 @@
 				<bytes>
 					<explicit>0</explicit>
 					<noofbytes>1000</noofbytes>
-					<contentid></contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t11</id>
+				<sourceip>client</sourceip>
+				<destinationip>192.168.1.6</destinationip>
+				<packetdelay>10</packetdelay>
+				<type>0</type>
+				<portnumber>32164</portnumber>
+				<response>0</response>
+				<bytes>
+					<explicit>0</explicit>
+					<noofbytes>1000</noofbytes>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
@@ -206,50 +209,66 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
+				<networktype>wifi</networktype>
+				<starttime>000001</starttime>
+				<endtime>235959</endtime>
+				<deviceid>client</deviceid>
+				<minimumbatterypower>10</minimumbatterypower>
+				<minimumsignalstrength>10</minimumsignalstrength>
+				<networkcarrier>Verizon Wireless</networkcarrier>
+				<devicemodelname>Galaxy Nexus</devicemodelname>
 			</criteria>		
+			<criteria>
+				<id>c2</id>
+				<latitude>45.66962856799364</latitude>
+				<longitude>-111.06049848720431</longitude>
+				<radius>50000</radius>
+			</criteria>	
 		</criteriadefine>
 	</defines>
 	<transactions>
 		<transaction count="2">
 			<transfers>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="20">
 					<transferid>t1</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="3000">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="2000">
 					<transferid>t3</transferid>
 				</transfer >
-				<transfer repeat="1">
-					<transferid>t6</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t7</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t10</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t11</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t8</transferid>
-				</transfer>
-				<transfer repeat="1">
-					<transferid>t9</transferid>
-				</transfer>
-				<transfer repeat="1">
+				<transfer repeat="1" delay="1000">
 					<transferid>t4</transferid>
-				</transfer>
-				<transfer repeat="1">
+				</transfer >
+				<transfer repeat="1" delay="20">
 					<transferid>t5</transferid>
 				</transfer>
-			</transfers>
+				<transfer repeat="1" delay="2000">
+					<transferid>t6</transferid>
+				</transfer >
+				<transfer repeat="1" delay="1000">
+					<transferid>t7</transferid>
+				</transfer >
+				<transfer repeat="1" delay="20">
+					<transferid>t8</transferid>
+				</transfer>
+				<transfer repeat="1" delay="2000">
+					<transferid>t9</transferid>
+				</transfer >
+				<transfer repeat="1" delay="20">
+					<transferid>t10</transferid>
+				</transfer>
+				<transfer repeat="1" delay="2000">
+					<transferid>t11</transferid>
+				</transfer >
+				<transfer repeat="1" delay="0">
+					<transferid>t1</transferid>
+				</transfer>
+		</transfers>
 			<criteria>
-				<criteriaid>c1</criteriaid>
+				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
 </entry>
-			

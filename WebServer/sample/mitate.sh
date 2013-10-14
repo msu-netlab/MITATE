@@ -56,10 +56,12 @@ then
 		then
 			echo "Please wait while we process your file..."
 			result=`curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_upload_experiment.php`
-			if [ "$result" != 'Invalid account credentials.' ]
+			if [ -z "${result//[0-9]/}" ]
 			then
 				echo $result >> user_experiment_list.txt
 				echo "Your experiment with ID: $result has been uploaded."
+			else
+				echo $result
 			fi
 		elif [ "$1" == 'delete' -a "$2" != '' ] 
 		then
@@ -100,6 +102,9 @@ then
 			then
 				curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_update_experiment.php
 			fi
+		elif [ "$1" == 'validate' -a "$2" != '' ]
+		then
+			echo `curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_validate_xml.php`
 		else
 			echo "Missing arguments.";
 		fi

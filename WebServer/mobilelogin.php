@@ -17,7 +17,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
         if ($loginresultrow['status'] == "1") {
             $pendingtestset = mysql_query("SELECT
 			trf.sourceip as sourceip, trf.destinationip as destinationip, trf.bytes as bytes, trf.transferid as transferid,
-			trs.transactionid as transactionid, trf.type as type, trf.packetdelay, trf.explicit, substring(replace(replace(content,'\t',''), '\n\r', '\n'),1) content, trf.noofpackets, trf.portnumber, trf.contenttype, trf.response
+			trs.transactionid as transactionid, trf.type as type, trf.packetdelay, trf.explicit, substring(replace(replace(content,'\t',''), '\n\r', '\n'),1) content, trf.noofpackets, trf.portnumber, trf.contenttype, trf.response, trf.delay as transferdelay
 			from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl
 			where cri.criteriaid = tcl.criteriaid
 			and trs.transactionid = tcl.transactionid
