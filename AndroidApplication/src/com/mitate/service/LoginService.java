@@ -15,7 +15,6 @@ import com.mitate.MITATEApplication;
 import com.mitate.measurement.Measurement;
 import com.mitate.utilities.MITATELocation;
 import com.mitate.utilities.MITATEUtilities;
-
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
@@ -24,15 +23,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
-import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
@@ -109,7 +102,7 @@ public class LoginService extends Service {
 			HttpEntity entity = hrHttpResponse.getEntity();
 		    
 			BufferedReader brReader = new BufferedReader(new InputStreamReader(entity.getContent(),"iso-8859-1"),8);
-		    String sLine = brReader.readLine();;
+		    String sLine = brReader.readLine();
 	        return sLine;  
 	}
 	
@@ -136,19 +129,6 @@ public class LoginService extends Service {
 	    	   MITATELocation mLocation = new MITATELocation();
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
-	    	   
-			    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-			    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);
-			    int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-	    	   
-	           TelephonyManager telephonyManager = MITATEApplication.getTelephonyManager();
-		        // for example value of first element
-	           
-	           // API Min 17
-		        CellInfoLte cellinfolte = (CellInfoLte)telephonyManager.getAllCellInfo().get(0);
-		        CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
-		        // System.out.println("------------>///`"+cellSignalStrengthlte.getDbm()+"-"+cellSignalStrengthlte.getLevel()+"-"+cellSignalStrengthlte.getAsuLevel());		    	   
-		        int iSignalStrength = cellSignalStrengthlte.getAsuLevel();			    
 			    
     	   	   /// String esURL = "http://54.243.186.107/mobilelogin.php?"  +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
@@ -160,7 +140,7 @@ public class LoginService extends Service {
    	    	   	    // "&networktype="+MITATEUtilities.getNetworkType(cContext)+"&city="+mLocation.getCity(cContext);
    	    	   	    "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
-   	    	   	    "&batterypower="+status+"&signalstrength="+iSignalStrength+
+   	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
    	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
@@ -204,7 +184,7 @@ public class LoginService extends Service {
                        JSONObject json_data = jaPendingTransfers.getJSONObject(i);
                        tPendingTransfers[i] = new Transfer();
                        tPendingTransfers[i].setiBytes(json_data.getInt("bytes"));
-                       tPendingTransfers[i].setsServerIP(json_data.getString("destinationip"));
+                       tPendingTransfers[i].setsDestinationIP(json_data.getString("destinationip"));
                        tPendingTransfers[i].setsSourceIP(json_data.getString("sourceip"));
                        tPendingTransfers[i].setiTransactionid(json_data.getInt("transactionid"));
                        tPendingTransfers[i].setiTransferid(json_data.getInt("transferid")); 
@@ -216,6 +196,15 @@ public class LoginService extends Service {
                        tPendingTransfers[i].setsPortNumber(json_data.getString("portnumber"));
                        tPendingTransfers[i].setsContentType(json_data.getString("contenttype"));
                        tPendingTransfers[i].setiResponse(json_data.getInt("response"));
+                       tPendingTransfers[i].setiTransferDelay(json_data.getInt("transferdelay"));
+                       tPendingTransfers[i].setsUsername(LoginService.sUserName);
+                       tPendingTransfers[i].setiDirection(tPendingTransfers[i].getsSourceIP().equals("client") ? 0 : 1);
+                       tPendingTransfers[i].setsDeviceName(MITATEApplication.getDeviceModel());
+                       tPendingTransfers[i].setsNetworkCarrier(MITATEApplication.getNetworkCarrierName());
+                       tPendingTransfers[i].setsDeviceId(LoginService.sDeviceId);
+                       tPendingTransfers[i].setlClientOffsetFromNTP(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal());
+                       tPendingTransfers[i].setiUDPHexBytes(tPendingTransfers[i].getsContent().getBytes().length + 26);
+                       
                        if(tPendingTransfers[i].getsContent().trim().length() == 0) {
                     	   tPendingTransfers[i].setsContent("null");
                        } else {

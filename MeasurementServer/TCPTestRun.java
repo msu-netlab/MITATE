@@ -3,10 +3,12 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import javax.xml.bind.DatatypeConverter;
 
 public class TCPTestRun {
@@ -41,13 +43,14 @@ public class TCPTestRun {
             ssServerSocket.setSoTimeout(40000);
             sSocket = ssServerSocket.accept();
             brReadFromClient = new BufferedReader(new InputStreamReader(sSocket.getInputStream(), "UTF-8"));
+            Scanner scReadFromClient = new Scanner(new BufferedReader(new InputStreamReader(sSocket.getInputStream())));
             
             int iTimeOutPackets = 0;
             String sBuffer = "";
             byte[] baExtraBytes = null;
             if(iExplicit == 0) {
-            	if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length > 0)
-            		baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
+            	if(iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length > 0)
+            		baExtraBytes = new byte[iTCPBytes-(":;:1111:;:"+System.currentTimeMillis()+":::").getBytes().length];
             }
             for (int i = 0; i < iTCPPackets; i++) {
                 try{
@@ -56,34 +59,28 @@ public class TCPTestRun {
                     	long lServerTime =  System.currentTimeMillis() - MNEPServer.lServerOffsetFromNTP;
                         if(iExplicit == 0)
 						{
-                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":;:";
+                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":::";
                         }
 						else if(iExplicit == 1)
 						{
-							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
+							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":::";
 						}
-						//System.out.println(sBuffer);
 						bwWriteToClient.write(sBuffer);
                         bwWriteToClient.flush();
-						if(sContentType.equalsIgnoreCase("HEX"))
-							iTCPTotalBytesSentToClient += sBuffer.length();
-						else
-							iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
+						iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
                         System.out.println(TAG+"@runTCPTest : Sent - " + i +", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPTotalBytesSentToClient);	
                         Thread.sleep(MNEPServer.iPacketDelay);
                     }
                     if(iUplinkOrDownlink == 0) {                   	
-                    	char[] buf = new char[iTCPBytes < 27 ? 27 : iTCPBytes];
-                        brReadFromClient.read(buf);
-                        String sFromClient = new String(buf);
-						//System.out.println(sFromClient);
+                        scReadFromClient.useDelimiter(":::");
+                        String sFromClient = scReadFromClient.next();
                         long lTimeOnServer = System.currentTimeMillis();
-                        int iNoOfBytesReceived = sFromClient.getBytes().length;
+                        int iNoOfBytesReceived = sFromClient.getBytes().length + ":::".length();
                         iTCPTotalBytesReceivedFromClient += iNoOfBytesReceived;
                         int iPacketNumber = Integer.parseInt(sFromClient.split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(sFromClient.split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient;
-                        System.out.println(TAG+" : @runTCPTest : Received - " + iPacketNumber +" Total bytes received - "+iTCPTotalBytesReceivedFromClient /*+", stime - "+lTimeOnServer+", ctime - "+lTimeOnClient+", diff - "+(lTimeOnClient-lTimeOnServer)+", ntpd - "+MNEPServer.lServerOffsetFromNTP */);
+                        System.out.println(TAG+" : @runTCPTest : Received - " + iPacketNumber +" Total bytes received - "+iTCPTotalBytesReceivedFromClient);
                         laTCPPacketReceivedTimestamps[i] = lLatencyDownLink;
                         iaTCPBytes[i] = iNoOfBytesReceived;
                     }
@@ -96,7 +93,7 @@ public class TCPTestRun {
                     e.printStackTrace();
                 }
             }
-                
+            scReadFromClient.close();             
             System.out.println(TAG+" : @runTCPTest : TCP test completed");
             sSocket.close();
             ssServerSocket.close();            

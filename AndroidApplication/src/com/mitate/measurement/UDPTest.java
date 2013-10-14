@@ -5,11 +5,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-import javax.xml.bind.DatatypeConverter;
-
 import com.mitate.MITATEApplication;
-import com.mitate.utilities.MITATEUtilities;
-
+ 
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -117,10 +114,6 @@ public class UDPTest {
 						}
 
 						baSendData = sData.getBytes();
-						
-						// System.out.println("--------->"+sData+">>>"+sData.length()+">>"+iUDPBytes);
-						// System.out.println("--------------->"+new String(baSendData)+"-------->>>>>"+baSendData.length+">>>"+new String(baSendData).length());
-						
 
 						iUDPBytesSentToServer += sData.getBytes().length;
 						
@@ -129,7 +122,7 @@ public class UDPTest {
 					
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : C->S Packet1- " + i + " sent"+", packet delay - "+iPacketDelay+", client time - "+lClientTime);
 						
-						if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : C2S s" + i);
+						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : C2S s" + i);
 						Thread.sleep(iPacketDelay);
 					}
 					if(iDirection == 1) {		
@@ -155,7 +148,7 @@ public class UDPTest {
 						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : S->C Packet " + iPacketNumber + " received"); //, Total bytes received - "+iUDPBytesReceivedFromServer+", stime - "+lTimeOnServer+", ctime - "+lTimeOnClient+", diff - "+(lTimeOnClient-lTimeOnServer)); // +", dpUDPPacket data - "+new String(dpUDPPacket.getData()));
 						// Log.d(TAG, "--->remote - "+dsUDPSocket.getRemoteSocketAddress()+", local - "+dsUDPSocket.getLocalSocketAddress());
 						// Log.d(TAG, "--->remote - "+dpUDPRecvPacket.getSocketAddress());
-						if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : S2C " + iPacketNumber);
+						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : S2C " + iPacketNumber);
 					}
 				} catch(Exception e){
 					if(++iTimeOutPackets > 3) break;

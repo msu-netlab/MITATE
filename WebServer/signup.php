@@ -49,6 +49,8 @@ if (!mysql_query($sql,$con))
   else
   {
 mkdir("user_accounts/$_POST[username]", 0777);
+mkdir("user_accounts/$_POST[username]/experiments", 0777);
+mkdir("user_accounts/$_POST[username]/validate", 0777);
   $msg="Congratulations! You have been successfully registered with MITATE.";
  mail($_POST[email], "Account Created - MNEP", $msg);
 echo "You have been successfully registered with MITATE. Please <a href=index.php>Sign In</a> to proceed";

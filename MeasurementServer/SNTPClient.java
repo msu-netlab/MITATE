@@ -93,8 +93,6 @@ public boolean requestTime(String host, int timeout) {
         long receiveTime = readTimeStamp(buffer, RECEIVE_TIME_OFFSET);
         long transmitTime = readTimeStamp(buffer, TRANSMIT_TIME_OFFSET);
         long roundTripTime = responseTicks - requestTicks - (transmitTime - receiveTime);
-        System.out.println("recevice time - "+receiveTime);
-        System.out.println("difference time - "+(System.currentTimeMillis() - receiveTime));
         long clockOffset = ((receiveTime - originateTime) + (transmitTime - responseTime))/2;
         mNtpTime = responseTime + clockOffset;
         mNtpTimeReference = responseTicks;
