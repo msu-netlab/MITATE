@@ -48,7 +48,7 @@ public class UDPTestRun {
             dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length);
             for (int i=0; i<5; i++){
                 dsUDPSocket.receive(dpUDPRecvPacket);
-                System.out.println(TAG+" : @runUDPTest : Receiving demo packet - "+i+ "--" + dpUDPRecvPacket.getSocketAddress());
+                //System.out.println(TAG+" : @runUDPTest : Receiving demo packet - "+i+ "--" + dpUDPRecvPacket.getSocketAddress());
             }
             saClientAddress = dpUDPRecvPacket.getSocketAddress();                     
             int iTimeOutPackets = 0;
@@ -61,9 +61,8 @@ public class UDPTestRun {
             
             String sData = "";
             for (int i = 0; i < iUDPPackets; i++){
-                try {
-                    
-                if(iUplinkOrDownlink == 1) {         
+                try {                
+                if(iUplinkOrDownlink == 1) {       
 					long lServerTime = System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP;                
 					if(iExplicit == 0) {
 						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":;:";
@@ -72,13 +71,11 @@ public class UDPTestRun {
 						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
 					}					
 					baSendData = sData.getBytes();
-					//System.out.println(sData);
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);
 					System.out.println(TAG+": @UDPTest : Packet- " + i + " sent, Total bytes sent - "+iUDPTotalBytesSentToClient);
-                    Thread.sleep(MNEPServer.iPacketDelay);
-                        
+                    Thread.sleep(MNEPServer.iPacketDelay);               
                     }
                     if(iUplinkOrDownlink == 0) {		
 						if(sContentType.equals("HEX")) {
@@ -91,15 +88,13 @@ public class UDPTestRun {
 						long lTimeOnServer = System.currentTimeMillis();
                         int iNoOfBytesReceived = dpUDPRecvPacket.getLength();
                         iUDPTotalBytesReceivedFromClient += iNoOfBytesReceived;
-						//System.out.println(iNoOfBytesReceived);
-						//System.out.println(new String(dpUDPRecvPacket.getData()));
                         int iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(new String(dpUDPRecvPacket.getData()).split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient; 
                         laUDPPacketReceivedTimestamps[i] = lLatencyDownLink;
                         iaUDPBytes[i] = iNoOfBytesReceived;
                         i = iPacketNumber;
-                        System.out.println(TAG+": @UDPTest : Packet " + iPacketNumber  + " received, Total bytes received - "+iUDPTotalBytesReceivedFromClient+", ctime - "+lTimeOnClient ); 
+                        System.out.println(TAG+": @UDPTest : Packet " + iPacketNumber  + " received, Total bytes received - "+iUDPTotalBytesReceivedFromClient); 
                     }
                     
                 } catch (Exception e){
@@ -108,10 +103,8 @@ public class UDPTestRun {
                     }
                     System.out.println(TAG+" : @runUDPTest - " + e.getMessage());      
                     e.printStackTrace();
-                    // return false;
                 } 
             } 
-
             System.out.println(TAG+" : @runUDPTest : UDP Test Completed");
             dsUDPSocket.close();
             return true;
