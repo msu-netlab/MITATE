@@ -116,9 +116,7 @@ public class TCPTest {
 						int iTCPBytesSent = sBuffer.getBytes().length;
 						iTCPBytesSentToServer += iTCPBytesSent;							
 						
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : +"+", packet delay - "+iPacketDelay+", Sent - " + i+", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPBytesSentToServer);
-
-						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i+"------>"+sBuffer.getBytes().length+"--->"+sBuffer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"------>"+sBuffer);
+						// if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i+"------>"+sBuffer.getBytes().length+"--->"+sBuffer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"------>"+sBuffer);
 						Thread.sleep(iPacketDelay);
 						// bwWriteToServer.close();
 					}
@@ -136,14 +134,13 @@ public class TCPTest {
 						int iTCPPacketNumber = Integer.parseInt(sFromServer.split(":;:")[1]);
 						long lTimeOnServer = Long.parseLong(sFromServer.split(":;:")[2]);
 
-						// long lLatencyDownLink = (lTimeOnClient-MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						long lLatencyDownLink = lTimeOnClient - Measurement.lClientOffsetFromNTP - lTimeOnServer; // MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						
 						i= iTCPPacketNumber;
 
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;
 						iaTCPBytes[i] = iNumberOfBytesReceived;
-						if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i+"--->"+iNumberOfBytesReceived+"--->"+sFromServer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"---------->"+sFromServer);
+						// if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i+"--->"+iNumberOfBytesReceived+"--->"+sFromServer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"---------->"+sFromServer);
 						// brReadFromServer.close();
 					}
 				}
