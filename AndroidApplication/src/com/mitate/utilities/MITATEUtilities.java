@@ -109,6 +109,11 @@ public class MITATEUtilities extends PhoneStateListener {
  	    SNTPClient client = new SNTPClient();
 		if (client.requestTime("us.pool.ntp.org",5000)) {
 		   lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+		   System.out.println(lNTPTime+"------>"+(lNTPTime+"").length());
+		   if ((lNTPTime+"").length() != 13) {
+			   System.out.println("respeat");
+			   calculateTimeDifferenceBetweenNTPAndLocal();
+		   }
 		}
  	  
  	    long lSystemTime = System.currentTimeMillis();

@@ -1,14 +1,18 @@
 package com.mitate;
 
-import java.sql.Timestamp;
-
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.os.BatteryManager;
 import android.os.Build;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrengthLte;
 import android.telephony.TelephonyManager;
 
-// mitate application instance, get current context and services like telephonymanager
+@TargetApi(17)
 public class MITATEApplication extends Application {
 	
     static Context cContext;
@@ -21,7 +25,8 @@ public class MITATEApplication extends Application {
     }
     
     public void onCreate(){
-    	cContext = getApplicationContext();	   	   
+    	cContext = getApplicationContext();	
+    	tmTelephonyManager = (TelephonyManager)cContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     // return current application context
@@ -31,7 +36,6 @@ public class MITATEApplication extends Application {
     
     // return telephony manager system service
     public static TelephonyManager getTelephonyManager() {
-    	tmTelephonyManager = (TelephonyManager)cContext.getSystemService(Context.TELEPHONY_SERVICE);
     	return tmTelephonyManager;
     }
 
@@ -40,7 +44,6 @@ public class MITATEApplication extends Application {
     }
     
     public static String getNetworkCarrierName() {
-    	tmTelephonyManager = (TelephonyManager)cContext.getSystemService(Context.TELEPHONY_SERVICE);
     	return tmTelephonyManager.getNetworkOperatorName().replaceAll("\\s", "%20");
 	}
     
@@ -52,5 +55,19 @@ public class MITATEApplication extends Application {
 	   else{
 	       return 0;
 	   }
-	}    
+	}  
+    
+    public static int getSignalStrength() {
+        // API Min 17
+        CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
+        CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
+        // System.out.println("------------>///`"+cellSignalStrengthlte.getDbm()+"-"+cellSignalStrengthlte.getLevel()+"-"+cellSignalStrengthlte.getAsuLevel());		    	   
+        return(cellSignalStrengthlte.getAsuLevel());    	
+    }
+    
+    public static int getBatteryPower() {
+	    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+	    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);
+	    return(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));    	
+    }
 }
