@@ -124,11 +124,11 @@
           <xs:element ref="latitude"/>
           <xs:element ref="longitude"/>
           <xs:element ref="radius"/>
+		  <xs:element ref="networktype"/>
         </xs:sequence>
         <xs:choice minOccurs="0">
           <xs:element ref="criteriaid"/>
           <xs:sequence>
-            <xs:element ref="networktype"/>
             <xs:element ref="starttime"/>
             <xs:element ref="endtime"/>
             <xs:element ref="deviceid"/>

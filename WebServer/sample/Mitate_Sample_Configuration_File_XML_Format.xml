@@ -67,7 +67,7 @@
 				<sourceip>client</sourceip>
 				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>1</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
 				<bytes>
@@ -81,7 +81,7 @@
 				<sourceip>client</sourceip>
 				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>2</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
 				<bytes>
@@ -93,7 +93,7 @@
 			<transfer>
 				<id>t5</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.6</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>23399</portnumber>
@@ -120,7 +120,7 @@
 			</transfer>
 			<transfer>
 				<id>t7</id>
-				<sourceip>192.168.1.6</sourceip>
+				<sourceip>153.90.118.234</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -134,7 +134,7 @@
 			</transfer>
 			<transfer>
 				<id>t8</id>
-				<sourceip>192.168.1.6</sourceip>
+				<sourceip>153.90.118.234</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>0</type>
@@ -177,7 +177,7 @@
 			<transfer>
 				<id>t11</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.6</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
@@ -191,7 +191,7 @@
 			<transfer>
 				<id>t11</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.1.6</destinationip>
+				<destinationip>153.90.118.234</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
@@ -209,7 +209,7 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
-				<networktype>wifi</networktype>
+				<networktype>cellular</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
 				<deviceid>client</deviceid>
@@ -223,49 +223,26 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>50000</radius>
+				<networktype>cellular</networktype>
 			</criteria>	
 		</criteriadefine>
 	</defines>
 	<transactions>
 		<transaction count="2">
 			<transfers>
-				<transfer repeat="1" delay="20">
-					<transferid>t1</transferid>
-				</transfer>
 				<transfer repeat="1" delay="3000">
 					<transferid>t2</transferid>
 				</transfer>
-				<transfer repeat="1" delay="2000">
+				<transfer repeat="1" delay="20">
 					<transferid>t3</transferid>
 				</transfer >
-				<transfer repeat="1" delay="1000">
+				<transfer repeat="1" delay="5000">
 					<transferid>t4</transferid>
 				</transfer >
-				<transfer repeat="1" delay="20">
+				<transfer repeat="1" delay="0">
 					<transferid>t5</transferid>
 				</transfer>
-				<transfer repeat="1" delay="2000">
-					<transferid>t6</transferid>
-				</transfer >
-				<transfer repeat="1" delay="1000">
-					<transferid>t7</transferid>
-				</transfer >
-				<transfer repeat="1" delay="20">
-					<transferid>t8</transferid>
-				</transfer>
-				<transfer repeat="1" delay="2000">
-					<transferid>t9</transferid>
-				</transfer >
-				<transfer repeat="1" delay="20">
-					<transferid>t10</transferid>
-				</transfer>
-				<transfer repeat="1" delay="2000">
-					<transferid>t11</transferid>
-				</transfer >
-				<transfer repeat="1" delay="0">
-					<transferid>t1</transferid>
-				</transfer>
-		</transfers>
+			</transfers>
 			<criteria>
 				<criteriaid>c2</criteriaid>
 			</criteria>
