@@ -214,8 +214,6 @@ public class MNEPServer {
 					sMobileSignalStrength = convertReceivedClientTimesObject[iLoopAllClientTimes].getsSignalStrength();
 					sAccelerometerReading = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAccelerometerReading();
 					isDeviceInCall = convertReceivedClientTimesObject[iLoopAllClientTimes].getIsCallActive() + "";
-					
-					System.out.println(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
 					ServerMetrics currentTransferServerMetrics = hmServerMetrics.get(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
 					 if(currentTransferServerMetrics.iTCPBytes > 0)
 				        {			
