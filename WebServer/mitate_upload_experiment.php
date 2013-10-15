@@ -44,7 +44,21 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							libxml_display_errors();  
 							Delete("user_accounts/" . $username . "/experiments/" . $experiment_id);
 						}
-						else {	
+						else {
+
+							$urltopost = "http://mitate.cs.montana.edu/mitate_count_credit.php";
+							$datatopost = array (
+							"XMLFilePath" => "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path
+							);
+							$ch = curl_init ($urltopost);
+							curl_setopt ($ch, CURLOPT_POST, true);
+							curl_setopt ($ch, CURLOPT_POSTFIELDS, $datatopost);
+							curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+							$returndata = curl_exec ($ch);
+							echo $returndata;
+						
+						
+						
 							$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 							$xml = simplexml_load_file("$filepath");
 							$sql="INSERT INTO experiment (experiment_id, username, permission) VALUES($experiment_id, '$username', 'private')";
@@ -163,6 +177,13 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							}	
 							$yesdone = 1;
 							echo "$experiment_id";
+							
+							
+							
+							
+							
+							
+							
 						}
 					}	
 				}
