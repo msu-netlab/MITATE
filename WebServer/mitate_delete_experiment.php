@@ -15,15 +15,7 @@ if ($loginresultset) {
 		echo "Logged in. Please wait...\n";
 		$experiment_id = $_POST[experiment_id];
 		if($experiment_id != "") {
-			$user_uploaded_file_name =  scandir("user_accounts/$username/experiments/$experiment_id");
-			$urltopost = "http://mitate.cs.montana.edu/mitate_count_credit.php";
-			$datatopost = array ("XMLFilePath" => "user_accounts/$username/experiments/$experiment_id/$user_uploaded_file_name[2]");
-			$ch = curl_init ($urltopost);
-			curl_setopt ($ch, CURLOPT_POST, true);
-			curl_setopt ($ch, CURLOPT_POSTFIELDS, $datatopost);
-			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-			$returndata = curl_exec ($ch);
-			$total_credits_in_xml = explode(":", $returndata);
+			$total_credits_in_xml = mysql_fetch_assoc(mysql_query("select cellulardata, wifidata from experiment where experiment_id = $experiment_id"));
 			$check_if_data_tobe_returned = mysql_query("select sum(original_count) as exp_ocount, sum(count) as exp_count from transaction1 where experiment_id = $experiment_id");
 			$fetch_transaction_id_set = mysql_query("select tran.transactionid from transaction1 tran, experiment exp 
 			where tran.experiment_id = $experiment_id
@@ -55,7 +47,7 @@ if ($loginresultset) {
 			echo "Experiment deleted";
 			$get_if_data_tobe_returned = mysql_fetch_assoc($check_if_data_tobe_returned);
 			if($get_if_data_tobe_returned[exp_ocount] == $get_if_data_tobe_returned[exp_count]) {
-				$sql="update userdevice set availabledata = (availabledata + ($total_credits_in_xml[0]/1024.0)), availablewifi = (availablewifi + ($total_credits_in_xml[1]/1024.0))  where username = '$username'";
+				$sql="update userdevice set availabledata = (availabledata + $total_credits_in_xml[cellulardata]), availablewifi = (availablewifi + $total_credits_in_xml[wifidata])  where username = '$username'";
 				if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 			}
 		}

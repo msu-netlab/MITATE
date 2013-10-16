@@ -18,7 +18,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             $pendingtestset = mysql_query("SELECT
 			trf.sourceip as sourceip, trf.destinationip as destinationip, trf.bytes as bytes, trf.transferid as transferid,
 			trs.transactionid as transactionid, trf.type as type, trf.packetdelay, trf.explicit, substring(replace(replace(content,'\t',''), '\n\r', '\n'),1) content, trf.noofpackets, trf.portnumber, trf.contenttype, trf.response, trf.delay as transferdelay
-			from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl
+			from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl, experiment exp
 			where cri.criteriaid = tcl.criteriaid
 			and trs.transactionid = tcl.transactionid
 			and trs.count > 0
@@ -34,7 +34,10 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 10), ';', -1) = '$_GET[devicemodelname]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 10), ';', -1) = 'allDeviceModelNames')
 			and ((6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) <= (cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as decimal)*(22/(180*7))) 
 			or (6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) = 0 )
-			order by ttl.orderno"); 
+			and exp.experiment_id = trs.experiment_id
+			and (exp.cellulardata <= (select availabledata from userdevice where username = '$_GET[username]')
+			or exp.wifidata <= (select availablewifi from userdevice where username = '$_GET[username]'))
+			order by trs.transactionid, ttl.orderno");
             $output="";
 			$i = 0 ;
 			$transaction_id_array = "";
