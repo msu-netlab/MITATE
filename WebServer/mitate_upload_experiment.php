@@ -46,7 +46,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 						}
 						else {
 							$urltopost = "http://mitate.cs.montana.edu/mitate_count_credit.php";
-							$datatopost = array ("XMLFilePath" => "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path);
+							$datatopost = array ("XMLFilePath" => "user_accounts/$username/experiments/$experiment_id/$final_file_path");
 							$ch = curl_init ($urltopost);
 							curl_setopt ($ch, CURLOPT_POST, true);
 							curl_setopt ($ch, CURLOPT_POSTFIELDS, $datatopost);
@@ -170,6 +170,8 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								}		
 								$yesdone = 1;
 								echo "$experiment_id";
+								$sql="update userdevice set availabledata = (availabledata - ($total_credits_in_xml[0]/1024.0)), availablewifi = (availablewifi - ($total_credits_in_xml[1]/1024.0)) where username = '$username'";
+								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 							}
 							else {
 								if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1024.0)
