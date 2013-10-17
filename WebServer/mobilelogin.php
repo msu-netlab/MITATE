@@ -35,8 +35,27 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and ((6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) <= (cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as decimal)*(22/(180*7))) 
 			or (6378.137 * ACos((Cos(cast($_GET[latitude] as decimal)*(22/(180*7)))) * (Cos(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))) * (Cos((cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 2), ';', -1) as decimal) - cast($_GET[longitude] as decimal))*(22/(180*7)))) + Sin(cast($_GET[latitude] as decimal)*(22/(180*7))) * (Sin(cast(SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 1), ';', -1) as decimal)*(22/(180*7)))))) = 0 )
 			and exp.experiment_id = trs.experiment_id
-			and (exp.cellulardata <= (select availabledata from userdevice where username = '$_GET[username]')
-			or exp.wifidata <= (select availablewifi from userdevice where username = '$_GET[username]'))
+			and (exp.experiment_id in (
+			select exp1.experiment_id
+			from experiment exp1
+			inner join experiment exp2 on exp1.experiment_id >= exp2.experiment_id
+			where exp1.username != '$_GET[username]'
+			group by exp1.experiment_id, exp1.wifidata
+			having SUM(exp2.wifidata) < (
+			select availablewifi from userdevice where username = '$_GET[username]'
+			) and SUM(exp2.wifidata) > 0
+			union select exp1.experiment_id
+			from experiment exp1
+			inner join experiment exp2 on exp1.experiment_id >= exp2.experiment_id
+			where exp1.username != '$_GET[username]'
+			group by exp1.experiment_id, exp1.cellulardata
+			having SUM(exp2.cellulardata) < (
+			select availabledata from userdevice where username = '$_GET[username]'
+			) and SUM(exp2.cellulardata) > 0
+			)
+			or exp.experiment_id in ( 
+			select exp1.experiment_id from experiment exp1 where username = '$_GET[username]'
+			))
 			order by trs.transactionid, ttl.orderno");
             $output="";
 			$i = 0 ;
@@ -55,13 +74,17 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             if($output) {
 				$temp_count = count(array_unique($transaction_id_array));
 				print(json_encode($output));
+				$temp_check_for_null_val = 0;
 				$final_transaction_id_array = array_unique($transaction_id_array);
-				while($temp_count > 0) {
-					$transaction_count_reduce = $final_transaction_id_array[$temp_count - 1];
-					$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
-					if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
-					mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
-					$temp_count = $temp_count - 1;
+				while($temp_count > 0 && $temp_check_for_null_val < count($transaction_id_array)) {
+					$transaction_count_reduce = $final_transaction_id_array[$temp_check_for_null_val];
+					if($transaction_count_reduce != '') {
+						$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
+						if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
+						mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
+						$temp_count = $temp_count - 1;
+					}
+					$temp_check_for_null_val = $temp_check_for_null_val + 1;
 				}							
 			}
             else {
