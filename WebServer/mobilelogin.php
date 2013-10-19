@@ -42,7 +42,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			where exp1.username != '$_GET[username]'
 			group by exp1.experiment_id, exp1.wifidata
 			having SUM(exp2.wifidata) < (
-			select availablewifi from userdevice where username = '$_GET[username]'
+			select available_wifi_credits from usercredits where username = '$_GET[username]'
 			) and SUM(exp2.wifidata) > 0
 			union select exp1.experiment_id
 			from experiment exp1
@@ -50,7 +50,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			where exp1.username != '$_GET[username]'
 			group by exp1.experiment_id, exp1.cellulardata
 			having SUM(exp2.cellulardata) < (
-			select availabledata from userdevice where username = '$_GET[username]'
+			select available_cellular_credits from usercredits where username = '$_GET[username]'
 			) and SUM(exp2.cellulardata) > 0
 			)
 			or exp.experiment_id in ( 
@@ -88,17 +88,18 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 				}							
 			}
             else {
-				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as content, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
+				$pendingtestset = mysql_query("SELECT 'NoPendingTransactions' as content");
 				$pendingtestrow=mysql_fetch_assoc($pendingtestset);
 				$output[]=$pendingtestrow;
 				print(json_encode($output));
 			}
+			mysql_query("update userdevice set timespinged = timespinged + 1 where deviceid = $_GET[deviceid]", $dbconnection);
 		}				
         else if ($loginresultrow['status'] == "0") {
-            $pendingtestset = mysql_query("SELECT 'InvalidLogin' as content, '' as starttime, '' as endtime, '' as clientip, '' as serverip, '' as bytes, '' as downbytes from transfer LIMIT 1");
+            $pendingtestset = mysql_query("SELECT 'InvalidLogin' as content");
             $pendingtestrow=mysql_fetch_assoc($pendingtestset);
             $output[]=$pendingtestrow;
-            print(json_encode($output));
+			print(json_encode($output));			
         }				
     }
     mysql_close();

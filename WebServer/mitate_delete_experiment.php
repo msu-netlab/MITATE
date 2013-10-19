@@ -47,7 +47,7 @@ if ($loginresultset) {
 			echo "Experiment deleted";
 			$get_if_data_tobe_returned = mysql_fetch_assoc($check_if_data_tobe_returned);
 			if($get_if_data_tobe_returned[exp_ocount] == $get_if_data_tobe_returned[exp_count]) {
-				$sql="update userdevice set availabledata = (availabledata + $total_credits_in_xml[cellulardata]), availablewifi = (availablewifi + $total_credits_in_xml[wifidata])  where username = '$username'";
+				$sql="update usercredits set available_cellular_credits = (available_cellular_credits + $total_credits_in_xml[cellulardata]), available_wifi_credits = (available_wifi_credits + $total_credits_in_xml[wifidata])  where username = '$username'";
 				if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 			}
 		}

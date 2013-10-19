@@ -52,7 +52,16 @@ mkdir("user_accounts/$_POST[username]", 0777);
 mkdir("user_accounts/$_POST[username]/experiments", 0777);
 mkdir("user_accounts/$_POST[username]/validate", 0777);
 mkdir("user_accounts/$_POST[username]/countcredit", 0777);
-  $msg="Congratulations! You have been successfully registered with MITATE.";
+$msg="Congratulations! You have been successfully registered with MITATE.";
+$start_value = 1000000000;
+$credit_id = $start_value;
+$get_credit_id_counts = mysql_query("SELECT count(*) as count, max(credit_id) as maxval from usercredits");
+while($get_credit_id_count = mysql_fetch_assoc($get_credit_id_counts)) {
+	if($get_credit_id_count[count] > 0)
+		$credit_id = $get_credit_id_count[maxval] + 1;
+}
+$sql_store_credits ="INSERT INTO usercredits (credit_id, username, available_cellular_credits, contributed_cellular_credits, available_wifi_credits, contributed_wifi_credits) VALUES($credit_id, '$_POST[username]', 200, 0, 500, 0)";
+if (!mysql_query($sql_store_credits, $con)) {die('Error: ' . mysql_error());}			
  mail($_POST[email], "Account Created - MNEP", $msg);
 echo "You have been successfully registered with MITATE. Please <a href=index.php>Sign In</a> to proceed";
 echo "<br />";

@@ -53,7 +53,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 							$returndata = curl_exec ($ch);
 							$total_credits_in_xml = explode(":", $returndata);
-							$get_user_available_credits = mysql_query("SELECT sum(availabledata) as availabledata, sum(availablewifi) as availablewifi FROM userdevice where username = '$username'");
+							$get_user_available_credits = mysql_query("SELECT sum(available_cellular_credits) as availabledata, sum(available_wifi_credits) as availablewifi FROM usercredits where username = '$username'");
 							$user_data_credits = mysql_fetch_assoc($get_user_available_credits);
 							if($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1024.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1024.0) {
 								$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
@@ -170,7 +170,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								}		
 								$yesdone = 1;
 								echo "$experiment_id";
-								$sql="update userdevice set availabledata = (availabledata - ($total_credits_in_xml[0]/1024.0)), availablewifi = (availablewifi - ($total_credits_in_xml[1]/1024.0)) where username = '$username'";
+								$sql="update usercredits set available_cellular_credits = (available_cellular_credits - ($total_credits_in_xml[0]/1024.0)), available_wifi_credits = (available_wifi_credits - ($total_credits_in_xml[1]/1024.0)) where username = '$username'";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 							}
 							else {
