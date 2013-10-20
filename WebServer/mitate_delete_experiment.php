@@ -15,6 +15,8 @@ if ($loginresultset) {
 		echo "Logged in. Please wait...\n";
 		$experiment_id = $_POST[experiment_id];
 		if($experiment_id != "") {
+			$total_credits_in_xml = mysql_fetch_assoc(mysql_query("select cellulardata, wifidata from experiment where experiment_id = $experiment_id"));
+			$check_if_data_tobe_returned = mysql_query("select sum(original_count) as exp_ocount, sum(count) as exp_count from transaction1 where experiment_id = $experiment_id");
 			$fetch_transaction_id_set = mysql_query("select tran.transactionid from transaction1 tran, experiment exp 
 			where tran.experiment_id = $experiment_id
 			and exp.experiment_id = tran.experiment_id
@@ -40,13 +42,14 @@ if ($loginresultset) {
 		if($experiment_count > 0) {
 			mysql_query("delete from transaction1 where experiment_id = $experiment_id");
 			mysql_query("delete from experiment where experiment_id = $experiment_id");
-			$files_to_delete = glob('user_accounts/' . $username . '/' . $experiment_id . '/*');
-			foreach($files_to_delete as $file_to_delete){
-				if(is_file($file_to_delete))
-					unlink($file_to_delete);
-			}
+			Delete("user_accounts/$username/experiments/$experiment_id");
 			rmdir("user_accounts/$username/$experiment_id");
 			echo "Experiment deleted";
+			$get_if_data_tobe_returned = mysql_fetch_assoc($check_if_data_tobe_returned);
+			if($get_if_data_tobe_returned[exp_ocount] == $get_if_data_tobe_returned[exp_count]) {
+				$sql="update usercredits set available_cellular_credits = (available_cellular_credits + $total_credits_in_xml[cellulardata]), available_wifi_credits = (available_wifi_credits + $total_credits_in_xml[wifidata])  where username = '$username'";
+				if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+			}
 		}
 		else 
 			echo "Valid experiment ID required.";
@@ -56,5 +59,19 @@ if ($loginresultset) {
 	}
 	else
 		echo "Invalid account credentials.";
+}
+
+function Delete($path) {
+    if (is_dir($path) === true) {
+        $files = array_diff(scandir($path), array('.', '..'));
+        foreach ($files as $file) {
+            Delete(realpath($path) . '/' . $file);
+        }
+        return rmdir($path);
+    }
+    else if (is_file($path) === true) {
+        return unlink($path);
+    }
+    return false;
 }
 ?>
