@@ -223,12 +223,12 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>50000</radius>
-				<networktype>cellular</networktype>
+				<networktype>wifi</networktype>
 			</criteria>	
 		</criteriadefine>
 	</defines>
 	<transactions>
-		<transaction count="2">
+		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="3000">
 					<transferid>t2</transferid>
