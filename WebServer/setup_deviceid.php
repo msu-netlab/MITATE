@@ -32,7 +32,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['phone_number']!="" &
 						$random_string = $fetch_random_string_count[maxval] + 1;
 				}
 				$deviceid_short = md5($user_phone_number);	
-				$sql_store_deviceid ="INSERT INTO userdevice (username, devicename, pollinterval, deviceid, minbatterypower, random_string) VALUES('$_GET[username]', '$_GET[device_name]', 30, $random_string, 50, '$deviceid_short')";
+				$sql_store_deviceid ="INSERT INTO userdevice (username, devicename, pollinterval, deviceid, minbatterypower, random_string) VALUES('$_GET[username]', '$_GET[device_name]', 30, $random_string, 5, '$deviceid_short')";
 				if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}					
 				echo $random_string;
 			}	
