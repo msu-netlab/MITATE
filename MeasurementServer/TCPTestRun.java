@@ -19,6 +19,7 @@ public class TCPTestRun {
     int iTCPTotalBytesSentToClient, iTCPTotalBytesReceivedFromClient;
     long[] laTCPPacketReceivedTimestamps;
 	int[] iaTCPBytes;
+	String sLog;
     BufferedReader brReadFromClient;
     BufferedWriter bwWriteToClient;
     
@@ -34,13 +35,14 @@ public class TCPTestRun {
         iTCPTotalBytesReceivedFromClient = 0;
         laTCPPacketReceivedTimestamps = new long[iTCPPackets];
         iaTCPBytes = new int[iTCPPackets];
+		sLog = "";
     }
     
     public boolean runTCPTest(int iUplinkOrDownlink, int iExplicit, String sContent, String sContentType) {       
         System.out.println(TAG+" : @runTCPTest : begin");
         try {
             ssServerSocket = new ServerSocket(iTCPPort);
-            ssServerSocket.setSoTimeout(40000);
+            ssServerSocket.setSoTimeout(10000);
             sSocket = ssServerSocket.accept();
             brReadFromClient = new BufferedReader(new InputStreamReader(sSocket.getInputStream(), "UTF-8"));
             Scanner scReadFromClient = new Scanner(new BufferedReader(new InputStreamReader(sSocket.getInputStream())));
@@ -91,16 +93,19 @@ public class TCPTestRun {
                     }
                     System.out.println(TAG+" : @runTCPTest : error - "+e.getMessage());
                     e.printStackTrace();
+					break;
                 }
             }
             scReadFromClient.close();             
             System.out.println(TAG+" : @runTCPTest : TCP test completed");
             sSocket.close();
-            ssServerSocket.close();            
+            ssServerSocket.close();   
+			sLog = "SUCCESS";			
             return true;
         } catch (Exception e) {
             System.out.println(TAG+" : @runTCPTest - " + e.getMessage()); 
             e.printStackTrace();
+			sLog = "TCP ERROR AT SERVER";
             return false;
         }        
     }
