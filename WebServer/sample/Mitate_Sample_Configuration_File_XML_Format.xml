@@ -213,12 +213,26 @@
 				<sourceip>client</sourceip>
 				<destinationip>8.8.8.8</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>1</type>
+				<type>2</type>
 				<portnumber>53</portnumber>
 				<response>1</response>
 				<bytes>
 					<explicit>1</explicit>
 					<contentid>content6</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t13</id>
+				<sourceip>client</sourceip>
+				<destinationip>mitate.cs.monvtana.edu</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>0</type>
+				<portnumber>80</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content5</contentid>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
@@ -251,7 +265,13 @@
 		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="0">
+					<transferid>t1</transferid>
+				</transfer>
+				<transfer repeat="1" delay="0">
 					<transferid>t12</transferid>
+				</transfer>
+				<transfer repeat="1" delay="0">
+					<transferid>t13</transferid>
 				</transfer>
 			</transfers>
 			<criteria>
