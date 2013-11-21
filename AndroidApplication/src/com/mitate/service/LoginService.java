@@ -137,8 +137,8 @@ public class LoginService extends Service {
        	   	   		"username="+sUserName+ //
    	    	   	    "&password="+sPassword+ //
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
-   	    	   	    // "&networktype="+MITATEUtilities.getNetworkType(cContext)+"&city="+mLocation.getCity(cContext);
-   	    	   	    "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
+   	    	   	    "&networktype="+MITATEUtilities.getNetworkType(cContext)+// +"&city="+mLocation.getCity(cContext);
+   	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
    	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
    	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
@@ -180,7 +180,8 @@ public class LoginService extends Service {
                }
                else {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : number of pending transactions - "+jaPendingTransfers.length());
-	               for(int i=0;i<jaPendingTransfers.length();i++) {
+	               
+            	   for(int i=0;i<jaPendingTransfers.length();i++) {
                        JSONObject json_data = jaPendingTransfers.getJSONObject(i);
                        tPendingTransfers[i] = new Transfer();
                        tPendingTransfers[i].setiBytes(json_data.getInt("bytes"));

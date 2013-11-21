@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.telephony.CellInfoLte;
@@ -16,8 +19,10 @@ import android.telephony.TelephonyManager;
 public class MITATEApplication extends Application {
 	
     static Context cContext;
-    public static boolean bDebug;
     static TelephonyManager tmTelephonyManager;
+    
+    public static boolean bDebug;
+    static String TAG = "MITATEApplication";
     
     // for debugging
     static {
@@ -39,14 +44,17 @@ public class MITATEApplication extends Application {
     	return tmTelephonyManager;
     }
 
+    // return device model name
     public static String getDeviceModel() {
     	return Build.MODEL.replaceAll("\\s", "%20");
     }
     
+    // return the wetwork carrier
     public static String getNetworkCarrierName() {
     	return tmTelephonyManager.getNetworkOperatorName().replaceAll("\\s", "%20");
 	}
     
+    // check of user is on call
     public static int isCallActive(){
 	   AudioManager manager = (AudioManager)cContext.getSystemService(Context.AUDIO_SERVICE);
 	   if(manager.getMode()==AudioManager.MODE_IN_CALL){
@@ -57,14 +65,21 @@ public class MITATEApplication extends Application {
 	   }
 	}  
     
+    // return signal strength - mobile / wifi
     public static int getSignalStrength() {
-        // API Min 17
-        CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
-        CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
-        // System.out.println("------------>///`"+cellSignalStrengthlte.getDbm()+"-"+cellSignalStrengthlte.getLevel()+"-"+cellSignalStrengthlte.getAsuLevel());		    	   
-        return(cellSignalStrengthlte.getAsuLevel());    	
+    	NetworkInfo userNetwork = ((ConnectivityManager)cContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+    	if(userNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+            // Min API required - API 17
+            CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
+            CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
+            return(cellSignalStrengthlte.getAsuLevel());    		
+    	} else { // (userNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+    		WifiManager wifiManager = (WifiManager)cContext.getSystemService(Context.WIFI_SERVICE);
+    		return(wifiManager.getConnectionInfo().getRssi());    		
+    	}
     }
-    
+
+    // return the battery power
     public static int getBatteryPower() {
 	    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 	    Intent batteryStatus = MITATEApplication.getCustomAppContext().registerReceiver(null, ifilter);

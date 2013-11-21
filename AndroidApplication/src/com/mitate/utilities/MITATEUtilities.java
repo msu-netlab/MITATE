@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 public class MITATEUtilities extends PhoneStateListener {
 	
-	private Handler handler;
+	// private Handler handler;
 	public static long lTimeDifference = 0;
 	public static int iSignalStrength;
 	
-	public MITATEUtilities() {
+	/* public MITATEUtilities() {
 		handler = new Handler();
 		Looper.myLooper().prepare();
-	}
+	} */
 	
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength)
@@ -77,7 +77,7 @@ public class MITATEUtilities extends PhoneStateListener {
 			if (netType == ConnectivityManager.TYPE_WIFI) {
 				return "wifi";
 			} 
-			else if (netType == ConnectivityManager.TYPE_MOBILE) { //  && netSubtype == TelephonyManager.NETWORK_TYPE_UMTS && !mTelephony.isNetworkRoaming()) {
+			else if (netType == ConnectivityManager.TYPE_MOBILE) {
 				return "cellular";
 			}
 		} catch (Exception e) {
@@ -107,17 +107,20 @@ public class MITATEUtilities extends PhoneStateListener {
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
 		long lNTPTime = 0;
  	    SNTPClient client = new SNTPClient();
-		if (client.requestTime("us.pool.ntp.org",5000)) {
-		   lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-		   System.out.println(lNTPTime+"------>"+(lNTPTime+"").length());
-		   if ((lNTPTime+"").length() != 13) {
-			   System.out.println("respeat");
-			   calculateTimeDifferenceBetweenNTPAndLocal();
-		   }
-		}
- 	  
- 	    long lSystemTime = System.currentTimeMillis();
- 	    lTimeDifference = lSystemTime - lNTPTime;
- 	    return lTimeDifference;
+ 	    while(true) { // clock.xmission.com
+ 	    	if (client.requestTime("us.pool.ntp.org", 4000)) {
+ 	    		lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+ 	    		System.out.println(lNTPTime+"------>"+(lNTPTime+"").length()); 	    	
+ 	    		if((lNTPTime+"".length()) == 13) 
+ 	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
+ 	    		return lTimeDifference;
+ 	    	} else {
+ 	    		try {
+ 	    			Thread.sleep(5000); 
+ 	    		} catch (Exception e) {
+ 	    			e.printStackTrace();
+ 	    		}
+ 	    	}
+ 	    }
 	}
 }
