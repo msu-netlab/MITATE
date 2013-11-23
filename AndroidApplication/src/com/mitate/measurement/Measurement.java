@@ -217,7 +217,8 @@ public class Measurement extends Thread implements SensorEventListener {
 				ctCDNTest = new CDNTest(
 						LoginService.tPendingTransfers[j].getiTransferid(), LoginService.tPendingTransfers[j].getiTransactionid(), 
 						LoginService.tPendingTransfers[j].getsDestinationIP(), LoginService.tPendingTransfers[j].getsPortNumber(), 
-						LoginService.tPendingTransfers[j].getsContent(), LoginService.tPendingTransfers[j].getiNoOfPackets());
+						LoginService.tPendingTransfers[j].getsContent(), LoginService.tPendingTransfers[j].getiNoOfPackets(),
+						LoginService.tPendingTransfers[j].getiPacketType());
 				ctCDNTest.runCDNTest(); 
 			} else { 
 			
@@ -309,7 +310,7 @@ public class Measurement extends Thread implements SensorEventListener {
 					Thread.sleep(1000);
 					iTCPPort = 32166;
 					sConnectionSocket = new Socket(sServerIP, iTCPPort);						
-					// sConnectionSocket.setSoTimeout(iPacketDelay + 8000);
+					sConnectionSocket.setSoTimeout(10000);
 					
 					if(sConnectionSocket != null) {
 						Log.d(TAG, "@clienttimesending : connected to server - "+sConnectionSocket.getRemoteSocketAddress()+", local - "+sConnectionSocket.getLocalSocketAddress());							

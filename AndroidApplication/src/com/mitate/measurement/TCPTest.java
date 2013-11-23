@@ -69,7 +69,7 @@ public class TCPTest {
 				try {
 					Thread.sleep(1000);
 					sConnectionSocket = new Socket(sServerIP, iServerTCPPortNo);
-					sConnectionSocket.setSoTimeout(iPacketDelay + 10000);
+					sConnectionSocket.setSoTimeout(10000);
 					if(sConnectionSocket != null) {
 						if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : Connected to Server : "+sConnectionSocket.getRemoteSocketAddress());
 						break; 

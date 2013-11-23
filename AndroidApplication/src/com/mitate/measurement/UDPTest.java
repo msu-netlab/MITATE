@@ -65,7 +65,7 @@ public class UDPTest {
 			
 			InetAddress iaServerAddress = InetAddress.getByName(sServerIP);
 			dsUDPSocket = new DatagramSocket(iUDPPort);
-			dsUDPSocket.setSoTimeout(iPacketDelay + 10000);
+			dsUDPSocket.setSoTimeout(10000);
 			dpUDPSendPacket = new DatagramPacket(new byte[10], 1, iaServerAddress, iUDPPort);
 			
 			for(int k=0;k <5; k++) {

@@ -3,6 +3,9 @@ package com.mitate.measurement;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -10,6 +13,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;                                  
 
 import android.util.Log;
 
@@ -25,23 +30,32 @@ public class CDNTest {
 	String iPortNo;
 	String sHTTPRequest;
 	String sResponse;	
+	String sResponseFromServer = "";
 
 	Socket sConnectionSocket;
 	PrintWriter pwWriteRequest;
 	BufferedReader brReadResponse;
 	
+	DatagramSocket dsUDPSocket;
+	DatagramPacket dpUDPSendPacket;
+	DatagramPacket dpUDPRecvPacket;
+	
+	byte[] baReceivedData;
+	
 	int iTransactionId;
 	int iTransferId;
 	int iRepeat;
+	int iPacketType;
 	
 	// initialize CDN test parameters
-	public CDNTest(int iTransferId, int iTransactionId, String sCDNName, String iPortNo, String sHTTPRequest, int iRepeat) {
+	public CDNTest(int iTransferId, int iTransactionId, String sCDNName, String iPortNo, String sHTTPRequest, int iRepeat, int iPacketType) {
 		this.iTransferId = iTransferId;
 		this.iTransactionId = iTransactionId;
 		this.sCDNName= sCDNName;
 		this.iPortNo = iPortNo;
 		this.sHTTPRequest = sHTTPRequest;
 		this.iRepeat = iRepeat;
+		this.iPacketType = iPacketType;
 	} 
 	
 	// run the cdn test
@@ -52,13 +66,13 @@ public class CDNTest {
 		long startTime = 0;
 		long finishTime = 0;
 		
+		sHTTPRequest = sHTTPRequest+"\r\n";
+		sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
+		
+		if(MITATEApplication.bDebug) Log.v(TAG, sHTTPRequest.toString()+"-"+sCDNName+":"+iPortNo);
+		
+		if(iPacketType == 2){
 		try {
-			
-			sHTTPRequest = sHTTPRequest+"\r\n";
-			sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
-			
-			if(MITATEApplication.bDebug) Log.v(TAG, sHTTPRequest.toString()+"-"+sCDNName+":"+iPortNo);
-			
 			sConnectionSocket = new Socket(sCDNName, Integer.parseInt(iPortNo));
 			sConnectionSocket.setSoTimeout(10000);
 			pwWriteRequest = new PrintWriter(sConnectionSocket.getOutputStream(), true);
@@ -70,11 +84,10 @@ public class CDNTest {
 				pwWriteRequest.write(sHTTPRequest+"\n");
 				pwWriteRequest.flush();
 			}				
-			String sResponseFromServer = "";
 			while((sResponse = brReadResponse.readLine())!=null) {
 				time.add(System.currentTimeMillis());
 				iBytesRead += sResponse.getBytes().length;
-				System.out.println("----" + sResponse.getBytes());
+				System.out.println("----" + sResponse);
 				sResponseFromServer = sResponseFromServer + sResponse;
 				if(System.currentTimeMillis() - time.get(time.size()-1) > 1000)
 				 	break;
@@ -93,6 +106,44 @@ public class CDNTest {
 		catch(Exception e) {
 			e.printStackTrace();
 			sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "UnableToResolveTheHost");
+		}
+		}
+		else if(iPacketType == 1) {
+			try {
+			dsUDPSocket = new DatagramSocket(3333);
+			dsUDPSocket.setSoTimeout(10000);
+			InetAddress iaServerAddress = InetAddress.getByName(sCDNName);
+			dpUDPSendPacket = new DatagramPacket(sHTTPRequest.getBytes(), sHTTPRequest.getBytes().length, iaServerAddress, Integer.parseInt(iPortNo));
+			
+			startTime = System.currentTimeMillis();
+			dsUDPSocket.send(dpUDPSendPacket);	
+			
+			baReceivedData = new byte[1000];
+			dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length, iaServerAddress, Integer.parseInt(iPortNo));
+			
+			while(true) {
+				dsUDPSocket.receive(dpUDPRecvPacket);
+				time.add(System.currentTimeMillis());
+				iBytesRead += dpUDPRecvPacket.getData().length;
+				System.out.println("+++++" + new String(dpUDPRecvPacket.getData()));
+				sResponseFromServer = sResponseFromServer + new String(dpUDPRecvPacket.getData());
+				if(dpUDPRecvPacket.getData().length <= 0 && (System.currentTimeMillis() - time.get(time.size()-1) > 1000))
+					break;
+			}
+			finishTime = System.currentTimeMillis();
+			
+			if(time.size() >= 2)	 
+				sendMetrics(iBytesRead, (time.get(time.size() - 2) - time.get(0)), (time.get(0)-startTime), new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+			else
+				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+		
+			dsUDPSocket.close();
+			}
+			catch(Exception e) {
+				dsUDPSocket.close();
+				e.printStackTrace();
+				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "UnableToResolveTheHost");
+			}
 		}
 	}
 	
