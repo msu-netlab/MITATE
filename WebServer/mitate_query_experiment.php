@@ -50,7 +50,7 @@ if ($loginresultset) {
 						}
 						$get_logs_list = mysql_query("select * from logs where transferid = $get_transfer_linked[transferid]");
 						while($get_log = mysql_fetch_assoc($get_logs_list)) {
-							echo "replace into logs (logid, username, transferid, deviceid, logmessage) values ($get_log[logid], '$get_log[username]', $get_log[transferid], '$get_log[deviceid]', '$get_log[logmessage]');";
+							echo "replace into logs (logid, username, transferid, deviceid, logmessage) values ($get_log[logid], '$get_log[username]', $get_log[transferid], '$get_log[deviceid]', '$get_log[logmessage]', '$get_log[transferfinished]');";
 						}
 					}
 				}
