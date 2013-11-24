@@ -88,12 +88,9 @@ public class TCPTestRun {
                     }
                 }
                 catch(Exception e) {
-                    if(++iTimeOutPackets > 3) {
-                        return false;
-                    }
                     System.out.println(TAG+" : @runTCPTest : error - "+e.getMessage());
                     e.printStackTrace();
-					break;
+					return false;
                 }
             }
             scReadFromClient.close();             

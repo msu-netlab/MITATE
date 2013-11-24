@@ -101,12 +101,9 @@ public class UDPTestRun {
                     }
                     
                 } catch (Exception e){
-                    if(++iTimeOutPackets > 3) {
-                        return false;
-                    }
                     System.out.println(TAG+" : @runUDPTest - " + e.getMessage());      
                     e.printStackTrace();
-					break;
+					return false;
                 } 
             } 
             System.out.println(TAG+" : @runUDPTest : UDP Test Completed");
