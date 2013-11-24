@@ -104,8 +104,11 @@ public class TCPTestRun {
             return true;
         } catch (Exception e) {
             System.out.println(TAG+" : @runTCPTest - " + e.getMessage()); 
+			scReadFromClient.close(); 
+			sSocket.close();
+            ssServerSocket.close(); 
             e.printStackTrace();
-			sLog = "TCP ERROR AT SERVER";
+			sLog = "TCP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
         }        
     }

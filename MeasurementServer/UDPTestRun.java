@@ -116,8 +116,9 @@ public class UDPTestRun {
 
         } catch (Exception e){
             System.out.println(TAG+" : @runUDPTest : error - " + e.getMessage()); 
+			dsUDPSocket.close();
             e.printStackTrace();
-			sLog = "UDP ERROR AT SERVER";
+			sLog = "UDP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
         }
     }

@@ -35,7 +35,7 @@
 			<content>
 				<contentid>content6</contentid>
 				<protocol>DNSLookup</protocol>
-				<data><![CDATA[000101000001000000000000013801380138013807696e2d61646472046172706100000c0001]]></data>
+				<data><![CDATA[1b3f0100000100000000000006736561726368096a6170616e706f7374026a700000010001]]></data>
 				<contenttype>HEX</contenttype>
 			</content>
 		</contentdefine>
@@ -45,7 +45,7 @@
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.montana.edu</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>2</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
 				<bytes>
@@ -225,14 +225,84 @@
 			<transfer>
 				<id>t13</id>
 				<sourceip>client</sourceip>
-				<destinationip>mitate.cs.monvtana.edu</destinationip>
+				<destinationip>8.8.8.8</destinationip>
 				<packetdelay>0</packetdelay>
-				<type>0</type>
+				<type>1</type>
+				<portnumber>53</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content6</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t14</id>
+				<sourceip>client</sourceip>
+				<destinationip>mitate.cs.montana.edu</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>1</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
 				<bytes>
 					<explicit>1</explicit>
 					<contentid>content5</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t15</id>
+				<sourceip>client</sourceip>
+				<destinationip>mitate.cs.mfontana.edu</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>1</type>
+				<portnumber>80</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content5</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t16</id>
+				<sourceip>client</sourceip>
+				<destinationip>mitate.cs.mfontana.edu</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>2</type>
+				<portnumber>80</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content5</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t17</id>
+				<sourceip>client</sourceip>
+				<destinationip>8.83.8.8</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>1</type>
+				<portnumber>53</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content6</contentid>
+				</bytes>
+				<noofpackets>1</noofpackets>
+			</transfer>
+			<transfer>
+				<id>t18</id>
+				<sourceip>client</sourceip>
+				<destinationip>8.83.8.8</destinationip>
+				<packetdelay>0</packetdelay>
+				<type>2</type>
+				<portnumber>53</portnumber>
+				<response>1</response>
+				<bytes>
+					<explicit>1</explicit>
+					<contentid>content6</contentid>
 				</bytes>
 				<noofpackets>1</noofpackets>
 			</transfer>
@@ -243,12 +313,12 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
-				<networktype>cellular</networktype>
+				<networktype>wifi</networktype>
 				<starttime>000001</starttime>
 				<endtime>235959</endtime>
 				<deviceid>client</deviceid>
 				<minimumbatterypower>0</minimumbatterypower>
-				<minimumsignalstrength>0</minimumsignalstrength>
+				<minimumsignalstrength>-1000</minimumsignalstrength>
 				<networkcarrier>Verizon Wireless</networkcarrier>
 				<devicemodelname>Galaxy Nexus</devicemodelname>
 			</criteria>		
@@ -257,7 +327,7 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>50000</radius>
-				<networktype>wifi</networktype>
+				<networktype>cellular</networktype>
 			</criteria>	
 		</criteriadefine>
 	</defines>
@@ -265,17 +335,20 @@
 		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="0">
-					<transferid>t1</transferid>
+					<transferid>t15</transferid>
 				</transfer>
 				<transfer repeat="1" delay="0">
-					<transferid>t12</transferid>
+					<transferid>t16</transferid>
 				</transfer>
 				<transfer repeat="1" delay="0">
-					<transferid>t13</transferid>
+					<transferid>t17</transferid>
+				</transfer>
+				<transfer repeat="1" delay="0">
+					<transferid>t18</transferid>
 				</transfer>
 			</transfers>
 			<criteria>
-				<criteriaid>c1</criteriaid>
+				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
