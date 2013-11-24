@@ -142,16 +142,21 @@ public class MNEPUtilities {
     
     public static long calculateTimeDifferenceBetweenNTPAndLocal(String sNTPServer) {
         long lNTPTime = 0;
-        SNTPClient client = new SNTPClient();            
-        if (client.requestTime(sNTPServer, 20000)) {
-               // lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-            //System.out.println("NTP - Server : "+sNTPServer+", Time : "+client.getNtpTime()+ ", System : "+System.currentTimeMillis()+", Diff : "+(client.getNtpTime() - System.currentTimeMillis()));
-            lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
-        }
-
+        SNTPClient client = new SNTPClient();   
+		try {
+			while((lNTPTime + "").length() < 13) {
+				if (client.requestTime(sNTPServer, 4000)) {
+					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+				}
+				else
+					Thread.sleep(5000);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
         long lSystemTime = System.currentTimeMillis();
         lServerOffsetWithNTP = lSystemTime - lNTPTime;
-        // lServerOffsetWithNTP = 0;
         return lServerOffsetWithNTP;
     }
 }
