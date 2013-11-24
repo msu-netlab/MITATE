@@ -97,19 +97,21 @@ public class TCPTestRun {
                 }
             }
             scReadFromClient.close();             
-            System.out.println(TAG+" : @runTCPTest : TCP test completed");
-            sSocket.close();
-            ssServerSocket.close();   
+            System.out.println(TAG+" : @runTCPTest : TCP test completed");  
 			sLog = "SUCCESS";			
             return true;
         } catch (Exception e) {
             System.out.println(TAG+" : @runTCPTest - " + e.getMessage()); 
-			scReadFromClient.close(); 
-			sSocket.close();
-            ssServerSocket.close(); 
             e.printStackTrace();
 			sLog = "TCP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
-        }        
+        }
+		finally {
+			try {
+			sSocket.close();
+            ssServerSocket.close(); 
+			}
+			catch(Exception e) {}
+		}
     }
 }
