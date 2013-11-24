@@ -14,6 +14,8 @@ public class ServerMetrics {
     int iUDPBytes;
     int iUplinkOrDownlink;
     int iTransactionId;
+	String sUDPLog;
+	String sTCPLog;
 	public int getiTransactionId() {
 		return iTransactionId;
 	}
@@ -89,6 +91,18 @@ public class ServerMetrics {
 	}
 	public void setiTCPTotalBytesSentToClient(int iTCPTotalBytesSentToClient) {
 		this.iTCPTotalBytesSentToClient = iTCPTotalBytesSentToClient;
+	}
+	public String getsUDPLog() {
+		return sUDPLog;
+	}
+	public void setsUDPLog(String sUDPLog) {
+		this.sUDPLog = sUDPLog;
+	}
+	public String getsTCPLog() {
+		return sTCPLog;
+	}
+	public void setsTCPLog(String sTCPLog) {
+		this.sTCPLog = sTCPLog;
 	}
     
 }

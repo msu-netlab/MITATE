@@ -20,6 +20,8 @@ public class UDPTestRun {
     byte[] baSendData;
     byte[] baReceivedData;
     
+	String sLog;
+	
     DatagramSocket dsUDPSocket;
     DatagramPacket dpUDPSendPacket;
     DatagramPacket dpUDPRecvPacket;
@@ -36,7 +38,8 @@ public class UDPTestRun {
         this.iUDPPackets = iUDPPackets;
         this.iUDPPort = iUDPPort;
         laUDPPacketReceivedTimestamps = new long[iUDPPackets];
-        iaUDPBytes = new int[iUDPPackets];        
+        iaUDPBytes = new int[iUDPPackets]; 
+		sLog = "";
     }
     
     public boolean runUDPTest(int iUplinkOrDownlink, int iExplicit, String sContent, String sContentType, int iUdpHexBytes) {        
@@ -44,7 +47,7 @@ public class UDPTestRun {
         try {
             baReceivedData = new byte[iUDPBytes < 27 ? 27 : iUDPBytes];
             dsUDPSocket = new DatagramSocket(iUDPPort);
-            dsUDPSocket.setSoTimeout(40000);
+            dsUDPSocket.setSoTimeout(10000);
             dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length);
             for (int i=0; i<5; i++){
                 dsUDPSocket.receive(dpUDPRecvPacket);
@@ -103,15 +106,19 @@ public class UDPTestRun {
                     }
                     System.out.println(TAG+" : @runUDPTest - " + e.getMessage());      
                     e.printStackTrace();
+					break;
                 } 
             } 
             System.out.println(TAG+" : @runUDPTest : UDP Test Completed");
             dsUDPSocket.close();
+			sLog = "SUCCESS";
             return true;
 
         } catch (Exception e){
             System.out.println(TAG+" : @runUDPTest : error - " + e.getMessage()); 
+			dsUDPSocket.close();
             e.printStackTrace();
+			sLog = "UDP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
         }
     }

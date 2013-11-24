@@ -38,7 +38,7 @@ public class MNEPServer {
     BufferedWriter brWriteToClient = null;
     UDPTestRun uTestRun;
     TCPTestRun tTestRun;
-    String sMeasurements;
+    String sMeasurements, sServerUDPLog, sServerTCPLog, sClientUDPLog, sClientTCPLog;
     
     float fTCPUplinkMeanLatency, fTCPUplinkMaxLatency, fTCPUplinkMinLatency, fTCPUplinkMedianLatency, fTCPUplinkThroughput, fTCPUplinkJitter, fTCPUplinkPacketLoss;
     long[] laTCPUplinkLatencies;
@@ -110,6 +110,8 @@ public class MNEPServer {
 					smServerMetrics.iUDPBytes = iUDPBytes;
 					smServerMetrics.iUplinkOrDownlink = convertReceivedObjectFromClientIntoServerObject[iLoopAllTransfers].getiDirection();
 					smServerMetrics.iTransactionId = convertReceivedObjectFromClientIntoServerObject[iLoopAllTransfers].getiTransactionid();
+					smServerMetrics.sUDPLog = uTestRun.sLog;
+					smServerMetrics.sTCPLog = tTestRun.sLog;
 					hmServerMetrics.put(smServerMetrics.iTransferId, smServerMetrics);
 				}
 				else
@@ -214,10 +216,12 @@ public class MNEPServer {
 					sMobileSignalStrength = convertReceivedClientTimesObject[iLoopAllClientTimes].getsSignalStrength();
 					sAccelerometerReading = convertReceivedClientTimesObject[iLoopAllClientTimes].getsAccelerometerReading();
 					isDeviceInCall = convertReceivedClientTimesObject[iLoopAllClientTimes].getIsCallActive() + "";
+					sClientUDPLog = convertReceivedClientTimesObject[iLoopAllClientTimes].getsUDPLog();
+					sClientTCPLog = convertReceivedClientTimesObject[iLoopAllClientTimes].getsUDPLog();
 					ServerMetrics currentTransferServerMetrics = hmServerMetrics.get(convertReceivedClientTimesObject[iLoopAllClientTimes].getiTransferId());
 					 if(currentTransferServerMetrics.iTCPBytes > 0)
 				        {			
-				            if(currentTransferServerMetrics.iUplinkOrDownlink == 0) {
+				            if(currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
 				                laTCPUplinkLatencies = currentTransferServerMetrics.laTCPPacketReceivedTimestamps;               
 				                iaTCPUpBytes = currentTransferServerMetrics.iaTCPBytes;
 				                faTCPUpThroughput = MNEPUtilities.calculateThroughput(laTCPUplinkLatencies, iaTCPUpBytes); 
@@ -253,7 +257,7 @@ public class MNEPServer {
 				                    tmTCPTransferMetrics.fLatencyConfInterval, tmTCPTransferMetrics.fThroughpuConfInterval);
 				                System.out.println(sMeasurements);
 				            }
-				            if(currentTransferServerMetrics.iUplinkOrDownlink == 1) {
+				            if(currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
 				                laTCPDownlinkLatencies = MNEPUtilities.toTimeArray(tsaTCPPacketReceivedTimes_Client);               
 				                iaTCPDownBytes = MNEPUtilities.toNumberOfBytesArray(iaTCPBytes_Client);
 				                faTCPDownThroughput = MNEPUtilities.calculateThroughput(laTCPDownlinkLatencies, iaTCPDownBytes); 
@@ -291,11 +295,12 @@ public class MNEPServer {
 				                    fTCPDownlinkJitter, fTCPDownlinkPacketLoss, tmTCPTransferMetrics.fLatencyConfInterval, tmTCPTransferMetrics.fThroughpuConfInterval);
 				                System.out.println(sMeasurements);
 				                }
+								sServerTCPLog = currentTransferServerMetrics.sTCPLog;
 				            }
 
 				            if(currentTransferServerMetrics.iUDPBytes>0)
 				            {                
-				                if(currentTransferServerMetrics.iUplinkOrDownlink == 0) {
+				                if(currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")) {
 				                    laUDPUplinkLatencies = currentTransferServerMetrics.laUDPPacketReceivedTimestamps;                 
 				                    iaUDPUpBytes = currentTransferServerMetrics.iaUDPBytes;
 				                    faUDPUpThroughput = MNEPUtilities.calculateThroughput(laUDPUplinkLatencies, iaUDPUpBytes); 
@@ -329,7 +334,7 @@ public class MNEPServer {
 					                    tmUDPTransferMetrics.fLatencyConfInterval, tmUDPTransferMetrics.fThroughpuConfInterval);
 				                    System.out.println(sMeasurements);
 				                }
-				                if(currentTransferServerMetrics.iUplinkOrDownlink == 1){
+				                if(currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")){
 				                    laUDPDownlinkLatencies = MNEPUtilities.toTimeArray(tsaUDPPacketReceivedTimes_Client);		                    
 				                    iaUDPDownBytes = MNEPUtilities.toNumberOfBytesArray(iaUDPBytes_Client);
 				                    faUDPDownThroughput = MNEPUtilities.calculateThroughput(laUDPDownlinkLatencies, iaUDPDownBytes); 
@@ -363,18 +368,18 @@ public class MNEPServer {
 				                        fUDPDownlinkMinLatency,fUDPDownlinkJitter, tmUDPTransferMetrics.fLatencyConfInterval, tmUDPTransferMetrics.fThroughpuConfInterval);
 				                    System.out.println(sMeasurements);
 				                }
+								sServerUDPLog = currentTransferServerMetrics.sUDPLog;
 				            }
 				            Connection conn = null;
 				            try{
 				    			conn = MNEPUtilities.getDBConnection();
 				    			if(conn != null) {
-				    				System.out.println ("Database connection established");  
 				    				Statement s;
 				    				s = conn.createStatement();
 				    				iTransferId = currentTransferServerMetrics.iTransferId;
 				    				iTransactionId = currentTransferServerMetrics.iTransactionId;
 				    				if(currentTransferServerMetrics.iUDPBytes>0) {
-				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 0){
+				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")){
 				    						s.execute("insert into metricdata values(10000, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10004, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10006, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
@@ -382,7 +387,7 @@ public class MNEPServer {
 				    						s.execute("insert into metricdata values(10008, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10016, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");                                 
 				    					}
-				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 1){
+				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")){
 				    						s.execute("insert into metricdata values(10002, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10010, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10012, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
@@ -390,9 +395,15 @@ public class MNEPServer {
 				    						s.execute("insert into metricdata values(10014, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10018, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    					}
+										if(!sServerUDPLog.equals("SUCCESS")) {
+											s.execute("insert into logs (username, transferid, deviceid, logmessage) values('" + sUsername + "', " + iTransferId + ", '" + sDeviceId + "', '" + sServerUDPLog + "')");
+										}
+										if(!sClientUDPLog.equals("SUCCESS")) {
+											s.execute("insert into logs (username, transferid, deviceid, logmessage) values('" + sUsername + "', " + iTransferId + ", '" + sDeviceId + "', '" + sClientUDPLog + "')");
+										}
 				    				}
 				    				if(currentTransferServerMetrics.iTCPBytes>0) {
-				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 0){
+				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")){
 				    						s.execute("insert into metricdata values(10001, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10005, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10007, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
@@ -401,7 +412,7 @@ public class MNEPServer {
 				    						s.execute("insert into metricdata values(10017, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10020, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkPacketLoss + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    					}
-				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 1){
+				    					if(currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")){
 				    						s.execute("insert into metricdata values(10003, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10011, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10013, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
@@ -410,7 +421,14 @@ public class MNEPServer {
 				    						s.execute("insert into metricdata values(10019, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    						s.execute("insert into metricdata values(10021, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkPacketLoss + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    					}
+										if(!sServerTCPLog.equals("SUCCESS")) {
+											s.execute("insert into logs (username, transferid, deviceid, logmessage) values('" + sUsername + "', " + iTransferId + ", '" + sDeviceId + "', '" + sServerTCPLog + "')");
+										}
+										if(!sClientTCPLog.equals("SUCCESS")) {
+											s.execute("insert into logs (username, transferid, deviceid, logmessage) values('" + sUsername + "', " + iTransferId + ", '" + sDeviceId + "', '" + sClientTCPLog + "')");
+										}
 				    				}         
+									if((currentTransferServerMetrics.iTCPBytes>0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) || (currentTransferServerMetrics.iUDPBytes>0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS"))) {
 				    				if(tmUDPTransferMetrics == null) {
 				    					tmUDPTransferMetrics = new TransferMetrics();
 				    				}
@@ -453,7 +471,9 @@ public class MNEPServer {
 				    			   s.execute("insert into metricdata values(10031, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLongitudeBeforeTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    			   s.execute("insert into metricdata values(10032, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLatitudeAfterTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    			   s.execute("insert into metricdata values(10033, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
+								   
 				    			   s.execute("insert into metricdata values(10034, " + iTransferId + ", " + iTransactionId + ", " + dDeviceTravelSpeedInMeterPerSecond + ", '" + sClientTime + "', '" + sDeviceId + "')");
+								   
 				    			   s.execute("insert into metricdata values(10035, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sMobileSignalStrength) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    			   s.execute("insert into metricdata values(10036, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[0]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				    			   s.execute("insert into metricdata values(10037, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[1]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
@@ -461,7 +481,7 @@ public class MNEPServer {
 				    			   s.execute("insert into metricdata values(10039, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(isDeviceInCall) + ", '" + sClientTime + "', '" + sDeviceId + "')");
 				            	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
 				            	   conn.close();
-				            	   System.out.println ("Entry made in Database");  
+								   }
 				               	}
 				            }
 				            catch (SQLException e) {
@@ -487,119 +507,6 @@ public class MNEPServer {
         catch(Exception e) {
             System.out.println(TAG+" : @receiveTimes : error occurred - "+e.getMessage());
             e.printStackTrace();
-        }
-    }
-    
-    public void insertIntoDatabase() {
-        Connection conn = null;
-        try{
-			conn = MNEPUtilities.getDBConnection();
-			if(conn != null) {
-				System.out.println ("Database connection established");  
-				Statement s;
-				s = conn.createStatement();
-				if(iUDPBytes>0) {
-					if(iUplinkOrDownlink == 0){
-						s.execute("insert into metricdata values(10000, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10004, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10006, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10023, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMedianLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10008, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10016, " + iTransferId + ", " + iTransactionId + ", " + fUDPUplinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");                                 
-					}
-					if(iUplinkOrDownlink == 1){
-						s.execute("insert into metricdata values(10002, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10010, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10012, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10025, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMedianLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10014, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10018, " + iTransferId + ", " + iTransactionId + ", " + fUDPDownlinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
-					}
-				}
-				if(iTCPBytes>0) {
-					if(iUplinkOrDownlink == 0){
-						s.execute("insert into metricdata values(10001, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10005, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10007, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10009, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10024, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkMedianLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10017, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10020, " + iTransferId + ", " + iTransactionId + ", " + fTCPUplinkPacketLoss + ", '" + sClientTime + "', '" + sDeviceId + "')");
-					}
-					if(iUplinkOrDownlink == 1){
-						s.execute("insert into metricdata values(10003, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkThroughput + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10011, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMinLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10013, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMeanLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10015, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMaxLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10026, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkMedianLatency + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10019, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkJitter + ", '" + sClientTime + "', '" + sDeviceId + "')");
-						s.execute("insert into metricdata values(10021, " + iTransferId + ", " + iTransactionId + ", " + fTCPDownlinkPacketLoss + ", '" + sClientTime + "', '" + sDeviceId + "')");
-					}
-				}         
-				if(tmUDPTransferMetrics == null) {
-					tmUDPTransferMetrics = new TransferMetrics();
-				}
-				if(tmTCPTransferMetrics == null) {
-					tmTCPTransferMetrics = new TransferMetrics();
-				}          
-				PreparedStatement psInsertStmt = conn.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid)" + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				psInsertStmt.setInt(1, iTransferId);
-				psInsertStmt.setInt(2, iTransactionId);
-				psInsertStmt.setObject(3, (Object)tmUDPTransferMetrics);
-				psInsertStmt.setObject(4, (Object)tmTCPTransferMetrics);
-				psInsertStmt.setFloat(5, tmUDPTransferMetrics.fLatencyConfInterval);
-				psInsertStmt.setFloat(6, tmUDPTransferMetrics.fThroughpuConfInterval);
-				psInsertStmt.setFloat(7, tmTCPTransferMetrics.fLatencyConfInterval);
-				psInsertStmt.setFloat(8, tmTCPTransferMetrics.fThroughpuConfInterval);
-				psInsertStmt.setString(9, sDeviceId);
-           
-				int t = psInsertStmt.executeUpdate();
-				System.out.println("number of records inserted - " + t);
-				
-				double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * Math.acos( Math.cos( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Math.cos( Double.parseDouble(sLatitudeAfterTransferExecution) * (22/(180*7))  ) * Math.cos(( Double.parseDouble(sLongitudeAfterTransferExecution) - Double.parseDouble(sLongitudeBeforeTransferExecution)) * (22/(180*7)) ) + Math.sin( Double.parseDouble(sLatitudeBeforeTransferExecution) * (22/(180*7)) ) * Math.sin( Double.parseDouble(sLatitudeAfterTransferExecution) * (22/(180*7)) ));
-				
-				float fTotalTimeForTransfer = 0.0f;
-				if(iUDPBytes > 0 && iUplinkOrDownlink == 0 && iTCPBytes == 0 )
-					fTotalTimeForTransfer = fUDPUplinkMeanLatency;
-				if(iUDPBytes > 0 && iUplinkOrDownlink == 1 && iTCPBytes == 0 )
-					fTotalTimeForTransfer = fUDPDownlinkMeanLatency;
-				if(iTCPBytes > 0 && iUplinkOrDownlink == 0 && iUDPBytes == 0 )
-					fTotalTimeForTransfer = fTCPUplinkMeanLatency;
-				if(iTCPBytes > 0 && iUplinkOrDownlink == 1 && iUDPBytes == 0 )
-					fTotalTimeForTransfer = fTCPDownlinkMeanLatency;
-				if(iTCPBytes > 0 && iUDPBytes > 0 && iUplinkOrDownlink == 0 )
-					fTotalTimeForTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
-				if(iTCPBytes > 0 && iUDPBytes > 0 && iUplinkOrDownlink == 1 )
-					fTotalTimeForTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
-				
-				double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (fTotalTimeForTransfer / 1000.0);
-				
-			   s.execute("insert into metricdata values(10030, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLatitudeBeforeTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10031, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLongitudeBeforeTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10032, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sLatitudeAfterTransferExecution) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10033, " + iTransferId + ", " + iTransactionId + ", '" + Double.parseDouble(sLongitudeAfterTransferExecution) + "', '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10034, " + iTransferId + ", " + iTransactionId + ", " + dDeviceTravelSpeedInMeterPerSecond + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10035, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sMobileSignalStrength) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10036, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[0]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10037, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[1]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10038, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(sAccelerometerReading.split(":")[2]) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-			   s.execute("insert into metricdata values(10039, " + iTransferId + ", " + iTransactionId + ", " + Double.parseDouble(isDeviceInCall) + ", '" + sClientTime + "', '" + sDeviceId + "')");
-        	   s.execute("insert into transferexecutedby values(" + iTransferId + ", '" + sDeviceName + "', '" + sUsername + "', '" + sMobileNetworkCarrier + "', '" + sDeviceId + "')");
-        	   conn.close();
-        	   System.out.println ("Entry made in Database");  
-           	}
-        }
-        catch (SQLException e) {
-        	System.err.println ("Could not make entry to database server");
-        	e.printStackTrace();
-        	try {
-                if(conn != null)
-                    conn.close();
-        	} 
-        	catch (SQLException ex) {
-                System.err.println ("Could not make entry to database server");
-                e.printStackTrace();
-        	}
         }
     }
     
