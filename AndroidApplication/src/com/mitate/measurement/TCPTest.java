@@ -76,7 +76,7 @@ public class TCPTest {
 					}
 				} catch(Exception e) {						
 					Log.e(TAG, "@TCPTest : retry - "+iTCPConnectionRetryCount+", error - "+e.getMessage());
-					if(iTCPConnectionRetryCount > 2) {
+					if(iTCPConnectionRetryCount > 0) {
 						Log.e(TAG, "@sendtimes : connection failed");
 						sLog = e.getMessage();
 						return false;
