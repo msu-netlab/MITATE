@@ -218,7 +218,7 @@ public class Measurement extends Thread implements SensorEventListener {
 						LoginService.tPendingTransfers[j].getiTransferid(), LoginService.tPendingTransfers[j].getiTransactionid(), 
 						LoginService.tPendingTransfers[j].getsDestinationIP(), LoginService.tPendingTransfers[j].getsPortNumber(), 
 						LoginService.tPendingTransfers[j].getsContent(), LoginService.tPendingTransfers[j].getiNoOfPackets(),
-						LoginService.tPendingTransfers[j].getiPacketType());
+						LoginService.tPendingTransfers[j].getiPacketType(), LoginService.tPendingTransfers[j].getsContentType());
 				ctCDNTest.runCDNTest(); 
 			} else { 
 			

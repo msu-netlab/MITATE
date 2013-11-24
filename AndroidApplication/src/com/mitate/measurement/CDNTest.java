@@ -10,9 +10,14 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;                                  
 
@@ -46,9 +51,10 @@ public class CDNTest {
 	int iTransferId;
 	int iRepeat;
 	int iPacketType;
+	String sContentTypeEncoding;
 	
 	// initialize CDN test parameters
-	public CDNTest(int iTransferId, int iTransactionId, String sCDNName, String iPortNo, String sHTTPRequest, int iRepeat, int iPacketType) {
+	public CDNTest(int iTransferId, int iTransactionId, String sCDNName, String iPortNo, String sHTTPRequest, int iRepeat, int iPacketType, String sContentType) {
 		this.iTransferId = iTransferId;
 		this.iTransactionId = iTransactionId;
 		this.sCDNName= sCDNName;
@@ -56,6 +62,7 @@ public class CDNTest {
 		this.sHTTPRequest = sHTTPRequest;
 		this.iRepeat = iRepeat;
 		this.iPacketType = iPacketType;
+		this.sContentTypeEncoding = sContentType;
 	} 
 	
 	// run the cdn test
@@ -66,9 +73,22 @@ public class CDNTest {
 		long startTime = 0;
 		long finishTime = 0;
 		
-		sHTTPRequest = sHTTPRequest+"\r\n";
-		sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
-		
+		if(sContentTypeEncoding.equals("ASCII")) {
+			sHTTPRequest = sHTTPRequest+"\r\n";
+			sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
+		}
+		else if(sContentTypeEncoding.equals("HEX")) {  
+			System.out.println("in hex code -- ");
+			
+			StringBuilder output = new StringBuilder();
+			for (int i = 0; i < sHTTPRequest.length() - 1; i+=2) {
+				String str = sHTTPRequest.substring(i, i+2);
+				output.append((char)Integer.parseInt(str, 16));
+			}
+			sHTTPRequest = new String(output);
+		}
+			
+			
 		if(MITATEApplication.bDebug) Log.v(TAG, sHTTPRequest.toString()+"-"+sCDNName+":"+iPortNo);
 		
 		if(iPacketType == 2){
@@ -86,10 +106,10 @@ public class CDNTest {
 			}				
 			while((sResponse = brReadResponse.readLine())!=null) {
 				time.add(System.currentTimeMillis());
+				System.out.println(System.currentTimeMillis());
 				iBytesRead += sResponse.getBytes().length;
-				System.out.println("----" + sResponse);
 				sResponseFromServer = sResponseFromServer + sResponse;
-				if(System.currentTimeMillis() - time.get(time.size()-1) > 1000)
+				if(System.currentTimeMillis() - time.get(time.size()-1) > 5000)
 				 	break;
 			}
 			
@@ -101,16 +121,16 @@ public class CDNTest {
 			if(time.size() >= 2)	 
 				sendMetrics(iBytesRead, (time.get(time.size() - 2) - time.get(0)), (time.get(0)-startTime), new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
 			else
-				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "Response not captured at the application layer");
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "UnableToResolveTheHost");
+			sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), e.getClass()+"");
 		}
 		}
 		else if(iPacketType == 1) {
 			try {
-			dsUDPSocket = new DatagramSocket(3333);
+			dsUDPSocket = new DatagramSocket(10000);
 			dsUDPSocket.setSoTimeout(10000);
 			InetAddress iaServerAddress = InetAddress.getByName(sCDNName);
 			dpUDPSendPacket = new DatagramPacket(sHTTPRequest.getBytes(), sHTTPRequest.getBytes().length, iaServerAddress, Integer.parseInt(iPortNo));
@@ -125,9 +145,10 @@ public class CDNTest {
 				dsUDPSocket.receive(dpUDPRecvPacket);
 				time.add(System.currentTimeMillis());
 				iBytesRead += dpUDPRecvPacket.getData().length;
-				System.out.println("+++++" + new String(dpUDPRecvPacket.getData()));
+				System.out.println(System.currentTimeMillis());
+				//System.out.println("+++++" + new String(dpUDPRecvPacket.getData()));
 				sResponseFromServer = sResponseFromServer + new String(dpUDPRecvPacket.getData());
-				if(dpUDPRecvPacket.getData().length <= 0 && (System.currentTimeMillis() - time.get(time.size()-1) > 1000))
+				if(System.currentTimeMillis() - time.get(time.size()-1) > 1000)
 					break;
 			}
 			finishTime = System.currentTimeMillis();
@@ -135,14 +156,23 @@ public class CDNTest {
 			if(time.size() >= 2)	 
 				sendMetrics(iBytesRead, (time.get(time.size() - 2) - time.get(0)), (time.get(0)-startTime), new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
 			else
-				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "Response not captured at the application layer");
 		
 			dsUDPSocket.close();
 			}
 			catch(Exception e) {
 				dsUDPSocket.close();
-				e.printStackTrace();
-				sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), "UnableToResolveTheHost");
+				//e.printStackTrace();
+				if(time.size() > 0) {
+					if(time.get(time.size() - 1) == time.get(0)) {
+						sendMetrics(iBytesRead, (time.get(0)-startTime), (time.get(0)-startTime), new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+					}
+					else
+						sendMetrics(iBytesRead, (time.get(time.size() - 1) - time.get(0)), (time.get(0)-startTime), new Timestamp(System.currentTimeMillis()).toString(), sResponseFromServer.substring(0, sResponseFromServer.length() < 512 ? sResponseFromServer.length() : 512));
+				}
+				else {
+					sendMetrics(0, 0, 0, new Timestamp(System.currentTimeMillis()).toString(), e.getClass()+"");
+				}
 			}
 		}
 	}
@@ -152,16 +182,28 @@ public class CDNTest {
 		try {
 			
 		   sClientTime = sClientTime.substring(0, sClientTime.indexOf(46)).replaceAll("(\\s)", "T");
-	   	   String sURL = "http://"+sServerName+"/cdn.php?" +
-	   			"username="+LoginService.sUserName+"&mobilecarrier="+(MITATEApplication.getTelephonyManager().getNetworkOperatorName().replaceAll("\\s", ""))+
-	   			"&transferid="+iTransferId+"&transactionid="+iTransactionId+"&size="+iBytesRead+"&oneway="+oneway+
-	   			"&rtt="+RTT+"&time="+sClientTime+"&deviceid="+LoginService.sDeviceId+"&devicename="+MITATEApplication.getDeviceModel()+"&log="+sLog;
-   	   
-	   	   Log.v(TAG, ""+sURL);
 	   	   
-	   	   HttpClient hcHttpClient = new DefaultHttpClient();		    
-	   	   HttpGet hpHttpGet = new HttpGet(sURL);    
-	   	   HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpGet);
+	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
+	   	   HttpPost hpHttpPost = new HttpPost("http://"+sServerName+"/cdn.php");  
+	   	   ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+	   	   params.add(new BasicNameValuePair("username", LoginService.sUserName));
+	   	   params.add(new BasicNameValuePair("mobilecarrier", (MITATEApplication.getTelephonyManager().getNetworkOperatorName().replaceAll("\\s", ""))));
+	   	   params.add(new BasicNameValuePair("transferid", iTransferId + ""));
+	   	   params.add(new BasicNameValuePair("transactionid", iTransactionId + ""));
+	   	   params.add(new BasicNameValuePair("size", iBytesRead + ""));
+	   	   params.add(new BasicNameValuePair("oneway", oneway + ""));
+	   	   params.add(new BasicNameValuePair("rtt", RTT + ""));
+	   	   params.add(new BasicNameValuePair("time", sClientTime));
+	   	   params.add(new BasicNameValuePair("deviceid", LoginService.sDeviceId));
+	   	   params.add(new BasicNameValuePair("devicename", MITATEApplication.getDeviceModel()));
+	   	   params.add(new BasicNameValuePair("log", sLog));
+	   	   hpHttpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+
+	   	   //Execute and get the response.
+	   	   HttpResponse response = hcHttpClient.execute(hpHttpPost);
+	   	   
+	   	   //HttpGet hpHttpGet = new HttpGet(sURL);    
+	   	   //HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpPost);
 	   	   
 		} catch(Exception e) {
 			e.printStackTrace();
