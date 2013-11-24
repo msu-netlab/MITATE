@@ -91,7 +91,7 @@ public boolean requestTime(String host, int timeout) {
         mNtpTimeReference = responseTicks;
         mRoundTripTime = roundTripTime;
     } catch (Exception e) {
-        if (Config.LOGD) Log.d(TAG, "request time failed: " + e);
+        if (Config.LOGD) Log.e(TAG, "request time failed: " + e);
         return false;
     }
 

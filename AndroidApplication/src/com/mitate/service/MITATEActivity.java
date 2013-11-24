@@ -88,6 +88,15 @@ public class MITATEActivity extends Activity implements OnClickListener {
 		setComponentsWidth();
 		initializeComponents();
 		tvStatus.setText("");
+		if(spMNEPPreference.getString("startbutton", "").equals("disabled")) {
+			btStartService.setEnabled(false);
+			btStopService.setEnabled(true);
+		} else {
+			btStartService.setEnabled(true);
+			btStopService.setEnabled(false);			
+		}
+		
+
 	}
 	
 	public void setComponentsWidth() {

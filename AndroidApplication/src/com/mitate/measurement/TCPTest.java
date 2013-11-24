@@ -39,6 +39,8 @@ public class TCPTest {
 	BufferedReader brReadFromServer;
 	Scanner scReadFromServer;
 	
+	String sLog = "SUCCESS";
+	
 	public TCPTest(String sServerIP, int iServerTCPPortNo, int iTCPBytes, int iTCPPackets, int iDirection, long lOffsetDifferenceClientAndServer, int iPacketDelay, int iExplicit, String sContent, String sContentType) {
 		this.sServerIP = sServerIP;
 		this.iServerTCPPortNo = iServerTCPPortNo;
@@ -53,6 +55,7 @@ public class TCPTest {
 		this.iExplicit = iExplicit;
 		this.sContent = sContent;
 		this.sContentType = sContentType;
+		this.sLog = "SUCCESS";
 	}
 	 
 	public boolean runTCPTest() {
@@ -66,17 +69,19 @@ public class TCPTest {
 				try {
 					Thread.sleep(1000);
 					sConnectionSocket = new Socket(sServerIP, iServerTCPPortNo);
-					sConnectionSocket.setSoTimeout(iPacketDelay + 8000);
+					sConnectionSocket.setSoTimeout(10000);
 					if(sConnectionSocket != null) {
 						if(MITATEApplication.bDebug) Log.d(TAG, "@runTCPTest : Connected to Server : "+sConnectionSocket.getRemoteSocketAddress());
-						break;
+						break; 
 					}
 				} catch(Exception e) {						
 					Log.e(TAG, "@TCPTest : retry - "+iTCPConnectionRetryCount+", error - "+e.getMessage());
-					if(iTCPConnectionRetryCount > 5) {
+					if(iTCPConnectionRetryCount > 2) {
 						Log.e(TAG, "@sendtimes : connection failed");
+						sLog = e.getMessage();
 						return false;
 					}	
+					Thread.sleep(10000);
 				}
 			}
 
@@ -116,9 +121,7 @@ public class TCPTest {
 						int iTCPBytesSent = sBuffer.getBytes().length;
 						iTCPBytesSentToServer += iTCPBytesSent;							
 						
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : C2S "+i+"------>"+sBuffer.getBytes().length+"--->"+sBuffer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"------>"+sBuffer);
 						Thread.sleep(iPacketDelay);
-						// bwWriteToServer.close();
 					}
 					if(iDirection == 1) {
 
@@ -137,15 +140,13 @@ public class TCPTest {
 						long lLatencyDownLink = lTimeOnClient - Measurement.lClientOffsetFromNTP - lTimeOnServer; // MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						
 						i= iTCPPacketNumber;
-
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;
 						iaTCPBytes[i] = iNumberOfBytesReceived;
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@TCP : S2C "+i+"--->"+iNumberOfBytesReceived+"--->"+sFromServer.length()+"-->"+System.currentTimeMillis()+"--->"+Measurement.lClientOffsetFromNTP+"---------->"+sFromServer);
-						// brReadFromServer.close();
 					}
 				}
 				catch(Exception e) {
 					Log.e(TAG, "@runTCPTest : error - "+e.getMessage());
+					sLog = e.getClass()+"";
 					if(MITATEApplication.bDebug) e.printStackTrace();
 				}
 			}
@@ -157,6 +158,7 @@ public class TCPTest {
 		} catch (Exception e) {
 			Log.e(TAG, "@runTCPTest : error - "+e.getMessage());
 			if(MITATEApplication.bDebug) e.printStackTrace();
+			sLog = e.getMessage();
 			return false;
 		} finally {
 			try {
