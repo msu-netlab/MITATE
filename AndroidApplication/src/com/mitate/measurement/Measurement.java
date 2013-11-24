@@ -307,7 +307,7 @@ public class Measurement extends Thread implements SensorEventListener {
 	        int iTCPConnectionRetryCount = 0;
 			while(++iTCPConnectionRetryCount < 6) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 					iTCPPort = 32166;
 					sConnectionSocket = new Socket(sServerIP, iTCPPort);						
 					sConnectionSocket.setSoTimeout(10000);

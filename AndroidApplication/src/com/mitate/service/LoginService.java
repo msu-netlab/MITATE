@@ -145,7 +145,7 @@ public class LoginService extends Service {
    	    	   	    "&networktype="+MITATEUtilities.getNetworkType(cContext)+// +"&city="+mLocation.getCity(cContext);
    	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
-   	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength=0"+//MITATEApplication.getSignalStrength()+
+   	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
    	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();	

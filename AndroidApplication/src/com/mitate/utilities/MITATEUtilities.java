@@ -105,7 +105,7 @@ public class MITATEUtilities extends PhoneStateListener {
 	
 	// calculate time difference with NTP server
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
-		long lNTPTime = 0;
+		long lNTPTime = System.currentTimeMillis();
  	    SNTPClient client = new SNTPClient();
  	    while(true) { // clock.xmission.com
  	    	if (client.requestTime("us.pool.ntp.org", 4000)) {
