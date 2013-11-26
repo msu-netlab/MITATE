@@ -16,6 +16,7 @@ public class ServerMetrics {
     int iTransactionId;
 	String sUDPLog;
 	String sTCPLog;
+	int iUDPTotalBytesSentToClient;
 	public int getiTransactionId() {
 		return iTransactionId;
 	}
@@ -103,6 +104,13 @@ public class ServerMetrics {
 	}
 	public void setsTCPLog(String sTCPLog) {
 		this.sTCPLog = sTCPLog;
+	}
+	public int getiUDPTotalBytesSentToClient() {
+		return iUDPTotalBytesSentToClient;
+	}
+	public void setiUDPTotalBytesSentToClient(
+			int iUDPTotalBytesSentToClient) {
+		this.iUDPTotalBytesSentToClient = iUDPTotalBytesSentToClient;
 	}
     
 }
