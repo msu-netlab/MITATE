@@ -61,7 +61,7 @@ public class MNEPServer {
     TransferMetrics tmUDPTransferMetrics;
     
     String tsaTCPPacketReceivedTimes_Client = "", iaTCPBytes_Client = "", sTCPBytesReceived_Client = "", sTCPBytesSent_Client = "";
-    String tsaUDPPacketReceivedTimes_Client = "", iaUDPBytes_Client = "", sUDPBytesReceived_Client;
+    String tsaUDPPacketReceivedTimes_Client = "", iaUDPBytes_Client = "", sUDPBytesReceived_Client = "", sUDPBytesSent_Client = "";
     String sClientTime="", sLatitudeBeforeTransferExecution = "", sLongitudeBeforeTransferExecution = "", sLatitudeAfterTransferExecution = "", sLongitudeAfterTransferExecution = "", sMobileSignalStrength = "", sAccelerometerReading = "";    
     HashMap<Integer, ServerMetrics> hmServerMetrics;
     
@@ -212,6 +212,7 @@ public class MNEPServer {
                     tsaUDPPacketReceivedTimes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getlUDPPacketReceivedTimes());
                     iaUDPBytes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getIaUDPBytes());		
                     sUDPBytesReceived_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getiUDPBytesReceivedFromServer() + "";
+					sUDPBytesSent_Client = convertReceivedClientTimesObject[iLoopAllClientTimes].getiUDPBytesSentToServer() + "";
                     sClientTime = convertReceivedClientTimesObject[iLoopAllClientTimes].getsClientTime();
                     sClientTime = sClientTime.substring(0, sClientTime.indexOf("."));
 					sLatitudeBeforeTransferExecution = convertReceivedClientTimesObject[iLoopAllClientTimes].getsBeforeExecCoordinates().split(":")[0];
@@ -329,7 +330,7 @@ public class MNEPServer {
 				                    fUDPUplinkThroughput = MNEPUtilities.toKBps(currentTransferServerMetrics.iUDPTotalBytesReceivedFromClient, MNEPUtilities.getSum(laUDPUplinkLatencies));
 				                    fUDPUplinkJitter = fUDPUplinkMaxLatency - fUDPUplinkMinLatency;
 									
-									fUDPUplinkPacketLoss = (float)(((Integer.parseInt(sTCPBytesSent_Client) - currentTransferServerMetrics.iUDPTotalBytesReceivedFromClient) * 100) / (Integer.parseInt(sTCPBytesSent_Client)));
+									fUDPUplinkPacketLoss = (float)(((Integer.parseInt(sUDPBytesSent_Client) - currentTransferServerMetrics.iUDPTotalBytesReceivedFromClient) * 100) / (Integer.parseInt(sUDPBytesSent_Client)));
 									
 				                    sMeasurements = String.format(
 					                    "----------UDP Network Metrics-------------\n" +
@@ -499,14 +500,6 @@ public class MNEPServer {
 				            catch (SQLException e) {
 				            	System.err.println ("Could not make entry to database server");
 				            	e.printStackTrace();
-				            	try {
-				                    if(conn != null)
-				                        conn.close();
-				            	} 
-				            	catch (SQLException ex) {
-				                    System.err.println ("Could not make entry to database server");
-				                    e.printStackTrace();
-				            	}
 				            }			            
     			}
 				s.executeBatch();
