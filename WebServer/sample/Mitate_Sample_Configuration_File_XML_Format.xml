@@ -44,7 +44,7 @@
 				<id>t1</id>
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.montana.edu</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
@@ -58,7 +58,7 @@
 				<id>t2</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6061</portnumber>
 				<response>0</response>
@@ -72,7 +72,7 @@
 				<id>t3</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
@@ -86,7 +86,7 @@
 				<id>t4</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
@@ -100,7 +100,7 @@
 				<id>t5</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>23399</portnumber>
 				<response>0</response>
@@ -114,7 +114,7 @@
 				<id>t6</id>
 				<sourceip>41.231.21.27</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6061</portnumber>
 				<response>0</response>
@@ -128,7 +128,7 @@
 				<id>t7</id>
 				<sourceip>41.231.21.27</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>8080</portnumber>
 				<response>0</response>
@@ -142,7 +142,7 @@
 				<id>t8</id>
 				<sourceip>41.231.21.27</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>6969</portnumber>
 				<response>0</response>
@@ -156,7 +156,7 @@
 				<id>t9</id>
 				<sourceip>41.231.21.27</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>23399</portnumber>
 				<response>0</response>
@@ -170,7 +170,7 @@
 				<id>t10</id>
 				<sourceip>41.231.21.27</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>32163</portnumber>
 				<response>0</response>
@@ -184,7 +184,7 @@
 				<id>t11</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
 				<response>0</response>
@@ -198,7 +198,7 @@
 				<id>t11</id>
 				<sourceip>client</sourceip>
 				<destinationip>41.231.21.27</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>32164</portnumber>
 				<response>0</response>
@@ -212,7 +212,7 @@
 				<id>t12</id>
 				<sourceip>client</sourceip>
 				<destinationip>8.8.8.8</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>53</portnumber>
 				<response>1</response>
@@ -226,7 +226,7 @@
 				<id>t13</id>
 				<sourceip>client</sourceip>
 				<destinationip>8.8.8.8</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>53</portnumber>
 				<response>1</response>
@@ -240,7 +240,7 @@
 				<id>t14</id>
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.montana.edu</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
@@ -254,7 +254,7 @@
 				<id>t15</id>
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.mfontana.edu</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
@@ -268,7 +268,7 @@
 				<id>t16</id>
 				<sourceip>client</sourceip>
 				<destinationip>mitate.cs.mfontana.edu</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>80</portnumber>
 				<response>1</response>
@@ -282,7 +282,7 @@
 				<id>t17</id>
 				<sourceip>client</sourceip>
 				<destinationip>8.83.8.8</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>53</portnumber>
 				<response>1</response>
@@ -296,7 +296,7 @@
 				<id>t18</id>
 				<sourceip>client</sourceip>
 				<destinationip>8.83.8.8</destinationip>
-				<packetdelay>500</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>0</type>
 				<portnumber>53</portnumber>
 				<response>1</response>
@@ -335,9 +335,6 @@
 		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="0">
-					<transferid>t1</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
 					<transferid>t2</transferid>
 				</transfer>
 				<transfer repeat="1" delay="0">
@@ -351,6 +348,9 @@
 				</transfer>
 				<transfer repeat="1" delay="0">
 					<transferid>t6</transferid>
+				</transfer>
+				<transfer repeat="1" delay="0">
+					<transferid>t7</transferid>
 				</transfer>
 			</transfers>
 			<criteria>

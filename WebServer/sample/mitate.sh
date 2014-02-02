@@ -105,10 +105,10 @@ then
 		elif [ "$1" == 'validate' -a "$2" != '' ]
 		then
 			echo `curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_validate_xml.php`
-		elif [ "$1" == 'count' -a "$2" != '' ]
+		elif [ "$1" == 'getExpCost' -a "$2" != '' ]
 		then
 			echo `curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_count_credit_xml.php`
-		elif [ "$1" == 'getmycredits' ]
+		elif [ "$1" == 'checkcredits' ]
 		then
 			echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/get_user_credits.php`
 		else
