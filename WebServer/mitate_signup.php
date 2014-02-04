@@ -7,7 +7,7 @@
 	<div><div>Last Name:</div><div><input type="text" placeholder="Last name" id="lname" name="lname" /></div></div>
 	<div><div>Username:</div><div><input type="text" placeholder="Username" id="username" name="username" /></div></div>
 	<div><div>Email:</div><div><input type="text" placeholder="Valid Email" id="email" name="email" /></div></div>
-	<div><div>Password:</div><div><input type="text" placeholder="Password" id="password" name="password" /></div></div>
+	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
 	<div><div><input type="submit" value="Create account" /></div></div>
 	</form>
 	</div>

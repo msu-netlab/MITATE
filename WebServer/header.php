@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head>
 <title>MITATE: Mobile Internet Testbed for Application Traffic Experimentation</title>
