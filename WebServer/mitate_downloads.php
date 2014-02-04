@@ -1,4 +1,7 @@
-<?php include('header.php'); ?>
+<?php
+session_start();
+if(isset($_SESSION['mitateLoggedInUser'])) {
+	include('header.php'); ?>
 	<div style="color: white;font-size: 22;text-align: justify;">
 	<h3 style="text-decoration:underline">Downloads:</h3>
 	<br />
@@ -9,5 +12,12 @@
 	3. MITATE Android Application (download)
 	<br />
 	4. MITATE Command Line API (<a target="_blank" href="sample/mitate.sh" style="color: red;">download</a>)
+	<br />
+	5. MITATE Documentation V 1.0 (<a target="_blank" href="sample/MITATE_Documentation_v1.0.pdf" style="color: red;">download</a>)
 	</div>
-<?php include('footer.php'); ?>
+	<?php include('footer.php'); 
+}
+else {
+	printf("<script>location.href = 'mitate_signin.php'</script>");
+}
+?>
