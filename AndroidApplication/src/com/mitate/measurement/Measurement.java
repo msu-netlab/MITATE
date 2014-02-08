@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.apache.http.MethodNotSupportedException;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -30,7 +29,6 @@ import com.mitate.utilities.MITATELocation;
 import com.mitate.utilities.MITATEUtilities;
 import com.mitate.utilities.MeasurementLogs;
 
-@TargetApi(17)
 public class Measurement extends Thread implements SensorEventListener {
 
 	String TAG = "Measurement";
@@ -190,6 +188,7 @@ public class Measurement extends Thread implements SensorEventListener {
 			ctTimes[index].iTransferId = iTransferId;
 			ctTimes[index].sUDPLog = utUDPTest.sLog;
 			ctTimes[index].sTCPLog = ttTCPTest.sLog;
+			ctTimes[index].iUDPBytesSentToServer = utUDPTest.iUDPBytesSentToServer;
 			
 			System.out.println(index+"--"+ctTimes[index].sUDPLog+"--------"+ctTimes[index].sTCPLog);
 			
@@ -305,7 +304,7 @@ public class Measurement extends Thread implements SensorEventListener {
 
 			}
 	        int iTCPConnectionRetryCount = 0;
-			while(++iTCPConnectionRetryCount < 6) {
+			while(++iTCPConnectionRetryCount < 10) {
 				try {
 					Thread.sleep(10000);
 					iTCPPort = 32166;

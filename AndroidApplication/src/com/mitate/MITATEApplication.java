@@ -1,6 +1,6 @@
 package com.mitate;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +13,10 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.telephony.CellInfoLte;
 import android.telephony.CellSignalStrengthLte;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
-@TargetApi(17)
 public class MITATEApplication extends Application {
 	
     static Context cContext;
@@ -66,13 +67,20 @@ public class MITATEApplication extends Application {
 	}  
     
     // return signal strength - mobile / wifi
-    public static int getSignalStrength() {
+    @SuppressLint("NewApi")
+	public static int getSignalStrength() {
+    	
     	NetworkInfo userNetwork = ((ConnectivityManager)cContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     	if(userNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
             // Min API required - API 17
-            CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
-            CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
-            return(cellSignalStrengthlte.getAsuLevel());    		
+    		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
+                CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
+                return(cellSignalStrengthlte.getAsuLevel());     			
+    		} else {
+    			return(999);
+    		}
+   		
     	} else { // (userNetwork.getType() == ConnectivityManager.TYPE_WIFI)
     		WifiManager wifiManager = (WifiManager)cContext.getSystemService(Context.WIFI_SERVICE);
     		return(wifiManager.getConnectionInfo().getRssi());    		

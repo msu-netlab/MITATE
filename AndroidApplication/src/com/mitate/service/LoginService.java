@@ -20,7 +20,6 @@ import com.mitate.MITATEApplication;
 import com.mitate.measurement.Measurement;
 import com.mitate.utilities.MITATELocation;
 import com.mitate.utilities.MITATEUtilities;
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +35,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-@TargetApi(17)
 public class LoginService extends Service {
 
 	String TAG = "LoginService";

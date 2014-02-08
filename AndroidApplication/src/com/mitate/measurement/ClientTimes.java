@@ -20,8 +20,14 @@ public class ClientTimes implements Serializable {
 	int iTransferId;
 	String sUDPLog;
 	String sTCPLog;
+	int iUDPBytesSentToServer;
 	
-	
+	public int getiUDPBytesSentToServer() {
+		return iUDPBytesSentToServer;
+	}
+	public void setiUDPBytesSentToServer(int iUDPBytesSentToServer) {
+		this.iUDPBytesSentToServer = iUDPBytesSentToServer;
+	}
 	public String getsUDPLog() {
 		return sUDPLog;
 	}
