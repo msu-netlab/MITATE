@@ -18,7 +18,28 @@ public class ClientTimes implements Serializable {
 	String sAccelerometerReading;
 	int isCallActive;
 	int iTransferId;
+	String sUDPLog;
+	String sTCPLog;
+	int iUDPBytesSentToServer;
 	
+	public int getiUDPBytesSentToServer() {
+		return iUDPBytesSentToServer;
+	}
+	public void setiUDPBytesSentToServer(int iUDPBytesSentToServer) {
+		this.iUDPBytesSentToServer = iUDPBytesSentToServer;
+	}
+	public String getsUDPLog() {
+		return sUDPLog;
+	}
+	public void setsUDPLog(String sUDPLog) {
+		this.sUDPLog = sUDPLog;
+	}
+	public String getsTCPLog() {
+		return sTCPLog;
+	}
+	public void setsTCPLog(String sTCPLog) {
+		this.sTCPLog = sTCPLog;
+	}
 	public int getiTransferId() {
 		return iTransferId;
 	}

@@ -5,7 +5,7 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_header1" android:text="MITATE" android:textSize="24dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
   </TableRow>
   <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip" android:background="#cdc9c9">
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_header2" android:text="Mobile Internet Testbed for Application Traffic" android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_header2" android:text="Mobile Internet Testbed for Application Traffic Experimentation" android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
   </TableRow>
   <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_separator1" android:text="" android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
