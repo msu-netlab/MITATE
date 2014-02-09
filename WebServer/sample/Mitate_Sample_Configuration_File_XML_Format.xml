@@ -208,7 +208,6 @@
 				<minimumbatterypower>10</minimumbatterypower>
 				<minimumsignalstrength>-1000</minimumsignalstrength>
 				<networkcarrier>Verizon Wireless</networkcarrier>
-				<devicemodelname>Galaxy Nexus</devicemodelname>
 			</criteria>	
 		</criteriadefine>
 	</defines>
@@ -229,7 +228,7 @@
 				</transfer>
 			</transfers>
 			<criteria>
-				<criteriaid>c1</criteriaid>
+				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
