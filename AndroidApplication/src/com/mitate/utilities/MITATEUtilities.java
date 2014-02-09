@@ -105,22 +105,42 @@ public class MITATEUtilities extends PhoneStateListener {
 	
 	// calculate time difference with NTP server
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
-		long lNTPTime = System.currentTimeMillis();
- 	    SNTPClient client = new SNTPClient();
- 	    while(true) { // clock.xmission.com
- 	    	if (client.requestTime("us.pool.ntp.org", 4000)) {
- 	    		lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
- 	    		System.out.println(lNTPTime+"------>"+(lNTPTime+"").length()); 	    	
- 	    		if((lNTPTime+"".length()) == 13) 
- 	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
- 	    		return lTimeDifference;
- 	    	} else {
- 	    		try {
- 	    			Thread.sleep(5000); 
- 	    		} catch (Exception e) {
- 	    			e.printStackTrace();
- 	    		}
- 	    	}
- 	    }
-	}
+		long lNTPTime = 0;
+		while(true) {
+	 	    SNTPClient client = new SNTPClient();
+	    	if (client.requestTime("time.nist.gov", 5000)) { 
+	    		lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+	    		if((lNTPTime+"").length() == 13) {
+	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
+	    			break;
+	    		} 
+	    	} 			
+		}
+
+    	return lTimeDifference;	    
+	} 
+	
+	
+	/*public static long calculateTimeDifferenceBetweenNTPAndLocal() {
+		String sNTPServer = "time.nist.gov";
+			        long lNTPTime = 0;
+			        SNTPClient client = new SNTPClient();
+			try {
+			while((lNTPTime + "").length() < 13) {
+			if (client.requestTime(sNTPServer, 10000)) {
+				lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+				System.out.println(lNTPTime + "****" + System.currentTimeMillis());
+			}
+			else
+				Thread.sleep(5000);
+			}
+			}
+			catch (Exception e) {
+			e.printStackTrace();
+			}
+			        long lSystemTime = System.currentTimeMillis();
+			        lTimeDifference = lSystemTime - lNTPTime;
+			        return lTimeDifference;
+			    } */
+	
 }

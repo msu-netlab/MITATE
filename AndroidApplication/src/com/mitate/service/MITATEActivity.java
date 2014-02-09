@@ -72,7 +72,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 		etUsername = (EditText)findViewById(R.id.am_et_username);
 		etPassword = (EditText)findViewById(R.id.am_et_password);
 		
-		tvSeparator1 = (TextView)findViewById(R.id.al_tv_separator5);	
+		tvSeparator1 = (TextView)findViewById(R.id.am_tv_separator1);	
 		tvSeparator5 = (TextView)findViewById(R.id.al_tv_separator5);
 		
 		btStartService = (Button)findViewById(R.id.am_bt_startservice);
@@ -111,8 +111,8 @@ public class MITATEActivity extends Activity implements OnClickListener {
 		tvSeparator1.setMaxHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
 		tvSeparator1.setMinimumHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
 		
-		tvSeparator5.setMaxHeight(((int)(0.415*getWindowManager().getDefaultDisplay().getHeight())));
-		tvSeparator5.setMinimumHeight(((int)(0.415*getWindowManager().getDefaultDisplay().getHeight())));
+		tvSeparator5.setMaxHeight(((int)(0.30*getWindowManager().getDefaultDisplay().getHeight())));
+		tvSeparator5.setMinimumHeight(((int)(0.30*getWindowManager().getDefaultDisplay().getHeight())));
 		
 		tvHeader.setMaxWidth((int)(getWindowManager().getDefaultDisplay().getWidth()));
 		tvHeader.setMinimumWidth((int)(getWindowManager().getDefaultDisplay().getWidth()));

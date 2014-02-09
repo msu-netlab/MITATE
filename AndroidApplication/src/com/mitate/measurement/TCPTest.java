@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
 import com.mitate.MITATEApplication;
+import com.mitate.utilities.MITATEUtilities;
 
 import android.util.Log;
 
@@ -106,15 +107,19 @@ public class TCPTest {
 			for (int i = 0; i <iTCPPackets; i++){
 				try{
 					if(iDirection == 0) {
-						long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
+						// long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
+						
+						// long start = System.currentTimeMillis();
 						if(iExplicit == 0) {
-							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";							
+							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";							
 						} else {
-							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":::";
+							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 						}
-
+						
+						System.out.print("offset - "+Measurement.lClientOffsetFromNTP); //+"----"+(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal()));
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
-						bwWriteToServer.write(sBuffer); 
+						 
+						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":::"); 
 						bwWriteToServer.flush();
 						
 						// changes with platform

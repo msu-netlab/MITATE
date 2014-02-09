@@ -90,14 +90,14 @@ public class UDPTest {
 			for (int i = 0; i < iUDPPackets; i++) {
 				try {
 					if(iDirection == 0) {
-						long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
+						// long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
 						if(iExplicit == 0) {
-							sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";						
+							sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";						
 						} else {
-							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";
+							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";
 						}
 
-						baSendData = sData.getBytes();
+						baSendData = (sData+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":;:").getBytes();
 						iUDPBytesSentToServer += sData.getBytes().length;						
 						dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, iaServerAddress, iUDPPort);
 						dsUDPSocket.send(dpUDPSendPacket);					
