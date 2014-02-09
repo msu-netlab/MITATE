@@ -247,7 +247,7 @@ public class MNEPServer {
 				                fTCPUplinkMinLatency = laTCPUplinkLatencies[elim];
 				                fTCPUplinkMedianLatency = laTCPUplinkLatencies[laTCPUplinkLatencies.length/2];
 								faTempTCPUpThroguhput = faTCPUpThroughput.clone();
-								Array.sort(faTempTCPUpThroguhput);
+								Arrays.sort(faTempTCPUpThroguhput);
 								fTCPUplinkThroughput = faTempTCPUpThroguhput[faTempTCPUpThroguhput.length - 1] * 8;
 				                //fTCPUplinkThroughput = MNEPUtilities.toKbps(currentTransferServerMetrics.iTCPTotalBytesReceivedFromClient, MNEPUtilities.getSum(laTCPUplinkLatencies));
 				                fTCPUplinkJitter = fTCPUplinkMaxLatency - fTCPUplinkMinLatency;
@@ -288,7 +288,7 @@ public class MNEPServer {
 								fTCPDownlinkMinLatency = laTCPDownlinkLatencies[elim];
 				                fTCPDownlinkMedianLatency = laTCPDownlinkLatencies[laTCPDownlinkLatencies.length/2];
 				                faTempTCPDownThroughput = faTCPDownThroughput.clone();
-								Array.sort(faTempTCPDownThroughput);
+								Arrays.sort(faTempTCPDownThroughput);
 								fTCPDownlinkThroughput = faTempTCPDownThroughput[faTempTCPDownThroughput.length - 1] * 8;
 								//fTCPDownlinkThroughput = MNEPUtilities.toKbps(Integer.parseInt(sTCPBytesReceived_Client), MNEPUtilities.getSum(laTCPDownlinkLatencies));
 				                fTCPDownlinkJitter = fTCPDownlinkMaxLatency - fTCPDownlinkMinLatency;
@@ -334,7 +334,7 @@ public class MNEPServer {
 									fUDPUplinkMinLatency = laUDPUplinkLatencies[elim];
 				                    fUDPUplinkMedianLatency = laUDPUplinkLatencies[laUDPUplinkLatencies.length/2];
 				                    faTempUDPUpThroughput = faUDPUpThroughput.clone();
-									Array.sort(faTempUDPUpThroughput);
+									Arrays.sort(faTempUDPUpThroughput);
 									fUDPUplinkThroughput = faTempUDPUpThroughput[faTempUDPUpThroughput.length - 1] * 8;
 									//fUDPUplinkThroughput = MNEPUtilities.toKbps(currentTransferServerMetrics.iUDPTotalBytesReceivedFromClient, MNEPUtilities.getSum(laUDPUplinkLatencies));
 				                    fUDPUplinkJitter = fUDPUplinkMaxLatency - fUDPUplinkMinLatency;
@@ -375,7 +375,7 @@ public class MNEPServer {
 									fUDPDownlinkMinLatency = laUDPDownlinkLatencies[elim];
 				                    fUDPDownlinkMedianLatency = laUDPDownlinkLatencies[laUDPDownlinkLatencies.length/2];
 				                    faTempUDPDownThroughput = faUDPDownThroughput.clone();
-									Array.sort(faTempUDPDownThroughput);
+									Arrays.sort(faTempUDPDownThroughput);
 									fUDPDownlinkThroughput = faTempUDPDownThroughput[faTempUDPDownThroughput.length - 1] * 8;
 									//fUDPDownlinkThroughput = MNEPUtilities.toKbps(Integer.parseInt(sUDPBytesReceived_Client), MNEPUtilities.getSum(laUDPDownlinkLatencies));
 				                    fUDPDownlinkJitter = fUDPDownlinkMaxLatency - fUDPDownlinkMinLatency;
