@@ -63,20 +63,20 @@ public class MNEPUtilities {
     }
     
     // to calculate throughtput in kilobytes per second
-    public static float toKBps(int bytes, int msecs){
+    public static float toKbps(int bytes, int msecs){
         float result = 0;
         try {
-            result = (float)((toKB(bytes)/(msecs/1000.0))*8);
+            result = (float)((toKib(bytes))/(msecs/1000.0));
         } catch (Exception e) {
-              System.err.println(TAG+" : @toKBps : error - "+e.getMessage());
+              System.err.println(TAG+" : @toKbps : error - "+e.getMessage());
               e.printStackTrace();
         }
         return result;
     } 
     
     // to convert bytes to kilobytes
-    public static float toKB(long bytes){
-        return (float)(bytes/1024.0);
+    public static float toKib(long bytes){
+        return (float)((bytes * 8)/1024.0);
     }
  
     //creates a Timestamp array from a String array of long values
@@ -141,12 +141,13 @@ public class MNEPUtilities {
     }  
     
     public static long calculateTimeDifferenceBetweenNTPAndLocal(String sNTPServer) {
-        long lNTPTime = System.currentTimeMillis();
+        long lNTPTime = 0;
         SNTPClient client = new SNTPClient();   
 		try {
 			while((lNTPTime + "").length() < 13) {
 				if (client.requestTime(sNTPServer, 4000)) {
 					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
 				}
 				else
 					Thread.sleep(5000);
