@@ -141,12 +141,13 @@ public class MNEPUtilities {
     }  
     
     public static long calculateTimeDifferenceBetweenNTPAndLocal(String sNTPServer) {
-        long lNTPTime = System.currentTimeMillis();
+        long lNTPTime = 0;
         SNTPClient client = new SNTPClient();   
 		try {
 			while((lNTPTime + "").length() < 13) {
 				if (client.requestTime(sNTPServer, 4000)) {
 					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
 				}
 				else
 					Thread.sleep(5000);
