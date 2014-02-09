@@ -195,14 +195,6 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
-				<networktype>cellular</networktype>
-				<starttime>000001</starttime>
-				<endtime>235959</endtime>
-				<deviceid>client</deviceid>
-				<minimumbatterypower>10</minimumbatterypower>
-				<minimumsignalstrength>-1000</minimumsignalstrength>
-				<networkcarrier>Verizon Wireless</networkcarrier>
-				<devicemodelname>Galaxy Nexus</devicemodelname>
 			</criteria>		
 			<criteria>
 				<id>c2</id>
@@ -238,25 +230,6 @@
 			</transfers>
 			<criteria>
 				<criteriaid>c1</criteriaid>
-			</criteria>
-		</transaction>
-		<transaction count="1">
-			<transfers>
-				<transfer repeat="1" delay="0">
-					<transferid>t3</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
-					<transferid>t2</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
-					<transferid>t4</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
-					<transferid>t5</transferid>
-				</transfer>
-			</transfers>
-			<criteria>
-				<criteriaid>c2</criteriaid>
 			</criteria>
 		</transaction>
 	</transactions>
