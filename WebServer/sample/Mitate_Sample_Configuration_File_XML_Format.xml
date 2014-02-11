@@ -51,8 +51,8 @@
 			<transfer>
 				<id>t2</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.2.5</destinationip>
-				<packetdelay>10</packetdelay>
+				<destinationip>153.90.102.164</destinationip>
+				<packetdelay>0</packetdelay>
 				<type>1</type>
 				<portnumber>5001</portnumber>
 				<response>0</response>
@@ -64,7 +64,7 @@
 			</transfer>
 			<transfer>
 				<id>t3</id>
-				<sourceip>192.168.2.5</sourceip>
+				<sourceip>153.90.102.164</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>1</type>
@@ -79,30 +79,30 @@
 			<transfer>
 				<id>t4</id>
 				<sourceip>client</sourceip>
-				<destinationip>192.168.2.5</destinationip>
-				<packetdelay>10</packetdelay>
+				<destinationip>153.90.102.164</destinationip>
+				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>5001</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>150000</noofbytes>
+					<noofbytes>15000</noofbytes>
 				</bytes>
-				<noofpackets>1</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t5</id>
-				<sourceip>192.168.2.5</sourceip>
+				<sourceip>153.90.102.164</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>10</packetdelay>
+				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>5002</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>150000</noofbytes>
+					<noofbytes>15000</noofbytes>
 				</bytes>
-				<noofpackets>1</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>			
 			<transfer>
 				<id>t6</id>
@@ -214,10 +214,10 @@
 	<transactions>
 		<transaction count="1">
 			<transfers>
-				<transfer repeat="1" delay="0">
+				<transfer repeat="1" delay="10">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer repeat="1" delay="0">
+				<transfer repeat="1" delay="10">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>

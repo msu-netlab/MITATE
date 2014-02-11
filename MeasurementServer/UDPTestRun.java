@@ -72,7 +72,7 @@ public class UDPTestRun {
 					else if(iExplicit == 1)	{
 						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 					}					
-					baSendData = (sData + (System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP - MNEPServer.iPacketDelay) + ":;:").getBytes();
+					baSendData = (sData + (System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP) + ":;:").getBytes();
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);
