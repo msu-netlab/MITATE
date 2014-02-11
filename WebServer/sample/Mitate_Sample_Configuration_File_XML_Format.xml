@@ -52,57 +52,57 @@
 				<id>t2</id>
 				<sourceip>client</sourceip>
 				<destinationip>192.168.2.5</destinationip>
-				<packetdelay>0</packetdelay>
+				<packetdelay>10</packetdelay>
 				<type>1</type>
 				<portnumber>5001</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>1500000</noofbytes>
+					<noofbytes>15000</noofbytes>
 				</bytes>
-				<noofpackets>100</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t3</id>
 				<sourceip>192.168.2.5</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>0</packetdelay>
+				<packetdelay>10</packetdelay>
 				<type>1</type>
 				<portnumber>5002</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>1500000</noofbytes>
+					<noofbytes>15000</noofbytes>
 				</bytes>
-				<noofpackets>100</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t4</id>
 				<sourceip>client</sourceip>
 				<destinationip>192.168.2.5</destinationip>
-				<packetdelay>0</packetdelay>
+				<packetdelay>10</packetdelay>
 				<type>2</type>
 				<portnumber>5001</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>1500000</noofbytes>
+					<noofbytes>150000</noofbytes>
 				</bytes>
-				<noofpackets>100</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t5</id>
 				<sourceip>192.168.2.5</sourceip>
 				<destinationip>client</destinationip>
-				<packetdelay>0</packetdelay>
+				<packetdelay>10</packetdelay>
 				<type>2</type>
 				<portnumber>5002</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>1500000</noofbytes>
+					<noofbytes>150000</noofbytes>
 				</bytes>
-				<noofpackets>100</noofpackets>
+				<noofpackets>10</noofpackets>
 			</transfer>			
 			<transfer>
 				<id>t6</id>
@@ -215,16 +215,10 @@
 		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="0">
-					<transferid>t3</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
 					<transferid>t2</transferid>
 				</transfer>
 				<transfer repeat="1" delay="0">
-					<transferid>t4</transferid>
-				</transfer>
-				<transfer repeat="1" delay="0">
-					<transferid>t5</transferid>
+					<transferid>t3</transferid>
 				</transfer>
 			</transfers>
 			<criteria>

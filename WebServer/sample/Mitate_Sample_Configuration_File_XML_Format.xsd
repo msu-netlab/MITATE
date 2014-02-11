@@ -32,7 +32,7 @@
                           <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
                           <xs:element minOccurs="1" maxOccurs="1" name="sourceip" type="xs:string" />
                           <xs:element minOccurs="1" maxOccurs="1" name="destinationip" type="xs:string" />
-                          <xs:element minOccurs="1" maxOccurs="1" name="packetdelay" type="xs:unsignedByte" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="packetdelay" type="xs:unsignedShort" />
                           <xs:element minOccurs="1" maxOccurs="1" name="type" type="xs:unsignedByte" />
                           <xs:element minOccurs="1" maxOccurs="1" name="portnumber" type="xs:unsignedShort" />
                           <xs:element minOccurs="1" maxOccurs="1" name="response" type="xs:unsignedByte" />
