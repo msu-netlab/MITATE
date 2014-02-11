@@ -17,7 +17,7 @@ public class MNEPAcceptConnection {
             try {
                 macClientConnection.ssTCPServerSocket = new ServerSocket(macClientConnection.iTCPPort);
                 macClientConnection.ssTCPServerSocket.setSoTimeout(0);
-				lServerOffsetFromNTPFromMain = MNEPUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
+				//lServerOffsetFromNTPFromMain = MNEPUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
                 for(;;) {		
                 System.out.println("Server socket created on port - "+macClientConnection.iTCPPort+", waiting for connection...");
                 final Socket sTCPConnectionSocket = macClientConnection.ssTCPServerSocket.accept();
@@ -27,7 +27,7 @@ public class MNEPAcceptConnection {
 			@Override
                     public void run() {
                         MNEPServer msServer = new MNEPServer();
-                        msServer.main1(sTCPConnectionSocket, lServerOffsetFromNTPFromMain);
+                        msServer.main1(sTCPConnectionSocket);
                     }
                 }).start(); 
                 

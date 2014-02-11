@@ -65,13 +65,13 @@ public class MNEPServer {
     String sClientTime="", sLatitudeBeforeTransferExecution = "", sLongitudeBeforeTransferExecution = "", sLatitudeAfterTransferExecution = "", sLongitudeAfterTransferExecution = "", sMobileSignalStrength = "", sAccelerometerReading = "";    
     HashMap<Integer, ServerMetrics> hmServerMetrics;
     
-    public void main1(Socket sConnectionSocket, long lServerOffsetFromNTPFromMain) {
+    public void main1(Socket sConnectionSocket) {
         sTCPConnectionSocket = sConnectionSocket;           
         System.out.println("*****************MITATE Measurement Server Started*********************");
 		try{
 			ObjectInputStream ois = new ObjectInputStream(sTCPConnectionSocket.getInputStream());
 			ObjectOutputStream oos = new ObjectOutputStream(sTCPConnectionSocket.getOutputStream());
-			lServerOffsetFromNTP = lServerOffsetFromNTPFromMain; //MNEPUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
+			lServerOffsetFromNTP = MNEPUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
 			Transfer[] convertReceivedObjectFromClientIntoServerObject = (Transfer[])ois.readObject();
 			oos.writeObject(lServerOffsetFromNTP);
 			sTCPConnectionSocket.close();
