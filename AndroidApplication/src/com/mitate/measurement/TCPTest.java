@@ -107,22 +107,18 @@ public class TCPTest {
 			for (int i = 0; i <iTCPPackets; i++){
 				try{
 					if(iDirection == 0) {
-						// long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
-						
-						// long start = System.currentTimeMillis();
 						if(iExplicit == 0) {
 							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";							
 						} else {
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 						}
 						
-						System.out.print("offset - "+Measurement.lClientOffsetFromNTP); //+"----"+(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal()));
+						System.out.print("offset - "+Measurement.lClientOffsetFromNTP); 
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						 
-						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":::"); 
+						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP - iPacketDelay)+":::"); 
 						bwWriteToServer.flush();
-						
-						// changes with platform
+					
 						int iTCPBytesSent = sBuffer.getBytes().length;
 						iTCPBytesSentToServer += iTCPBytesSent;							
 						
