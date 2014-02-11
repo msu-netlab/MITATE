@@ -82,11 +82,11 @@
 				<destinationip>153.90.102.164</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
-				<portnumber>5001</portnumber>
+				<portnumber>7001</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>15000</noofbytes>
+					<noofbytes>10000</noofbytes>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
@@ -96,11 +96,11 @@
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
-				<portnumber>5002</portnumber>
+				<portnumber>7002</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>15000</noofbytes>
+					<noofbytes>10000</noofbytes>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>			
@@ -201,23 +201,16 @@
 				<latitude>45.66962856799364</latitude>
 				<longitude>-111.06049848720431</longitude>
 				<radius>5000</radius>
-				<networktype>wifi</networktype>
-				<starttime>000001</starttime>
-				<endtime>235959</endtime>
-				<deviceid>client</deviceid>
-				<minimumbatterypower>10</minimumbatterypower>
-				<minimumsignalstrength>-1000</minimumsignalstrength>
-				<networkcarrier>Verizon Wireless</networkcarrier>
 			</criteria>	
 		</criteriadefine>
 	</defines>
 	<transactions>
 		<transaction count="1">
 			<transfers>
-				<transfer repeat="1" delay="10">
+				<transfer repeat="1" delay="0">
 					<transferid>t4</transferid>
 				</transfer>
-				<transfer repeat="1" delay="10">
+				<transfer repeat="1" delay="0">
 					<transferid>t5</transferid>
 				</transfer>
 			</transfers>

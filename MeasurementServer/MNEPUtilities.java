@@ -145,7 +145,7 @@ public class MNEPUtilities {
 		String sNTPServer = "us.pool.ntp.org";
 		int ntpSubDomain = 0;
         SNTPClient client = new SNTPClient();   
-		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 3 ) {
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 4 ) {
 			if(ntpSubDomain > 3) 
 				ntpSubDomain = 0;
 			try {
