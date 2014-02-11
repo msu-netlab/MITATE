@@ -127,23 +127,22 @@ public class MITATEUtilities extends PhoneStateListener {
 		String sNTPServer = "us.pool.ntp.org";
 		int ntpSubDomain = 0;
         SNTPClient client = new SNTPClient();   
-		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 3 ) {
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 4 ) {
 			if(ntpSubDomain > 3) 
 				ntpSubDomain = 0;
-			try {
-				if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
-					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
-					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
-				}
+			if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
+				lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+				System.out.println(lNTPTime + "****" + System.currentTimeMillis());
+				if((lNTPTime+"").length() == 13) {
+	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
+	    			break;
+	    		} 
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			else {
 				ntpSubDomain = ntpSubDomain + 1;
 			}
 		}
-        long lSystemTime = System.currentTimeMillis();
-        lClientOffsetWithNTP = lSystemTime - lNTPTime;
-        return lClientOffsetWithNTP;
+        return lTimeDifference;
     }
 	
 	
