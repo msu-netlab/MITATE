@@ -88,7 +88,7 @@
 					<explicit>0</explicit>
 					<noofbytes>150000</noofbytes>
 				</bytes>
-				<noofpackets>10</noofpackets>
+				<noofpackets>1</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t5</id>
@@ -102,7 +102,7 @@
 					<explicit>0</explicit>
 					<noofbytes>150000</noofbytes>
 				</bytes>
-				<noofpackets>10</noofpackets>
+				<noofpackets>1</noofpackets>
 			</transfer>			
 			<transfer>
 				<id>t6</id>
@@ -215,10 +215,10 @@
 		<transaction count="1">
 			<transfers>
 				<transfer repeat="1" delay="0">
-					<transferid>t2</transferid>
+					<transferid>t4</transferid>
 				</transfer>
 				<transfer repeat="1" delay="0">
-					<transferid>t3</transferid>
+					<transferid>t5</transferid>
 				</transfer>
 			</transfers>
 			<criteria>

@@ -104,6 +104,7 @@ public class MITATEUtilities extends PhoneStateListener {
 	}
 	
 	// calculate time difference with NTP server
+	/*
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
 		long lNTPTime = 0;
 		while(true) {
@@ -119,28 +120,31 @@ public class MITATEUtilities extends PhoneStateListener {
 
     	return lTimeDifference;	    
 	} 
+	*/
 	
-	
-	/*public static long calculateTimeDifferenceBetweenNTPAndLocal() {
-		String sNTPServer = "time.nist.gov";
-			        long lNTPTime = 0;
-			        SNTPClient client = new SNTPClient();
+	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
+        long lNTPTime = 0;
+		String sNTPServer = "us.pool.ntp.org";
+		int ntpSubDomain = 0;
+        SNTPClient client = new SNTPClient();   
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 3 ) {
+			if(ntpSubDomain > 3) 
+				ntpSubDomain = 0;
 			try {
-			while((lNTPTime + "").length() < 13) {
-			if (client.requestTime(sNTPServer, 10000)) {
-				lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
-				System.out.println(lNTPTime + "****" + System.currentTimeMillis());
-			}
-			else
-				Thread.sleep(5000);
-			}
+				if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
+					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
+				}
 			}
 			catch (Exception e) {
-			e.printStackTrace();
+				e.printStackTrace();
+				ntpSubDomain = ntpSubDomain + 1;
 			}
-			        long lSystemTime = System.currentTimeMillis();
-			        lTimeDifference = lSystemTime - lNTPTime;
-			        return lTimeDifference;
-			    } */
+		}
+        long lSystemTime = System.currentTimeMillis();
+        lClientOffsetWithNTP = lSystemTime - lNTPTime;
+        return lClientOffsetWithNTP;
+    }
+	
 	
 }
