@@ -39,6 +39,8 @@ public class LoginService extends Service {
 
 	String TAG = "LoginService";
 	
+	public static long lClientTimeOffset;
+	
 	// public static String sWebServerName = "192.168.1.4";
 	public static String sWebServerName = "mitate.cs.montana.edu";
 	public static String sUserName;
@@ -132,7 +134,12 @@ public class LoginService extends Service {
 	    	   MITATELocation mLocation = new MITATELocation();
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
-			    
+	
+	    	   
+	    	   lClientTimeOffset = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
+	    	   
+	    	   System.out.println("client offset - "+lClientTimeOffset);
+	    	   
     	   	   /// String esURL = "http://54.243.186.107/mobilelogin.php?"  +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
     	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
@@ -207,7 +214,7 @@ public class LoginService extends Service {
                        tPendingTransfers[i].setsDeviceName(MITATEApplication.getDeviceModel());
                        tPendingTransfers[i].setsNetworkCarrier(MITATEApplication.getNetworkCarrierName());
                        tPendingTransfers[i].setsDeviceId(LoginService.sDeviceId);
-                       tPendingTransfers[i].setlClientOffsetFromNTP(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal());
+                       tPendingTransfers[i].setlClientOffsetFromNTP(lClientTimeOffset);
                        tPendingTransfers[i].setiUDPHexBytes(tPendingTransfers[i].getsContent().getBytes().length + 26);
                        
                        if(tPendingTransfers[i].getsContent().trim().length() == 0) {

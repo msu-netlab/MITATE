@@ -52,7 +52,7 @@ public class Measurement extends Thread implements SensorEventListener {
 	SensorManager smManager;
 	
  	static long lServerOffsetFromNTP;
- 	static long lClientOffsetFromNTP;
+ 	// static long lClientOffsetFromNTP;
 	
  	long lStartTime;
  	
@@ -224,7 +224,7 @@ public class Measurement extends Thread implements SensorEventListener {
 				Set<String> s = new HashSet<String>(); 	   
 				int i=j;
 		
-				lClientOffsetFromNTP = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
+				// lClientOffsetFromNTP = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
 		
 				for(;j<LoginService.tPendingTransfers.length && !MITATEActivity.bStopTransactionExecution;j++) {
 					
