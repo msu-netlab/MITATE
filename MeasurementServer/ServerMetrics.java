@@ -17,6 +17,8 @@ public class ServerMetrics {
 	String sUDPLog;
 	String sTCPLog;
 	int iUDPTotalBytesSentToClient;
+	int iPacketDelay;
+	
 	public int getiTransactionId() {
 		return iTransactionId;
 	}
@@ -112,5 +114,11 @@ public class ServerMetrics {
 			int iUDPTotalBytesSentToClient) {
 		this.iUDPTotalBytesSentToClient = iUDPTotalBytesSentToClient;
 	}
-    
+    public int getiPacketDelay() {
+		return iPacketDelay;
+	}
+	public void setiPacketDelay(int iPacketDelay) {
+		this.iPacketDelay = iPacketDelay;
+	}
+	
 }

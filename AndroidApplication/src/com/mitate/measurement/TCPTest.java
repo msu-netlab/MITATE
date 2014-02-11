@@ -116,7 +116,7 @@ public class TCPTest {
 						System.out.print("offset - "+Measurement.lClientOffsetFromNTP); 
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						 
-						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP - iPacketDelay)+":::"); 
+						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":::"); 
 						bwWriteToServer.flush();
 					
 						int iTCPBytesSent = sBuffer.getBytes().length;

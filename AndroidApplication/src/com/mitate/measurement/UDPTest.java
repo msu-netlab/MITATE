@@ -96,7 +96,7 @@ public class UDPTest {
 							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";
 						}
 
-						baSendData = (sData+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP - iPacketDelay)+":;:").getBytes();
+						baSendData = (sData+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":;:").getBytes();
 						iUDPBytesSentToServer += sData.getBytes().length;						
 						dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, iaServerAddress, iUDPPort);
 						dsUDPSocket.send(dpUDPSendPacket);					

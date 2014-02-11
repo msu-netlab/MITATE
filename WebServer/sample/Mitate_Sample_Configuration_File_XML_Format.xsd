@@ -32,9 +32,9 @@
                           <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
                           <xs:element minOccurs="1" maxOccurs="1" name="sourceip" type="xs:string" />
                           <xs:element minOccurs="1" maxOccurs="1" name="destinationip" type="xs:string" />
-                          <xs:element minOccurs="1" maxOccurs="1" name="packetdelay" type="xs:unsignedShort" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="packetdelay" type="xs:unsignedInt" />
                           <xs:element minOccurs="1" maxOccurs="1" name="type" type="xs:unsignedByte" />
-                          <xs:element minOccurs="1" maxOccurs="1" name="portnumber" type="xs:unsignedShort" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="portnumber" type="xs:unsignedInt" />
                           <xs:element minOccurs="1" maxOccurs="1" name="response" type="xs:unsignedByte" />
                           <xs:element minOccurs="1" maxOccurs="1" name="bytes">
                             <xs:complexType>
@@ -45,7 +45,7 @@
                               </xs:sequence>
                             </xs:complexType>
                           </xs:element>
-                          <xs:element minOccurs="1" maxOccurs="1" name="noofpackets" type="xs:unsignedByte" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="noofpackets" type="xs:unsignedInt" />
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
@@ -61,13 +61,13 @@
                           <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
                           <xs:element minOccurs="1" maxOccurs="1" name="latitude" type="xs:decimal" />
                           <xs:element minOccurs="1" maxOccurs="1" name="longitude" type="xs:decimal" />
-                          <xs:element minOccurs="1" maxOccurs="1" name="radius" type="xs:unsignedShort" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="radius" type="xs:unsignedInt" />
                           <xs:element minOccurs="0" maxOccurs="1"  name="networktype" type="xs:string" />
-                          <xs:element minOccurs="0" maxOccurs="1" name="starttime" type="xs:unsignedByte" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="starttime" type="xs:unsignedInt" />
                           <xs:element minOccurs="0" maxOccurs="1" name="endtime" type="xs:unsignedInt" />
                           <xs:element minOccurs="0" maxOccurs="1" name="deviceid" type="xs:string" />
-                          <xs:element minOccurs="0" maxOccurs="1" name="minimumbatterypower" type="xs:unsignedByte" />
-                          <xs:element minOccurs="0" maxOccurs="1" name="minimumsignalstrength" type="xs:short" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="minimumbatterypower" type="xs:unsignedInt" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="minimumsignalstrength" type="xs:integer" />
                           <xs:element minOccurs="0" maxOccurs="1" name="networkcarrier" type="xs:string" />
                           <xs:element minOccurs="0" maxOccurs="1" name="devicemodelname" type="xs:string" />
                         </xs:sequence>
@@ -93,8 +93,8 @@
                               <xs:sequence>
                                 <xs:element minOccurs="1" maxOccurs="1" name="transferid" type="xs:string" />
                               </xs:sequence>
-                              <xs:attribute name="repeat" type="xs:unsignedByte" use="optional" />
-                              <xs:attribute name="delay" type="xs:unsignedByte" use="optional" />
+                              <xs:attribute name="repeat" type="xs:unsignedInt" use="optional" />
+                              <xs:attribute name="delay" type="xs:unsignedInt" use="optional" />
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
@@ -108,7 +108,7 @@
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
-                  <xs:attribute name="count" type="xs:unsignedByte" use="optional" />
+                  <xs:attribute name="count" type="xs:unsignedInt" use="optional" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
