@@ -65,15 +65,14 @@ public class UDPTestRun {
             String sData = "";
             for (int i = 0; i < iUDPPackets; i++){
                 try {                
-                if(iUplinkOrDownlink == 1) {       
-					//long lServerTime = System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP;                
+                if(iUplinkOrDownlink == 1) {                      
 					if(iExplicit == 0) {
 						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:";
 					}
 					else if(iExplicit == 1)	{
 						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 					}					
-					baSendData = (sData + (System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP) + ":;:").getBytes();
+					baSendData = (sData + (System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP - MNEPServer.iPacketDelay) + ":;:").getBytes();
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);

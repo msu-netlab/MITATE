@@ -140,21 +140,24 @@ public class MNEPUtilities {
         return total;
     }  
     
-    public static long calculateTimeDifferenceBetweenNTPAndLocal(String sNTPServer) {
+    public static long calculateTimeDifferenceBetweenNTPAndLocal() {
         long lNTPTime = 0;
+		String sNTPServer = "us.pool.ntp.org";
+		int ntpSubDomain = 0;
         SNTPClient client = new SNTPClient();   
-		try {
-			while((lNTPTime + "").length() < 13) {
-				if (client.requestTime(sNTPServer, 4000)) {
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 3 ) {
+			if(ntpSubDomain > 3) 
+				ntpSubDomain = 0;
+			try {
+				if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
 					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
 					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
 				}
-				else
-					Thread.sleep(5000);
 			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+			catch (Exception e) {
+				e.printStackTrace();
+				ntpSubDomain = ntpSubDomain + 1;
+			}
 		}
         long lSystemTime = System.currentTimeMillis();
         lServerOffsetWithNTP = lSystemTime - lNTPTime;
