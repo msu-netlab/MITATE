@@ -104,7 +104,7 @@ public class MITATEUtilities extends PhoneStateListener {
 	}
 	
 	// calculate time difference with NTP server
-	/*
+	
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
 		long lNTPTime = 0;
 		while(true) {
@@ -120,8 +120,8 @@ public class MITATEUtilities extends PhoneStateListener {
 
     	return lTimeDifference;	    
 	} 
-	*/
 	
+	/*
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
         long lNTPTime = 0;
 		String sNTPServer = "us.pool.ntp.org";
@@ -144,6 +144,6 @@ public class MITATEUtilities extends PhoneStateListener {
 		}
         return lTimeDifference;
     }
-	
+	*/
 	
 }

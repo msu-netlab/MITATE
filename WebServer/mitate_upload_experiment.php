@@ -94,7 +94,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 												$criteria_networkcarrier = 'allNetworkCarriers';
 											$criteria_minimumsignalstrength = $tempcriteria->minimumsignalstrength;
 											if($criteria_minimumsignalstrength == '')
-												$criteria_minimumsignalstrength = '0';
+												$criteria_minimumsignalstrength = '-1000';
 											$criteria_minimumbatterypower = $tempcriteria->minimumbatterypower;
 											if($criteria_minimumbatterypower == '')
 												$criteria_minimumbatterypower = '0';
@@ -102,6 +102,8 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 											if($criteria_deviceid == '')
 												$criteria_deviceid = 'client';
 											$criteria_networktype = $tempcriteria->networktype;
+											if($criteria_networktype == '')
+												$criteria_networktype = 'allNetworkTypes';
 											$criteria_starttime = $tempcriteria->starttime;
 											if($criteria_starttime == '')
 												$criteria_starttime = '000001';
