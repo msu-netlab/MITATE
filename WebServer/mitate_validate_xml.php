@@ -44,7 +44,7 @@ if ($loginresultset) {
 						Delete("user_accounts/" . $username . "/validate/" . $experiment_id);
 					}
 					else 
-						echo "Your XML is validated.";
+						echo "XML experiment  is valid.";
 				}
 			}	
 		}

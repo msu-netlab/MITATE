@@ -1,7 +1,7 @@
 #!/bin/sh
 isValid=0
 
-userLogin() {
+validateExistingUserCredential() {
 	ifUserIsValid='false'
 	touch user.txt
 	value=`cat user.txt`;
@@ -16,14 +16,27 @@ userLogin() {
 		password=$encrypted_password
 	fi
 	ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
+}
+
+saveUserCredentials() {
 	if [ "$ifUserIsValid" == 'true' ]
 	then
 		chmod 777 user.txt
 		echo "$encrypted_username:$encrypted_password" > user.txt;
 		chmod 444 user.txt
 		isValid=1;
-		echo "You are now authenticated."
-	else
+		if [ "$1" == 'withEcho' ]
+		then
+			echo "You are now authenticated."
+		fi
+	fi
+}
+
+userLogin() {
+	validateExistingUserCredential
+	saveUserCredentials 'withEcho'
+	if [ "$ifUserIsValid" != 'true' ]
+	then
 		isValid=0;
 		echo "Enter your MITATE username: ";
 		read username;
@@ -47,32 +60,15 @@ userLogin() {
 }
 
 checkIfUserAlreadyLoggedIn() {
-	ifUserIsValid='false'
-	touch user.txt
-	value=`cat user.txt`;
-	encrypted_username=`echo $value | cut -d \: -f 1`
-	encrypted_password=`echo $value | cut -d \: -f 2`
-	if [ "$encrypted_username" != '' -a "$encrypted_password" != '' ]
-	then
-		username=`curl -k -ssl3 -F "string=$encrypted_username" https://mitate.cs.montana.edu/decrypt_user.php`
-		password=`curl -k -ssl3 -F "string=$encrypted_password" https://mitate.cs.montana.edu/decrypt_user.php`
-	else
-		username=$encrypted_username
-		password=$encrypted_password
-	fi
-	ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
-	if [ "$ifUserIsValid" == 'true' ]
-	then
-		chmod 777 user.txt
-		echo "$encrypted_username:$encrypted_password" > user.txt;
-		chmod 444 user.txt
-		isValid=1;
-	fi
+	validateExistingUserCredential
+	saveUserCredentials 'withoutEcho'
 }
 
 checkIfUserAlreadyLoggedIn
-
-if [ "$1" == '' -a "$isValid" == 0 ]
+if [ "$1" = "help" ]
+then
+	echo `curl -k -ssl3 https://mitate.cs.montana.edu/mitate_api_help.php`
+elif [ "$1" == '' -a "$isValid" == 0 ]
 then
 	echo "You are not authenticated. To authenticate yourself, run mitate.sh login ";
 elif [ "$1" != '' -a "$isValid" == 0 -a "$1" != 'login' ]
@@ -86,7 +82,7 @@ then
 	echo "You are already logged in."
 elif [ "$1" == '' -a "$isValid" == 1 ]
 then
-	echo "Invalid arguments."
+	echo "Invalid arguments. To know possible commands, run mitate.sh help"
 elif [ "$1" != '' -a "$isValid" == 1 ]
 then
 	if [ "$1" == 'upload' -a "$2" != '' ] 
@@ -115,6 +111,8 @@ then
 	elif [ "$1" == 'query' -a "$2" != '' -a "$3" != '' ]
 	then
 		echo "Please wait while we gather your data..."
+		touch $2
+		touch $3
 		while read line           
 		do
 			experiment_result=`curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$line https://mitate.cs.montana.edu/mitate_query_experiment.php`
@@ -125,13 +123,13 @@ then
 				echo $experiment_result >> $3
 			fi
 		done < $2
-		echo "All the results are appended in $2 file."
+		echo "The output file '$3' has been updated."
 	elif [ "$1" == 'init' -a "$2" != '' ]
 	then
 		echo "Please wait while we generate initialization scripts..."
 		echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/mitate_initialize_db.php` > $2
 		echo "Scripts are stored in $2 file"
-	elif [ "$1" == 'update' -a "$2" != '' ]
+	elif [ "$1" == 'makePublic' -a "$2" != '' ]
 	then
 		echo "This experiment will be made public. Are you sure?(y/n))";
 		read update_response;
@@ -145,7 +143,7 @@ then
 	elif [ "$1" == 'getExpCost' -a "$2" != '' ]
 	then
 		echo `curl -k -ssl3 -F "username=$username" -F "password=$password" -F file=@$2 https://mitate.cs.montana.edu/mitate_count_credit_xml.php`
-	elif [ "$1" == 'checkcredits' ]
+	elif [ "$1" == 'checkCredits' ]
 	then
 		echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/get_user_credits.php`
 	elif [ "$1" == 'logout' ]
@@ -153,10 +151,12 @@ then
 		touch user.txt
 		chmod 777 user.txt
 		echo "" > user.txt
-		echo "You are now logged out."
+		rm user.txt
+		rm user_experiment_list.txt
 		isValid=0
-	elif [ "$1" != "login" ]
+		echo "You are now logged out."
+	elif [ "$1" != 'login' -a "$isValid" == 1 ]
 	then
-		echo "Invalid arguments.";
+		echo "Invalid arguments. To know possible commands, run mitate.sh help";
 	fi
 fi
