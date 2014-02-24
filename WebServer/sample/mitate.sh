@@ -38,9 +38,9 @@ userLogin() {
 	if [ "$ifUserIsValid" != 'true' ]
 	then
 		isValid=0;
-		echo "Enter your MITATE username: ";
+		echo -n "Enter your MITATE username: ";
 		read username;
-		echo "Enter your password: ";
+		echo -n "Enter your password: ";
 		read -s password;
 		ifUserIsValid=`curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/validate_user.php`
 		if [ "$ifUserIsValid" == 'true' ]
@@ -51,10 +51,10 @@ userLogin() {
 			echo "$encrypted_username:$encrypted_password" > user.txt;
 			chmod 444 user.txt
 			isValid=1;
-			echo "You are now authenticated."
+			printf "\nYou are now authenticated."
 		else
 			isValid=0;
-			echo "Invalid account credentials."
+			printf "\nInvalid account credentials."
 		fi
 	fi
 }
@@ -67,7 +67,7 @@ checkIfUserAlreadyLoggedIn() {
 checkIfUserAlreadyLoggedIn
 if [ "$1" = "help" ]
 then
-	echo `curl -k -ssl3 https://mitate.cs.montana.edu/mitate_api_help.php`
+	echo -e `curl -k -ssl3 https://mitate.cs.montana.edu/mitate_api_help.php`
 elif [ "$1" == '' -a "$isValid" == 0 ]
 then
 	echo "You are not authenticated. To authenticate yourself, run mitate.sh login ";
@@ -149,6 +149,7 @@ then
 	elif [ "$1" == 'logout' ]
 	then
 		touch user.txt
+		touch user_experiment_list.txt
 		chmod 777 user.txt
 		echo "" > user.txt
 		rm user.txt
