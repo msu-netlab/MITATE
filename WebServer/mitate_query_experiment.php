@@ -37,7 +37,11 @@ if ($loginresultset) {
 						$get_metricdata_transfer_list = mysql_query("select * from metricdata where transferid = $get_transfer_linked[transferid]");
 						while($get_metricdata_transfer = mysql_fetch_assoc($get_metricdata_transfer_list)) {
 							$device_id_array[$deviceid_count] = $get_metricdata_transfer[deviceid];
-							echo "replace into metricdata (metricid, transferid, transactionid, value, transferfinished, deviceid, responsedata) values ($get_metricdata_transfer[metricid], $get_metricdata_transfer[transferid], $get_metricdata_transfer[transactionid], $get_metricdata_transfer[value], '$get_metricdata_transfer[transferfinished]', '$get_metricdata_transfer[deviceid]', '$get_metricdata_transfer[responsedata]');";
+							if($get_metricdata_transfer[value] != '') {
+								echo "replace into metricdata (metricid, transferid, transactionid, value, transferfinished, deviceid, responsedata) values ($get_metricdata_transfer[metricid], $get_metricdata_transfer[transferid], $get_metricdata_transfer[transactionid], $get_metricdata_transfer[value], '$get_metricdata_transfer[transferfinished]', '$get_metricdata_transfer[deviceid]', '$get_metricdata_transfer[responsedata]');";
+							}
+							else
+								echo "replace into metricdata (metricid, transferid, transactionid, transferfinished, deviceid, responsedata) values ($get_metricdata_transfer[metricid], $get_metricdata_transfer[transferid], $get_metricdata_transfer[transactionid], '$get_metricdata_transfer[transferfinished]', '$get_metricdata_transfer[deviceid]', '$get_metricdata_transfer[responsedata]');";
 							$deviceid_count = $deviceid_count + 1;
 						}
 						$get_transferexecutedby_transfer_list = mysql_query("select * from transferexecutedby where transferid = $get_transfer_linked[transferid]");
