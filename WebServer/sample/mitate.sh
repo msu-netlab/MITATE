@@ -108,11 +108,11 @@ then
 			cp temp_user_delete_experiment.txt user_experiment_list.txt
 			rm temp_user_delete_experiment.txt
 		fi
-	elif [ "$1" == 'query' -a "$2" != '' -a "$3" != '' ]
+	elif [ "$1" == 'query' -a "$2" != '' ]
 	then
 		echo "Please wait while we gather your data..."
+		touch 'user_experiment_list.txt'
 		touch $2
-		touch $3
 		while read line           
 		do
 			experiment_result=`curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$line https://mitate.cs.montana.edu/mitate_query_experiment.php`
@@ -120,10 +120,10 @@ then
 			then
 				echo "Can not retrieve data for experiment ID: $line"
 			else
-				echo $experiment_result >> $3
+				echo $experiment_result >> $2
 			fi
-		done < $2
-		echo "The output file '$3' has been updated."
+		done < 'user_experiment_list.txt'
+		echo "The output file '$2' has been updated."
 	elif [ "$1" == 'init' -a "$2" != '' ]
 	then
 		echo "Please wait while we generate initialization scripts..."
