@@ -3,9 +3,14 @@ package com.mitate.service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Properties;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
@@ -15,7 +20,6 @@ import com.mitate.MITATEApplication;
 import com.mitate.measurement.Measurement;
 import com.mitate.utilities.MITATELocation;
 import com.mitate.utilities.MITATEUtilities;
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -31,10 +35,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-@TargetApi(17)
 public class LoginService extends Service {
 
 	String TAG = "LoginService";
+	
+	public static long lClientTimeOffset;
 	
 	// public static String sWebServerName = "192.168.1.4";
 	public static String sWebServerName = "mitate.cs.montana.edu";
@@ -129,7 +134,12 @@ public class LoginService extends Service {
 	    	   MITATELocation mLocation = new MITATELocation();
 	    	   
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
-			    
+	
+	    	   
+	    	   lClientTimeOffset = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
+	    	   
+	    	   System.out.println("client offset - "+lClientTimeOffset);
+	    	   
     	   	   /// String esURL = "http://54.243.186.107/mobilelogin.php?"  +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
     	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
@@ -137,8 +147,8 @@ public class LoginService extends Service {
        	   	   		"username="+sUserName+ //
    	    	   	    "&password="+sPassword+ //
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
-   	    	   	    // "&networktype="+MITATEUtilities.getNetworkType(cContext)+"&city="+mLocation.getCity(cContext);
-   	    	   	    "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
+   	    	   	    "&networktype="+MITATEUtilities.getNetworkType(cContext)+// +"&city="+mLocation.getCity(cContext);
+   	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
    	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
    	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
@@ -147,6 +157,7 @@ public class LoginService extends Service {
    		   	   HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
                HttpPost hpHttpPost = new HttpPost(sURL);                           
                // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
                if(MITATEApplication.bDebug) Log.i(TAG, "@executeLogin() : request - "+hpHttpPost.getRequestLine().toString());
                
                HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpPost);
@@ -180,7 +191,8 @@ public class LoginService extends Service {
                }
                else {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : number of pending transactions - "+jaPendingTransfers.length());
-	               for(int i=0;i<jaPendingTransfers.length();i++) {
+	               
+            	   for(int i=0;i<jaPendingTransfers.length();i++) {
                        JSONObject json_data = jaPendingTransfers.getJSONObject(i);
                        tPendingTransfers[i] = new Transfer();
                        tPendingTransfers[i].setiBytes(json_data.getInt("bytes"));
@@ -202,7 +214,7 @@ public class LoginService extends Service {
                        tPendingTransfers[i].setsDeviceName(MITATEApplication.getDeviceModel());
                        tPendingTransfers[i].setsNetworkCarrier(MITATEApplication.getNetworkCarrierName());
                        tPendingTransfers[i].setsDeviceId(LoginService.sDeviceId);
-                       tPendingTransfers[i].setlClientOffsetFromNTP(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal());
+                       tPendingTransfers[i].setlClientOffsetFromNTP(lClientTimeOffset);
                        tPendingTransfers[i].setiUDPHexBytes(tPendingTransfers[i].getsContent().getBytes().length + 26);
                        
                        if(tPendingTransfers[i].getsContent().trim().length() == 0) {

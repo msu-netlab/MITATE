@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.telephony.NeighboringCellInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -30,7 +31,8 @@ public class MITATEActivity extends Activity implements OnClickListener {
 	TextView tvUsername = null;
 	TextView tvPassword = null;
 	TextView tvHeader = null;
-	TextView tvSeparator = null;
+	TextView tvSeparator1 = null;
+	TextView tvSeparator5 = null;
 	TextView tvStatus = null;
 	
 	EditText etUsername = null;
@@ -55,6 +57,10 @@ public class MITATEActivity extends Activity implements OnClickListener {
 
 		if(MITATEApplication.bDebug) Log.i(TAG, "@onCreate() - start");
 		
+		/* for(NeighboringCellInfo n : MITATEApplication.getTelephonyManager().getNeighboringCellInfo()) {
+			System.out.print("strenght="+n.getCid()+"-"+n.getLac()+"-"+n.getRssi()+"-"+n.getPsc());
+		} */
+		
 		spMNEPPreference = getSharedPreferences(sPreferenceName, 0);		
 	    editor = spMNEPPreference.edit();
 		
@@ -66,7 +72,8 @@ public class MITATEActivity extends Activity implements OnClickListener {
 		etUsername = (EditText)findViewById(R.id.am_et_username);
 		etPassword = (EditText)findViewById(R.id.am_et_password);
 		
-		tvSeparator =  (TextView)findViewById(R.id.am_tv_separator1);	
+		tvSeparator1 = (TextView)findViewById(R.id.am_tv_separator1);	
+		tvSeparator5 = (TextView)findViewById(R.id.al_tv_separator5);
 		
 		btStartService = (Button)findViewById(R.id.am_bt_startservice);
 		btStartService.setOnClickListener(this);
@@ -88,19 +95,31 @@ public class MITATEActivity extends Activity implements OnClickListener {
 		setComponentsWidth();
 		initializeComponents();
 		tvStatus.setText("");
+		if(spMNEPPreference.getString("startbutton", "").equals("disabled")) {
+			btStartService.setEnabled(false);
+			btStopService.setEnabled(true);
+		} else {
+			btStartService.setEnabled(true);
+			btStopService.setEnabled(false);			
+		}
+		
+
 	}
 	
 	public void setComponentsWidth() {
 
-		tvSeparator.setMaxHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
-		tvSeparator.setMinimumHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
+		tvSeparator1.setMaxHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
+		tvSeparator1.setMinimumHeight(((int)(0.15*getWindowManager().getDefaultDisplay().getHeight())));
+		
+		tvSeparator5.setMaxHeight(((int)(0.30*getWindowManager().getDefaultDisplay().getHeight())));
+		tvSeparator5.setMinimumHeight(((int)(0.30*getWindowManager().getDefaultDisplay().getHeight())));
 		
 		tvHeader.setMaxWidth((int)(getWindowManager().getDefaultDisplay().getWidth()));
 		tvHeader.setMinimumWidth((int)(getWindowManager().getDefaultDisplay().getWidth()));
 		
         tvUsername.setMaxWidth((int)(0.40*getWindowManager().getDefaultDisplay().getWidth()));
         tvUsername.setMinimumWidth((int)(0.40*getWindowManager().getDefaultDisplay().getWidth()));
-
+ 
         tvPassword.setMaxWidth((int)(0.40*getWindowManager().getDefaultDisplay().getWidth()));
         tvPassword.setMinimumWidth((int)(0.40*getWindowManager().getDefaultDisplay().getWidth()));
 

@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 public class MITATEUtilities extends PhoneStateListener {
 	
-	private Handler handler;
+	// private Handler handler;
 	public static long lTimeDifference = 0;
 	public static int iSignalStrength;
 	
-	public MITATEUtilities() {
+	/* public MITATEUtilities() {
 		handler = new Handler();
 		Looper.myLooper().prepare();
-	}
+	} */
 	
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength)
@@ -77,7 +77,7 @@ public class MITATEUtilities extends PhoneStateListener {
 			if (netType == ConnectivityManager.TYPE_WIFI) {
 				return "wifi";
 			} 
-			else if (netType == ConnectivityManager.TYPE_MOBILE) { //  && netSubtype == TelephonyManager.NETWORK_TYPE_UMTS && !mTelephony.isNetworkRoaming()) {
+			else if (netType == ConnectivityManager.TYPE_MOBILE) {
 				return "cellular";
 			}
 		} catch (Exception e) {
@@ -104,20 +104,46 @@ public class MITATEUtilities extends PhoneStateListener {
 	}
 	
 	// calculate time difference with NTP server
+	
 	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
 		long lNTPTime = 0;
- 	    SNTPClient client = new SNTPClient();
-		if (client.requestTime("us.pool.ntp.org",5000)) {
-		   lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-		   System.out.println(lNTPTime+"------>"+(lNTPTime+"").length());
-		   if ((lNTPTime+"").length() != 13) {
-			   System.out.println("respeat");
-			   calculateTimeDifferenceBetweenNTPAndLocal();
-		   }
+		while(true) {
+	 	    SNTPClient client = new SNTPClient();
+	    	if (client.requestTime("time.nist.gov", 5000)) { 
+	    		lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+	    		if((lNTPTime+"").length() == 13) {
+	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
+	    			break;
+	    		} 
+	    	} 			
 		}
- 	  
- 	    long lSystemTime = System.currentTimeMillis();
- 	    lTimeDifference = lSystemTime - lNTPTime;
- 	    return lTimeDifference;
-	}
+
+    	return lTimeDifference;	    
+	} 
+	
+	/*
+	public static long calculateTimeDifferenceBetweenNTPAndLocal() {
+        long lNTPTime = 0;
+		String sNTPServer = "us.pool.ntp.org";
+		int ntpSubDomain = 0;
+        SNTPClient client = new SNTPClient();   
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 4 ) {
+			if(ntpSubDomain > 3) 
+				ntpSubDomain = 0;
+			if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
+				lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+				System.out.println(lNTPTime + "****" + System.currentTimeMillis());
+				if((lNTPTime+"").length() == 13) {
+	    			lTimeDifference = System.currentTimeMillis() - lNTPTime;
+	    			break;
+	    		} 
+			}
+			else {
+				ntpSubDomain = ntpSubDomain + 1;
+			}
+		}
+        return lTimeDifference;
+    }
+	*/
+	
 }

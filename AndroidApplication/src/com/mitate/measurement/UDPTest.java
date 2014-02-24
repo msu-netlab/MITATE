@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import com.mitate.MITATEApplication;
+import com.mitate.service.LoginService;
  
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -33,6 +34,8 @@ public class UDPTest {
 	byte[] baReceivedData;
 	
 	TelephonyManager mTelephonyManager;
+	
+	String sLog = "SUCCESS";
 
 	public UDPTest() {
 
@@ -52,6 +55,7 @@ public class UDPTest {
 		this.iExplicit = iExplicit;
 		this.sContent = sContent;
 		this.sContentType = sContentType;
+		this.sLog = "SUCCESS";
 	}
 
 	public boolean runUDPTest() {
@@ -62,7 +66,7 @@ public class UDPTest {
 			
 			InetAddress iaServerAddress = InetAddress.getByName(sServerIP);
 			dsUDPSocket = new DatagramSocket(iUDPPort);
-			dsUDPSocket.setSoTimeout(iPacketDelay + 8000);
+			dsUDPSocket.setSoTimeout(10000);
 			dpUDPSendPacket = new DatagramPacket(new byte[10], 1, iaServerAddress, iUDPPort);
 			
 			for(int k=0;k <5; k++) {
@@ -81,48 +85,23 @@ public class UDPTest {
 					bExtraBytes = new byte[iUDPBytes-(":;:1111:;:"+System.currentTimeMillis()+":;:").getBytes().length];
 			} else {
 				
-				/* if(sContentType.equals("HEX")) {
-					if(sContent.length() % 2 != 0) {
-						sContent = sContent+"0";
-					}
-					
-					// sContent = new String(DatatypeConverter.parseHexBinary(sContent));
-					// sContent = MITATEUtilities.parseHexString(sContent);
-					// System.out.println("content from hex string - "+sContent);
-				} else if(sContentType.equals("BINARY")) {
-					// int iContentLengthToAdd = (8 - sContent.length() % 8);
-					// while (iContentLengthToAdd-- > 0) {
-						// sContent += "0";						
-					// }					
-					// sContent = MITATEUtilities.parseBinaryString(sContent);
-					// System.out.println("content from binary string - "+sContent);
-					sContent = sContent;
-				} else {
-					
-				} */
 			}
 
 			String sData = "";
-			for (int i = 0; i < iUDPPackets; i++){
-				try{
+			for (int i = 0; i < iUDPPackets; i++) {
+				try {
 					if(iDirection == 0) {
-						long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
 						if(iExplicit == 0) {
-							sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";						
+							sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";						
 						} else {
-							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lClientTime+":;:";
+							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";
 						}
 
-						baSendData = sData.getBytes();
-
-						iUDPBytesSentToServer += sData.getBytes().length;
-						
+						baSendData = (sData+(System.currentTimeMillis() - LoginService.lClientTimeOffset)+":;:").getBytes();
+						iUDPBytesSentToServer += sData.getBytes().length;						
 						dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, iaServerAddress, iUDPPort);
-						dsUDPSocket.send(dpUDPSendPacket);
-					
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : C->S Packet1- " + i + " sent"+", packet delay - "+iPacketDelay+", client time - "+lClientTime);
-						
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : C2S s" + i);
+						dsUDPSocket.send(dpUDPSendPacket);					
+
 						Thread.sleep(iPacketDelay);
 					}
 					if(iDirection == 1) {		
@@ -132,39 +111,34 @@ public class UDPTest {
 						dsUDPSocket.receive(dpUDPRecvPacket);
 						long lTimeOnClient = System.currentTimeMillis();
 						
-						// Log.v(TAG,  new String(dpUDPRecvPacket.getData()));
-						
 						int iUDPBytesReceived = dpUDPRecvPacket.getData().length;
 						iUDPBytesReceivedFromServer += iUDPBytesReceived;
 						
 						iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
 						long lTimeOnServer = Long.parseLong(new String(dpUDPRecvPacket.getData()).split(":;:")[2]);
 
-						long lLatencyDownLink = lTimeOnClient - Measurement.lClientOffsetFromNTP - lTimeOnServer; // (lTimeOnClient-MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
+						long lLatencyDownLink = lTimeOnClient - LoginService.lClientTimeOffset - lTimeOnServer; // (lTimeOnClient-MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						lUDPPacketReceivedTimes[i] = lLatencyDownLink;
 						iaUDPBytes[i] = iUDPBytesReceived;
 
 						i = iPacketNumber;
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDPTest : S->C Packet " + iPacketNumber + " received"); //, Total bytes received - "+iUDPBytesReceivedFromServer+", stime - "+lTimeOnServer+", ctime - "+lTimeOnClient+", diff - "+(lTimeOnClient-lTimeOnServer)); // +", dpUDPPacket data - "+new String(dpUDPPacket.getData()));
-						// Log.d(TAG, "--->remote - "+dsUDPSocket.getRemoteSocketAddress()+", local - "+dsUDPSocket.getLocalSocketAddress());
-						// Log.d(TAG, "--->remote - "+dpUDPRecvPacket.getSocketAddress());
-						// if(MITATEApplication.bDebug) Log.d(TAG, "@UDP : S2C " + iPacketNumber);
+
 					}
 				} catch(Exception e){
-					if(++iTimeOutPackets > 3) break;
+					if(++iTimeOutPackets > 1) break;
 					Log.e("UDP", "error udp - "+e.getMessage());
+					sLog = e.getClass()+"";
 					e.printStackTrace();
 				} 
 			}
 			
-			Thread.sleep(iPacketDelay);
-			
+			Thread.sleep(iPacketDelay);			
 			Log.i(TAG, "@UDPTest : UDP Completed");
-
 
 		} catch (Exception e) {
 			Log.e(TAG, "@UDPTest : error - "+e.getMessage());
 			e.printStackTrace();
+			sLog = e.getMessage();
 			return false;
 		} finally {
 			dsUDPSocket.close();

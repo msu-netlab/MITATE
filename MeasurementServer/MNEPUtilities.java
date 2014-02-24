@@ -63,20 +63,20 @@ public class MNEPUtilities {
     }
     
     // to calculate throughtput in kilobytes per second
-    public static float toKBps(int bytes, int msecs){
+    public static float toKbps(int bytes, int msecs){
         float result = 0;
         try {
-            result = (float)((toKB(bytes)/(msecs/1000.0))*8);
+            result = (float)((toKb(bytes))/(msecs/1000.0));
         } catch (Exception e) {
-              System.err.println(TAG+" : @toKBps : error - "+e.getMessage());
+              System.err.println(TAG+" : @toKbps : error - "+e.getMessage());
               e.printStackTrace();
         }
         return result;
     } 
     
     // to convert bytes to kilobytes
-    public static float toKB(long bytes){
-        return (float)(bytes/1024.0);
+    public static float toKb(long bytes){
+        return (float)((bytes * 8)/1000.0);
     }
  
     //creates a Timestamp array from a String array of long values
@@ -112,11 +112,11 @@ public class MNEPUtilities {
         return times;
     }
     
-    public static float[] calculateThroughput(long[] laLatencies, int[] iaBytes) {
+    public static float[] calculateThroughput(long[] laLatencies, int[] iaBytes, int iPacketDelay) {
     	float[] faThroughput = new float[laLatencies.length];
     	for(int i=0; i<laLatencies.length; i++) {
     		try {
-    			faThroughput[i] = (float)iaBytes[i] / (float)laLatencies[i];
+    			faThroughput[i] = (float)iaBytes[i] / (float)(laLatencies[i] + iPacketDelay);
     		} catch(Exception e) {
     			System.out.println(TAG+" : error : "+e.getMessage());
     		}
@@ -140,18 +140,27 @@ public class MNEPUtilities {
         return total;
     }  
     
-    public static long calculateTimeDifferenceBetweenNTPAndLocal(String sNTPServer) {
+    public static long calculateTimeDifferenceBetweenNTPAndLocal() {
         long lNTPTime = 0;
-        SNTPClient client = new SNTPClient();            
-        if (client.requestTime(sNTPServer, 20000)) {
-               // lNTPTime = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-            //System.out.println("NTP - Server : "+sNTPServer+", Time : "+client.getNtpTime()+ ", System : "+System.currentTimeMillis()+", Diff : "+(client.getNtpTime() - System.currentTimeMillis()));
-            lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
-        }
-
+		String sNTPServer = "us.pool.ntp.org";
+		int ntpSubDomain = 0;
+        SNTPClient client = new SNTPClient();   
+		while((lNTPTime + "").length() < 13 && ntpSubDomain <= 4 ) {
+			if(ntpSubDomain > 3) 
+				ntpSubDomain = 0;
+			try {
+				if (client.requestTime(ntpSubDomain + "." + sNTPServer, 4000)) {
+					lNTPTime = client.getNtpTime() + ((long)Math.ceil(System.nanoTime() * Math.pow(10, -6))) - client.getNtpTimeReference();
+					System.out.println(lNTPTime + "****" + System.currentTimeMillis());
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				ntpSubDomain = ntpSubDomain + 1;
+			}
+		}
         long lSystemTime = System.currentTimeMillis();
         lServerOffsetWithNTP = lSystemTime - lNTPTime;
-        // lServerOffsetWithNTP = 0;
         return lServerOffsetWithNTP;
     }
 }

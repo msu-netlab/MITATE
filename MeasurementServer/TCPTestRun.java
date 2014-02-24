@@ -19,6 +19,7 @@ public class TCPTestRun {
     int iTCPTotalBytesSentToClient, iTCPTotalBytesReceivedFromClient;
     long[] laTCPPacketReceivedTimestamps;
 	int[] iaTCPBytes;
+	String sLog;
     BufferedReader brReadFromClient;
     BufferedWriter bwWriteToClient;
     
@@ -34,13 +35,14 @@ public class TCPTestRun {
         iTCPTotalBytesReceivedFromClient = 0;
         laTCPPacketReceivedTimestamps = new long[iTCPPackets];
         iaTCPBytes = new int[iTCPPackets];
+		sLog = "";
     }
     
     public boolean runTCPTest(int iUplinkOrDownlink, int iExplicit, String sContent, String sContentType) {       
         System.out.println(TAG+" : @runTCPTest : begin");
         try {
             ssServerSocket = new ServerSocket(iTCPPort);
-            ssServerSocket.setSoTimeout(40000);
+            ssServerSocket.setSoTimeout(10000);
             sSocket = ssServerSocket.accept();
             brReadFromClient = new BufferedReader(new InputStreamReader(sSocket.getInputStream(), "UTF-8"));
             Scanner scReadFromClient = new Scanner(new BufferedReader(new InputStreamReader(sSocket.getInputStream())));
@@ -56,16 +58,15 @@ public class TCPTestRun {
                 try{
                     if(iUplinkOrDownlink == 1) {
                     	bwWriteToClient = new BufferedWriter(new OutputStreamWriter(sSocket.getOutputStream()));
-                    	long lServerTime =  System.currentTimeMillis() - MNEPServer.lServerOffsetFromNTP;
                         if(iExplicit == 0)
 						{
-                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":::";
+                        	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:";
                         }
 						else if(iExplicit == 1)
 						{
-							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":::";
+							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 						}
-						bwWriteToClient.write(sBuffer);
+						bwWriteToClient.write(sBuffer + (System.currentTimeMillis() - MNEPServer.lServerOffsetFromNTP) + ":::");
                         bwWriteToClient.flush();
 						iTCPTotalBytesSentToClient += sBuffer.getBytes().length;
                         System.out.println(TAG+"@runTCPTest : Sent - " + i +", Bytes count -- "+sBuffer.getBytes().length+", Total bytes sent - "+iTCPTotalBytesSentToClient);	
@@ -86,22 +87,27 @@ public class TCPTestRun {
                     }
                 }
                 catch(Exception e) {
-                    if(++iTimeOutPackets > 3) {
-                        return false;
-                    }
                     System.out.println(TAG+" : @runTCPTest : error - "+e.getMessage());
                     e.printStackTrace();
+					return false;
                 }
             }
             scReadFromClient.close();             
-            System.out.println(TAG+" : @runTCPTest : TCP test completed");
-            sSocket.close();
-            ssServerSocket.close();            
+            System.out.println(TAG+" : @runTCPTest : TCP test completed");  
+			sLog = "SUCCESS";			
             return true;
         } catch (Exception e) {
             System.out.println(TAG+" : @runTCPTest - " + e.getMessage()); 
             e.printStackTrace();
+			sLog = "TCP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
-        }        
+        }
+		finally {
+			try {
+			sSocket.close();
+            ssServerSocket.close(); 
+			}
+			catch(Exception e) {}
+		}
     }
 }

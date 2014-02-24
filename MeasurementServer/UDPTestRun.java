@@ -20,6 +20,8 @@ public class UDPTestRun {
     byte[] baSendData;
     byte[] baReceivedData;
     
+	String sLog;
+	
     DatagramSocket dsUDPSocket;
     DatagramPacket dpUDPSendPacket;
     DatagramPacket dpUDPRecvPacket;
@@ -36,7 +38,8 @@ public class UDPTestRun {
         this.iUDPPackets = iUDPPackets;
         this.iUDPPort = iUDPPort;
         laUDPPacketReceivedTimestamps = new long[iUDPPackets];
-        iaUDPBytes = new int[iUDPPackets];        
+        iaUDPBytes = new int[iUDPPackets]; 
+		sLog = "";
     }
     
     public boolean runUDPTest(int iUplinkOrDownlink, int iExplicit, String sContent, String sContentType, int iUdpHexBytes) {        
@@ -44,7 +47,7 @@ public class UDPTestRun {
         try {
             baReceivedData = new byte[iUDPBytes < 27 ? 27 : iUDPBytes];
             dsUDPSocket = new DatagramSocket(iUDPPort);
-            dsUDPSocket.setSoTimeout(40000);
+            dsUDPSocket.setSoTimeout(10000);
             dpUDPRecvPacket = new DatagramPacket(baReceivedData, baReceivedData.length);
             for (int i=0; i<5; i++){
                 dsUDPSocket.receive(dpUDPRecvPacket);
@@ -62,15 +65,14 @@ public class UDPTestRun {
             String sData = "";
             for (int i = 0; i < iUDPPackets; i++){
                 try {                
-                if(iUplinkOrDownlink == 1) {       
-					long lServerTime = System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP;                
+                if(iUplinkOrDownlink == 1) {                      
 					if(iExplicit == 0) {
-						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:"+lServerTime+":;:";
+						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:";
 					}
 					else if(iExplicit == 1)	{
-						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:"+lServerTime+":;:";
+						sData = sContent + ":;:" + String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 					}					
-					baSendData = sData.getBytes();
+					baSendData = (sData + (System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP) + ":;:").getBytes();
 					iUDPTotalBytesSentToClient += baSendData.length;						
 					dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, saClientAddress);                           
 					dsUDPSocket.send(dpUDPSendPacket);
@@ -98,20 +100,21 @@ public class UDPTestRun {
                     }
                     
                 } catch (Exception e){
-                    if(++iTimeOutPackets > 3) {
-                        return false;
-                    }
                     System.out.println(TAG+" : @runUDPTest - " + e.getMessage());      
                     e.printStackTrace();
+					return false;
                 } 
             } 
             System.out.println(TAG+" : @runUDPTest : UDP Test Completed");
             dsUDPSocket.close();
+			sLog = "SUCCESS";
             return true;
 
         } catch (Exception e){
             System.out.println(TAG+" : @runUDPTest : error - " + e.getMessage()); 
+			dsUDPSocket.close();
             e.printStackTrace();
+			sLog = "UDP SERVER SIDE ERROR - " + e.getClass() + "";
             return false;
         }
     }
