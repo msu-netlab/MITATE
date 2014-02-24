@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
 import com.mitate.MITATEApplication;
+import com.mitate.service.LoginService;
 import com.mitate.utilities.MITATEUtilities;
 
 import android.util.Log;
@@ -107,22 +108,18 @@ public class TCPTest {
 			for (int i = 0; i <iTCPPackets; i++){
 				try{
 					if(iDirection == 0) {
-						// long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
-						
-						// long start = System.currentTimeMillis();
 						if(iExplicit == 0) {
 							sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";							
 						} else {
 							sBuffer = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:";
 						}
 						
-						System.out.print("offset - "+Measurement.lClientOffsetFromNTP); //+"----"+(MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal()));
+						System.out.print("offset - "+LoginService.lClientTimeOffset); 
 						bwWriteToServer = new BufferedWriter(new OutputStreamWriter(sConnectionSocket.getOutputStream()));
 						 
-						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":::"); 
+						bwWriteToServer.write(sBuffer+(System.currentTimeMillis() - LoginService.lClientTimeOffset)+":::"); 
 						bwWriteToServer.flush();
-						
-						// changes with platform
+					
 						int iTCPBytesSent = sBuffer.getBytes().length;
 						iTCPBytesSentToServer += iTCPBytesSent;							
 						
@@ -142,7 +139,7 @@ public class TCPTest {
 						int iTCPPacketNumber = Integer.parseInt(sFromServer.split(":;:")[1]);
 						long lTimeOnServer = Long.parseLong(sFromServer.split(":;:")[2]);
 
-						long lLatencyDownLink = lTimeOnClient - Measurement.lClientOffsetFromNTP - lTimeOnServer; // MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
+						long lLatencyDownLink = lTimeOnClient - LoginService.lClientTimeOffset - lTimeOnServer; // MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						
 						i= iTCPPacketNumber;
 						laTCPPacketReceivedTimes[i] = lLatencyDownLink;

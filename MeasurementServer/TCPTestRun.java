@@ -58,7 +58,6 @@ public class TCPTestRun {
                 try{
                     if(iUplinkOrDownlink == 1) {
                     	bwWriteToClient = new BufferedWriter(new OutputStreamWriter(sSocket.getOutputStream()));
-                    	//long lServerTime =  System.currentTimeMillis() - MNEPServer.lServerOffsetFromNTP;
                         if(iExplicit == 0)
 						{
                         	sBuffer = Arrays.toString(baExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:";
@@ -82,7 +81,6 @@ public class TCPTestRun {
                         int iPacketNumber = Integer.parseInt(sFromClient.split(":;:")[1]);
                         long lTimeOnClient = Long.parseLong(sFromClient.split(":;:")[2]);
                         long lLatencyDownLink = lTimeOnServer - MNEPServer.lServerOffsetFromNTP - lTimeOnClient;
-						System.out.println(lTimeOnServer + "**" + MNEPServer.lServerOffsetFromNTP + "**" + lTimeOnClient);
                         System.out.println(TAG+" : @runTCPTest : Received - " + iPacketNumber +" Total bytes received - "+iTCPTotalBytesReceivedFromClient);
                         laTCPPacketReceivedTimestamps[i] = lLatencyDownLink;
                         iaTCPBytes[i] = iNoOfBytesReceived;

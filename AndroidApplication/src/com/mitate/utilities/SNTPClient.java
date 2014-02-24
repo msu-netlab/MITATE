@@ -8,18 +8,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-/**
-* {@hide}
-*
-* Simple SNTP client class for retrieving network time.
-*
-* Sample usage:
-* <pre>SntpClient client = new SntpClient();
-* if (client.requestTime("time.foo.com")) {
-*     long now = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-* }
-* </pre>
-*/
 public class SNTPClient
 {
 private static final String TAG = "SntpClient";

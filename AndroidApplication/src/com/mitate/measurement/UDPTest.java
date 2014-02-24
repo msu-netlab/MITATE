@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import com.mitate.MITATEApplication;
+import com.mitate.service.LoginService;
  
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -90,14 +91,13 @@ public class UDPTest {
 			for (int i = 0; i < iUDPPackets; i++) {
 				try {
 					if(iDirection == 0) {
-						// long lClientTime = System.currentTimeMillis() - Measurement.lClientOffsetFromNTP;
 						if(iExplicit == 0) {
 							sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "")+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";						
 						} else {
 							sData = sContent+":;:"+String.format("%4s", i).replaceAll("\\s", "0")+":;:"; //+lClientTime+":;:";
 						}
 
-						baSendData = (sData+(System.currentTimeMillis() - Measurement.lClientOffsetFromNTP)+":;:").getBytes();
+						baSendData = (sData+(System.currentTimeMillis() - LoginService.lClientTimeOffset)+":;:").getBytes();
 						iUDPBytesSentToServer += sData.getBytes().length;						
 						dpUDPSendPacket = new DatagramPacket(baSendData, baSendData.length, iaServerAddress, iUDPPort);
 						dsUDPSocket.send(dpUDPSendPacket);					
@@ -117,7 +117,7 @@ public class UDPTest {
 						iPacketNumber = Integer.parseInt(new String(dpUDPRecvPacket.getData()).split(":;:")[1]);
 						long lTimeOnServer = Long.parseLong(new String(dpUDPRecvPacket.getData()).split(":;:")[2]);
 
-						long lLatencyDownLink = lTimeOnClient - Measurement.lClientOffsetFromNTP - lTimeOnServer; // (lTimeOnClient-MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
+						long lLatencyDownLink = lTimeOnClient - LoginService.lClientTimeOffset - lTimeOnServer; // (lTimeOnClient-MITATEUtilities.lTimeDifference) - (lTimeOnServer + lOffsetDifferenceClientAndServer - Measurement.lOffsetServerAndNTP);
 						lUDPPacketReceivedTimes[i] = lLatencyDownLink;
 						iaUDPBytes[i] = iUDPBytesReceived;
 

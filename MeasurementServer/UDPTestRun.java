@@ -65,8 +65,7 @@ public class UDPTestRun {
             String sData = "";
             for (int i = 0; i < iUDPPackets; i++){
                 try {                
-                if(iUplinkOrDownlink == 1) {       
-					//long lServerTime = System.currentTimeMillis()- MNEPServer.lServerOffsetFromNTP;                
+                if(iUplinkOrDownlink == 1) {                      
 					if(iExplicit == 0) {
 						sData = Arrays.toString(bExtraBytes).replace('[', (char)32).replace(']', (char)32).replaceAll(",", "").replaceAll("(\\s)", "") + ":;:" + String.format("%4s", i).replaceAll("\\s", "0") +":;:";
 					}
