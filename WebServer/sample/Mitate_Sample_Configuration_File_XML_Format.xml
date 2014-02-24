@@ -79,20 +79,20 @@
 			<transfer>
 				<id>t4</id>
 				<sourceip>client</sourceip>
-				<destinationip>153.90.102.164</destinationip>
+				<destinationip>192.168.2.5</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
 				<portnumber>7001</portnumber>
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>10000</noofbytes>
+					<noofbytes>1000000</noofbytes>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>
 			<transfer>
 				<id>t5</id>
-				<sourceip>153.90.102.164</sourceip>
+				<sourceip>192.168.2.5</sourceip>
 				<destinationip>client</destinationip>
 				<packetdelay>0</packetdelay>
 				<type>2</type>
@@ -100,7 +100,7 @@
 				<response>0</response>
 				<bytes>
 					<explicit>0</explicit>
-					<noofbytes>10000</noofbytes>
+					<noofbytes>1000000</noofbytes>
 				</bytes>
 				<noofpackets>10</noofpackets>
 			</transfer>			
