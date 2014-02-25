@@ -25,5 +25,61 @@
 	15. Copy the contents of results.txt and paste it in your MySQL termianl window. This will insert data into your local MySQL instance. <br /><br />
 	
 	<h3>Step 4: Querying local database</h3>
+	16. To query data for TCP Uplink Throughput, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select md.value as tcp_uplink_throughput <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metric mt, metricdata md <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id <br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.metricid = mt.metricid <br />
+	and mt.name = 'tcp_uplink_throughput'
+	</b><br /><br />
+	17. To query data for Minimum, Mean and Maximum TCP Pplink Latency, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select mt.name as metric_name, md.value as tcp_uplink_latency <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metric mt, metricdata md <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id<br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.metricid = mt.metricid <br />
+	and mt.name in ('tcp_min_uplink_delay', 'tcp_mean_uplink_delay', 'tcp_max_uplink_delay')
+	</b>
+	<br /><br />
+	18. To query data for Maximum TCP Uplink Jitter, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select md.value as max_tcp_uplink_jitter <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metric mt, metricdata md <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id <br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.metricid = mt.metricid <br />
+	and mt.name = 'tcp_maximum_uplink_jitter' <br />
+	</b><br /><br />
+	19. To query data for TCP Uplink Packet Loss, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select md.value as uplink_tcp_max_jitter <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metric mt, metricdata md <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id <br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.metricid = mt.metricid <br />
+	and mt.name = 'tcp_uplink_packet_loss'
+	</b><br /><br />
+	20. To query data for Device Travel Speed in (Km/hr), Device Signal Strength, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select mt.name as metric_name, md.value as device_metric_value <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metric mt, metricdata md <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id <br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.metricid = mt.metricid <br />
+	and mt.name in ('device_travel_speed', 'signal_strength')
+	</b><br /><br />
 	</div>
 <?php include('footer.php'); ?>

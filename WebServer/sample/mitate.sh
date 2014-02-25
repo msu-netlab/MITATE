@@ -21,6 +21,7 @@ validateExistingUserCredential() {
 saveUserCredentials() {
 	if [ "$ifUserIsValid" == 'true' ]
 	then
+		touch user.txt
 		chmod 777 user.txt
 		echo "$encrypted_username:$encrypted_password" > user.txt;
 		chmod 444 user.txt
@@ -30,6 +31,7 @@ saveUserCredentials() {
 			echo "You are now authenticated."
 		fi
 	else
+		touch user.txt
 		rm user.txt
 		touch user_experiment_list.txt
 		rm user_experiment_list.txt
@@ -51,6 +53,7 @@ userLogin() {
 		then
 			encrypted_username=`curl -k -ssl3 -F "string=$username" https://mitate.cs.montana.edu/encrypt_user.php`
 			encrypted_password=`curl -k -ssl3 -F "string=$password" https://mitate.cs.montana.edu/encrypt_user.php`
+			touch user.txt
 			chmod 777 user.txt
 			echo "$encrypted_username:$encrypted_password" > user.txt;
 			chmod 444 user.txt
