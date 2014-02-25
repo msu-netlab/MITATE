@@ -20,9 +20,9 @@
 	12. Go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads page</a> and download the ' MITATE Android Application'. After downloading, install the application on your mobile, enter the login credentials and finally press the <b>>Start Service</b> button.<br /><br />
 	
 	<h3>Step 3: Getting results</h3>
-	13. To check the status of your uploaded experiment, run <b>./mitate.sh getExpStatus <experiment_ID></b>, where <experiment_ID> is the experiment ID you received in step 11.<br /><br />
+	13. To check the status of your uploaded experiment, run <b>./mitate.sh getExpStatus experiment_ID</b>, where <i>experiment_ID</i> is the experiment ID you received in step 11.<br /><br />
 	14. To pull results of executed transfer from the MITATE database, run <b>./mitate.sh query results.txt</b>. This will create a file <b>results.txt</b> in the directory where mitate.sh resides.<br /><br />
-	15. Copy the contents of results.txt and paste it in your MySQL termianl window. This will insert data into your local MySQL instance. <br /><br />
+	15. Copy the contents of results.txt and paste it in your MySQL terminal window. This will insert data into your local MySQL instance. <br /><br />
 	
 	<h3>Step 4: Querying local database</h3>
 	16. To query data for TCP Uplink Throughput, run the following SQL query from your MySQL command line: <br /><br />
