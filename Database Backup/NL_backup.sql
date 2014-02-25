@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `mitate` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `mitate`;
--- MySQL dump 10.13  Distrib 5.6.11, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
--- Host: 153.90.6.12    Database: mitate
+-- Host: localhost    Database: mitate
 -- ------------------------------------------------------
--- Server version	5.1.69
+-- Server version	5.1.73
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -80,6 +78,7 @@ CREATE TABLE `logs` (
   `transferid` int(10) NOT NULL,
   `deviceid` varchar(10) NOT NULL,
   `logmessage` mediumtext,
+  `transferfinished` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`logid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -104,7 +103,7 @@ CREATE TABLE `metric` (
   `name` varchar(100) NOT NULL,
   `metricid` int(6) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`metricid`)
-) ENGINE=MyISAM AUTO_INCREMENT=10040 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10043 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +112,7 @@ CREATE TABLE `metric` (
 
 LOCK TABLES `metric` WRITE;
 /*!40000 ALTER TABLE `metric` DISABLE KEYS */;
-INSERT INTO `metric` VALUES ('udp_uplink_throughput',10000),('tcp_uplink_throughput',10001),('udp_downlink_throughput',10002),('tcp_downlink_throughput',10003),('udp_min_uplink_delay',10004),('tcp_min_uplink_delay',10005),('udp_mean_uplink_delay',10006),('tcp_mean_uplink_delay',10007),('udp_max_uplink_delay',10008),('tcp_max_uplink_delay',10009),('udp_min_downlink_delay',10010),('tcp_min_downlink_delay',10011),('udp_mean_downlink_delay',10012),('tcp_mean_downlink_delay',10013),('udp_max_downlink_delay',10014),('tcp_max_downlink_delay',10015),('udp_maximum_uplink_jitter',10016),('tcp_maximum_uplink_jitter',10017),('udp_maximum_downlink_jitter',10018),('tcp_maximum_downlink_jitter',10019),('tcp_uplink_packet_loss',10020),('tcp_downlink_packet_loss',10021),('accelerometer_reading_y',10037),('tcp_uplink_median',10024),('udp_uplink_median',10023),('udp_downlink_median',10025),('tcp_downlink_median',10026),('one_way_cdn_delay',10027),('rtt_cdn_latency',10028),('one_way_cdn_throughput',10029),('latitude_before',10030),('longitude_before',10031),('latitude_after',10032),('longitude_after',10033),('device_travel_speed',10034),('signal_strength',10035),('accelerometer_reading_x',10036),('accelerometer_reading_z',10038),('is_device_incall',10039);
+INSERT INTO `metric` VALUES ('udp_uplink_throughput',10000),('tcp_uplink_throughput',10001),('udp_downlink_throughput',10002),('tcp_downlink_throughput',10003),('udp_min_uplink_delay',10004),('tcp_min_uplink_delay',10005),('udp_mean_uplink_delay',10006),('tcp_mean_uplink_delay',10007),('udp_max_uplink_delay',10008),('tcp_max_uplink_delay',10009),('udp_min_downlink_delay',10010),('tcp_min_downlink_delay',10011),('udp_mean_downlink_delay',10012),('tcp_mean_downlink_delay',10013),('udp_max_downlink_delay',10014),('tcp_max_downlink_delay',10015),('udp_maximum_uplink_jitter',10016),('tcp_maximum_uplink_jitter',10017),('udp_maximum_downlink_jitter',10018),('tcp_maximum_downlink_jitter',10019),('tcp_uplink_packet_loss',10020),('tcp_downlink_packet_loss',10021),('accelerometer_reading_y',10037),('tcp_uplink_median',10024),('udp_uplink_median',10023),('udp_downlink_median',10025),('tcp_downlink_median',10026),('one_way_cdn_delay',10027),('rtt_cdn_latency',10028),('one_way_cdn_throughput',10029),('latitude_before',10030),('longitude_before',10031),('latitude_after',10032),('longitude_after',10033),('device_travel_speed',10034),('signal_strength',10035),('accelerometer_reading_x',10036),('accelerometer_reading_z',10038),('is_device_incall',10039),('responsedata',10040),('udp_uplink_packet_loss',10041),('udp_downlink_packet_loss',10042);
 /*!40000 ALTER TABLE `metric` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,6 +130,7 @@ CREATE TABLE `metricdata` (
   `value` decimal(18,10) DEFAULT NULL,
   `transferfinished` varchar(50) DEFAULT NULL,
   `deviceid` varchar(200) DEFAULT NULL,
+  `responsedata` varchar(512) DEFAULT NULL,
   UNIQUE KEY `mttdt` (`metricid`,`transferid`,`transactionid`,`deviceid`,`transferfinished`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -190,32 +190,6 @@ LOCK TABLES `trans_transfer_link` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `transaction1`
---
-
-DROP TABLE IF EXISTS `transaction1`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `transaction1` (
-  `transactionid` int(10) NOT NULL,
-  `username` varchar(20) DEFAULT NULL,
-  `count` int(3) DEFAULT '1',
-  `original_count` int(3) DEFAULT '1',
-  `experiment_id` int(13) DEFAULT NULL,
-  PRIMARY KEY (`transactionid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `transaction1`
---
-
-LOCK TABLES `transaction1` WRITE;
-/*!40000 ALTER TABLE `transaction1` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transaction1` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `transaction_fetched`
 --
 
@@ -236,6 +210,32 @@ CREATE TABLE `transaction_fetched` (
 LOCK TABLES `transaction_fetched` WRITE;
 /*!40000 ALTER TABLE `transaction_fetched` DISABLE KEYS */;
 /*!40000 ALTER TABLE `transaction_fetched` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactions`
+--
+
+DROP TABLE IF EXISTS `transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `transactions` (
+  `transactionid` int(10) NOT NULL,
+  `username` varchar(20) DEFAULT NULL,
+  `count` int(3) DEFAULT '1',
+  `original_count` int(3) DEFAULT '1',
+  `experiment_id` int(13) DEFAULT NULL,
+  PRIMARY KEY (`transactionid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions`
+--
+
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -423,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-20 21:13:17
+-- Dump completed on 2014-02-24 23:17:16
