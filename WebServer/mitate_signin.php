@@ -1,7 +1,7 @@
 <?php 
 	session_start();
 	include('header.php'); ?>
-	<div style="color: white;font-size: 22;text-align: justify;">
+	<div style="font-size: 18;text-align: justify;">
 	<h3 style="text-decoration:underline">Sign in for MITATE:</h3>
 	<br />
 	<form action="" method="POST">

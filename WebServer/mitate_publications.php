@@ -1,5 +1,5 @@
 <?php include('header.php'); ?>
-	<div style="color: white;font-size: 22;text-align: justify;">
+	<div style="font-size: 18;text-align: justify;">
 	<h3 style="text-decoration:underline">Refereed Conference Publications:</h3>
 	1. Utkarsh Goel; Ajay Miyyapuram; Mike P. Wittie; Qing Yang, "MITATE: Mobile Internet Testbed for Application Traffic Experimentation", to appear in 10th International Conference on Mobile and Ubiquitous Systems: Computing, Networking and Services, Mobiquitous'13, Tokoyo, Japan, Dec 2013. (<a target="_blank" href="publications/Goel_MITATE_Mobiquitous13.pdf" style="color: red;">paper</a>)
 	<br />
