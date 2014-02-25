@@ -44,10 +44,6 @@ if ($loginresultset) {
 								echo "replace into metricdata (metricid, transferid, transactionid, transferfinished, deviceid, responsedata) values ($get_metricdata_transfer[metricid], $get_metricdata_transfer[transferid], $get_metricdata_transfer[transactionid], '$get_metricdata_transfer[transferfinished]', '$get_metricdata_transfer[deviceid]', '$get_metricdata_transfer[responsedata]');";
 							$deviceid_count = $deviceid_count + 1;
 						}
-						$get_transferexecutedby_transfer_list = mysql_query("select * from transferexecutedby where transferid = $get_transfer_linked[transferid]");
-						while($get_transferexecutedby_transfer = mysql_fetch_assoc($get_transferexecutedby_transfer_list)) {
-							echo "replace into transferexecutedby (transferid, devicename, username, carriername, deviceid) values ($get_transferexecutedby_transfer[transferid], '$get_transferexecutedby_transfer[devicename]', '$get_transferexecutedby_transfer[username]', '$get_transferexecutedby_transfer[carriername]', '$get_transferexecutedby_transfer[deviceid]');";
-						}
 						$get_transfermetrics_transfer_list = mysql_query("select * from transfermetrics where transferid = $get_transfer_linked[transferid]");
 						while($get_transfermetrics_transfer = mysql_fetch_assoc($get_transfermetrics_transfer_list)) {
 							echo "replace into transfermetrics (transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid) values ($get_transfermetrics_transfer[transferid], $get_transfermetrics_transfer[transactionid], $get_transfermetrics_transfer[udppacketmetrics], $get_transfermetrics_transfer[tcppacketmetrics], $get_transfermetrics_transfer[udplatencyconf], $get_transfermetrics_transfer[udpthroughputconf], $get_transfermetrics_transfer[tcplatencyconf], $get_transfermetrics_transfer[tcpthroughputconf], '$get_transfermetrics_transfer[deviceid]');";
@@ -57,10 +53,6 @@ if ($loginresultset) {
 							echo "replace into logs (logid, username, transferid, deviceid, logmessage) values ($get_log[logid], '$get_log[username]', $get_log[transferid], '$get_log[deviceid]', '$get_log[logmessage]', '$get_log[transferfinished]');";
 						}
 					}
-				}
-				$get_transaction_fetched_list = mysql_query("select * from transaction_fetched where transactionid = $get_transaction[transactionid]");
-				while($get_transaction_fetched = mysql_fetch_assoc($get_transaction_fetched_list)) {
-					echo "replace into transaction_fetched (transactionid, deviceid) values ($get_transaction_fetched[transactionid], '$get_transaction_fetched[deviceid]');";
 				}
 			}
 			$experiment_count = $experiment_count + 1;

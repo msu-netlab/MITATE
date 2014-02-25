@@ -146,6 +146,9 @@ then
 	elif [ "$1" == 'checkAvailableCredits' ]
 	then
 		echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/get_user_credits.php`
+	elif [ "$1" == 'getExpStatus' -a "$2" != '' ]
+	then
+		echo -e `curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/get_experiment_status.php`
 	elif [ "$1" == 'logout' ]
 	then
 		touch user.txt
