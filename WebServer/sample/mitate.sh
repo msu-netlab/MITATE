@@ -29,6 +29,10 @@ saveUserCredentials() {
 		then
 			echo "You are now authenticated."
 		fi
+	else
+		rm user.txt
+		touch user_experiment_list.txt
+		rm user_experiment_list.txt
 	fi
 }
 

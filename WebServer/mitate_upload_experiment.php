@@ -58,7 +58,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							if($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1000000.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1000000.0) {
 								$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 								$xml = simplexml_load_file("$filepath");
-								$sql="INSERT INTO experiment (experiment_id, username, permission, cellulardata, wifidata) VALUES($experiment_id, '$username', 'private', $total_credits_in_xml[0]/1024.0, $total_credits_in_xml[1]/1024.0)";
+								$sql="INSERT INTO experiment (experiment_id, username, permission, cellulardata, wifidata) VALUES($experiment_id, '$username', 'private', $total_credits_in_xml[0]/1000000.0, $total_credits_in_xml[1]/1000000.0)";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 								foreach($xml->transactions->transaction as $temptransaction) {
 									$order=1;

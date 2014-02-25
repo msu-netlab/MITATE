@@ -14,10 +14,14 @@ if ($loginresultset) {
 		$get_status_list = mysql_query("select count(teb.transferid) as totalExecuted, count(ttl.transferid) as totalTransfers
 		from experiment exp, transactions tr, trans_transfer_link ttl left outer join transferexecutedby teb on ttl.transferid = teb.transferid
 		where exp.experiment_id = $_POST[experiment_id]
+		and exp.username = '$_POST[username]'
 		and exp.experiment_id = tr.experiment_id
 		and tr.transactionid = ttl.transactionid;");
 		while($get_status = mysql_fetch_assoc($get_status_list)) {
-			echo 'Total number of transfer(s): ' . $get_status[totalTransfers] . '\nTotal number of transfer(s) executed: ' .  $get_status[totalExecuted] . '\nTo get more details, run mitate.sh query <outfile>';
+			if($get_status[totalTransfers] != 0)
+				echo 'Total number of transfer(s): ' . $get_status[totalTransfers] . '\nTotal number of transfer(s) executed: ' .  $get_status[totalExecuted] . '\nTo get more details, run mitate.sh query <outfile>';
+			else
+				echo 'You do not have permissions to get the status of this experiment.';
 		}
 	}
 }
