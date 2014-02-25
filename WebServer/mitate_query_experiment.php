@@ -18,7 +18,7 @@ if ($loginresultset) {
 			echo "replace into experiment (experiment_id, username, permission, cellulardata, wifidata) values($get_experiment[experiment_id], '$get_experiment[username]', '$get_experiment[permission]', $get_experiment[cellulardata], $get_experiment[wifidata]);";
 			$get_transaction_list = mysql_query("select * from transaction1 where experiment_id = $get_experiment[experiment_id]");
 			while($get_transaction = mysql_fetch_assoc($get_transaction_list)) {
-				echo "replace into transaction1 (transactionid, username, count, original_count, experiment_id) values($get_transaction[transactionid], '$get_transaction[username]', $get_transaction[count], $get_transaction[original_count], $get_transaction[experiment_id]);";
+				echo "replace into transactions (transactionid, username, count, original_count, experiment_id) values($get_transaction[transactionid], '$get_transaction[username]', $get_transaction[count], $get_transaction[original_count], $get_transaction[experiment_id]);";
 				$get_criteria_linked_list = mysql_query("select * from trans_criteria_link where transactionid = $get_transaction[transactionid]");
 				while($get_criteria_linked = mysql_fetch_assoc($get_criteria_linked_list)) {
 					echo "replace into trans_criteria_link (criteriaid, transactionid) values ($get_criteria_linked[criteriaid], $get_criteria_linked[transactionid]);";
@@ -60,9 +60,12 @@ if ($loginresultset) {
 			$final_deviceid_array = array_unique($device_id_array);
 			while($final_deviceid_array_count > 0) {
 				$get_deviceid_unique = $final_deviceid_array[$final_deviceid_array_count - 1];
-				$get_deviceid_list = mysql_query("select devicename, deviceid from userdevice where deviceid = '$get_deviceid_unique'");
+				$get_deviceid_list = mysql_query("select DISTINCT ud.deviceid, replace(teb.devicename, '%20', ' ') as devicename, replace(teb.carriername, '%20', ' ') as devicecarrier
+				from userdevice ud, transferexecutedby teb 
+				where ud.deviceid = '$get_deviceid_unique'
+				and ud.deviceid = teb.deviceid");
 				while($get_deviceid = mysql_fetch_assoc($get_deviceid_list)) {
-					echo "replace into userdevice (devicename, deviceid) values ('$get_deviceid[devicename]', '$get_deviceid[deviceid]');";
+					echo "replace into userdevice (deviceid, devicename, devicecarrier) values ('$get_deviceid[deviceid]', '$get_deviceid[devicename]', '$get_deviceid[devicecarrier]');";
 				}
 				$final_deviceid_array_count = $final_deviceid_array_count - 1;
 			}			
