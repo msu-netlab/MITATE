@@ -12,10 +12,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 if ($loginresultset) {
 	$loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == 1) {	
-		echo "Logged in. Please wait...\n";
 		$check_user_credits = mysql_query("select available_cellular_credits, contributed_cellular_credits, available_wifi_credits, contributed_wifi_credits from usercredits where username = '$username'");
 		$check_user_credit = mysql_fetch_assoc($check_user_credits);
-		echo "Available cellular credits: $check_user_credit[available_cellular_credits] \n Contributed cellular credits: $check_user_credit[contributed_cellular_credits] \n Available Wi-Fi credits: $check_user_credit[available_wifi_credits] \n Contributed Wi-Fi credits: $check_user_credit[contributed_wifi_credits]";
+		echo 'Total available cellular credits: ' . $check_user_credit[available_cellular_credits] . '\n Total contributed cellular credits: ' . $check_user_credit[contributed_cellular_credits] . '\n Total available Wi-Fi credits: ' . $check_user_credit[available_wifi_credits] . '\n Total contributed Wi-Fi credits: ' . $check_user_credit[contributed_wifi_credits];
 	}
 	else
 		echo "Invalid login";

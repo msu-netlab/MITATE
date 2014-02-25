@@ -16,9 +16,9 @@ if ($loginresultset) {
 		$get_experiment_list = mysql_query("select * from experiment where experiment_id = $_POST[experiment_id] and ((username = '$_POST[username]' and permission = 'private') or permission = 'public')");
 		while($get_experiment = mysql_fetch_assoc($get_experiment_list)) {
 			echo "replace into experiment (experiment_id, username, permission, cellulardata, wifidata) values($get_experiment[experiment_id], '$get_experiment[username]', '$get_experiment[permission]', $get_experiment[cellulardata], $get_experiment[wifidata]);";
-			$get_transaction_list = mysql_query("select * from transaction1 where experiment_id = $get_experiment[experiment_id]");
+			$get_transaction_list = mysql_query("select * from transactions where experiment_id = $get_experiment[experiment_id]");
 			while($get_transaction = mysql_fetch_assoc($get_transaction_list)) {
-				echo "replace into transaction1 (transactionid, username, count, original_count, experiment_id) values($get_transaction[transactionid], '$get_transaction[username]', $get_transaction[count], $get_transaction[original_count], $get_transaction[experiment_id]);";
+				echo "replace into transactions (transactionid, username, count, original_count, experiment_id) values($get_transaction[transactionid], '$get_transaction[username]', $get_transaction[count], $get_transaction[original_count], $get_transaction[experiment_id]);";
 				$get_criteria_linked_list = mysql_query("select * from trans_criteria_link where transactionid = $get_transaction[transactionid]");
 				while($get_criteria_linked = mysql_fetch_assoc($get_criteria_linked_list)) {
 					echo "replace into trans_criteria_link (criteriaid, transactionid) values ($get_criteria_linked[criteriaid], $get_criteria_linked[transactionid]);";
@@ -44,10 +44,6 @@ if ($loginresultset) {
 								echo "replace into metricdata (metricid, transferid, transactionid, transferfinished, deviceid, responsedata) values ($get_metricdata_transfer[metricid], $get_metricdata_transfer[transferid], $get_metricdata_transfer[transactionid], '$get_metricdata_transfer[transferfinished]', '$get_metricdata_transfer[deviceid]', '$get_metricdata_transfer[responsedata]');";
 							$deviceid_count = $deviceid_count + 1;
 						}
-						$get_transferexecutedby_transfer_list = mysql_query("select * from transferexecutedby where transferid = $get_transfer_linked[transferid]");
-						while($get_transferexecutedby_transfer = mysql_fetch_assoc($get_transferexecutedby_transfer_list)) {
-							echo "replace into transferexecutedby (transferid, devicename, username, carriername, deviceid) values ($get_transferexecutedby_transfer[transferid], '$get_transferexecutedby_transfer[devicename]', '$get_transferexecutedby_transfer[username]', '$get_transferexecutedby_transfer[carriername]', '$get_transferexecutedby_transfer[deviceid]');";
-						}
 						$get_transfermetrics_transfer_list = mysql_query("select * from transfermetrics where transferid = $get_transfer_linked[transferid]");
 						while($get_transfermetrics_transfer = mysql_fetch_assoc($get_transfermetrics_transfer_list)) {
 							echo "replace into transfermetrics (transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid) values ($get_transfermetrics_transfer[transferid], $get_transfermetrics_transfer[transactionid], $get_transfermetrics_transfer[udppacketmetrics], $get_transfermetrics_transfer[tcppacketmetrics], $get_transfermetrics_transfer[udplatencyconf], $get_transfermetrics_transfer[udpthroughputconf], $get_transfermetrics_transfer[tcplatencyconf], $get_transfermetrics_transfer[tcpthroughputconf], '$get_transfermetrics_transfer[deviceid]');";
@@ -58,19 +54,18 @@ if ($loginresultset) {
 						}
 					}
 				}
-				$get_transaction_fetched_list = mysql_query("select * from transaction_fetched where transactionid = $get_transaction[transactionid]");
-				while($get_transaction_fetched = mysql_fetch_assoc($get_transaction_fetched_list)) {
-					echo "replace into transaction_fetched (transactionid, deviceid) values ($get_transaction_fetched[transactionid], '$get_transaction_fetched[deviceid]');";
-				}
 			}
 			$experiment_count = $experiment_count + 1;
 			$final_deviceid_array_count = count(array_unique($device_id_array));
 			$final_deviceid_array = array_unique($device_id_array);
 			while($final_deviceid_array_count > 0) {
 				$get_deviceid_unique = $final_deviceid_array[$final_deviceid_array_count - 1];
-				$get_deviceid_list = mysql_query("select devicename, deviceid from userdevice where deviceid = '$get_deviceid_unique'");
+				$get_deviceid_list = mysql_query("select DISTINCT ud.deviceid, replace(teb.devicename, '%20', ' ') as devicename, replace(teb.carriername, '%20', ' ') as devicecarrier
+				from userdevice ud, transferexecutedby teb 
+				where ud.deviceid = '$get_deviceid_unique'
+				and ud.deviceid = teb.deviceid");
 				while($get_deviceid = mysql_fetch_assoc($get_deviceid_list)) {
-					echo "replace into userdevice (devicename, deviceid) values ('$get_deviceid[devicename]', '$get_deviceid[deviceid]');";
+					echo "replace into userdevice (deviceid, devicename, devicecarrier) values ('$get_deviceid[deviceid]', '$get_deviceid[devicename]', '$get_deviceid[devicecarrier]');";
 				}
 				$final_deviceid_array_count = $final_deviceid_array_count - 1;
 			}			
