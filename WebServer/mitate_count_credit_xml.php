@@ -86,17 +86,19 @@ if ($loginresultset) {
 										else if($contenttype == "BINARY")
 											$bytestostore = ceil($bytestostore/8);
 										$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
+										if($contenttype == "")
+											$bytestostore = $bytestostore - 26;
 										if ($criteria_networktype == "wifi")
-											$count_wifi_credits = $count_wifi_credits + ($transfer_repeat * $temptransfer->noofpackets * $bytestostore);
+											$count_wifi_credits = $count_wifi_credits + ($transfer_repeat * $bytestostore);
 										elseif ($criteria_networktype == "cellular")
-											$count_cellular_credits = $count_cellular_credits + ($transfer_repeat * $temptransfer->noofpackets * $bytestostore);
+											$count_cellular_credits = $count_cellular_credits + ($transfer_repeat * $bytestostore);
 									}
 								}
 							}
 							$count_wifi_credits = $count_wifi_credits * $transaction_count;
 							$count_cellular_credits = $count_cellular_credits * $transaction_count;
 						}	
-						echo "Cellular Data: $count_cellular_credits Bytes, Wi-Fi Data: $count_wifi_credits Bytes";
+						echo "Cellular Data: " . $count_cellular_credits/1000000.0 . " MB, Wi-Fi Data: " . $count_wifi_credits/1000000.0 . " MB";
 						Delete("user_accounts/" . $username . "/countcredit/" . $experiment_id);
 					}
 				}

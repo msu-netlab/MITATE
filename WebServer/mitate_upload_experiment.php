@@ -55,7 +55,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							$total_credits_in_xml = explode(":", $returndata);
 							$get_user_available_credits = mysql_query("SELECT sum(available_cellular_credits) as availabledata, sum(available_wifi_credits) as availablewifi FROM usercredits where username = '$username'");
 							$user_data_credits = mysql_fetch_assoc($get_user_available_credits);
-							if($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1024.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1024.0) {
+							if($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1000000.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1000000.0) {
 								$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 								$xml = simplexml_load_file("$filepath");
 								$sql="INSERT INTO experiment (experiment_id, username, permission, cellulardata, wifidata) VALUES($experiment_id, '$username', 'private', $total_credits_in_xml[0]/1024.0, $total_credits_in_xml[1]/1024.0)";
@@ -102,8 +102,6 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 											if($criteria_deviceid == '')
 												$criteria_deviceid = 'client';
 											$criteria_networktype = $tempcriteria->networktype;
-											if($criteria_networktype == '')
-												$criteria_networktype = 'allNetworkTypes';
 											$criteria_starttime = $tempcriteria->starttime;
 											if($criteria_starttime == '')
 												$criteria_starttime = '000001';
@@ -172,13 +170,13 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								}		
 								$yesdone = 1;
 								echo "$experiment_id";
-								$sql="update usercredits set available_cellular_credits = (available_cellular_credits - ($total_credits_in_xml[0]/1024.0)), available_wifi_credits = (available_wifi_credits - ($total_credits_in_xml[1]/1024.0)) where username = '$username'";
+								$sql="update usercredits set available_cellular_credits = (available_cellular_credits - ($total_credits_in_xml[0]/1000000.0)), available_wifi_credits = (available_wifi_credits - ($total_credits_in_xml[1]/1000000.0)) where username = '$username'";
 								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 							}
 							else {
-								if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1024.0)
+								if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1000000.0)
 									echo "You do not have enough cellular data credits.";
-								elseif ($user_wifi_credits[availablewifi] < $total_credits_in_xml[1]/1024.0)
+								elseif ($user_wifi_credits[availablewifi] < $total_credits_in_xml[1]/1000000.0)
 									echo "You do not have enough Wi-Fi data credits.";
 							}
 						}

@@ -27,7 +27,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and ttl.transactionid = trs.transactionid
 			and trs.transactionid not in (select transactionid from transaction_fetched where deviceid = '$_GET[deviceid]')
 			and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 5), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 6), ';', -1)
-			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = 'allNetworkTypes')
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]'
 			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 7), ';', -1) <= $_GET[batterypower]
 			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 8), ';', -1) <= $_GET[signalstrength]
 			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = '$_GET[networkcarrier]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = 'allNetworkCarriers')
