@@ -5,7 +5,7 @@
 			<transfer>
 				<id>transfer1</id>
 				<sourceip>client</sourceip>
-				<destinationip>153.90.118.234</destinationip>
+				<destinationip>41.231.21.27</destinationip>
 				<packetdelay>10</packetdelay>
 				<type>2</type>
 				<portnumber>5006</portnumber>

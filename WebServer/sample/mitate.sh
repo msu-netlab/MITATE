@@ -135,7 +135,7 @@ then
 		read update_response;
 		if [ $update_response == 'y' ]
 		then
-			curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_update_experiment.php
+			curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_make_public_experiment.php
 		fi
 	elif [ "$1" == 'validate' -a "$2" != '' ]
 	then
