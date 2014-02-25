@@ -16,7 +16,7 @@ if ($loginresultset) {
 		$get_experiment_list = mysql_query("select * from experiment where experiment_id = $_POST[experiment_id] and ((username = '$_POST[username]' and permission = 'private') or permission = 'public')");
 		while($get_experiment = mysql_fetch_assoc($get_experiment_list)) {
 			echo "replace into experiment (experiment_id, username, permission, cellulardata, wifidata) values($get_experiment[experiment_id], '$get_experiment[username]', '$get_experiment[permission]', $get_experiment[cellulardata], $get_experiment[wifidata]);";
-			$get_transaction_list = mysql_query("select * from transaction1 where experiment_id = $get_experiment[experiment_id]");
+			$get_transaction_list = mysql_query("select * from transactions where experiment_id = $get_experiment[experiment_id]");
 			while($get_transaction = mysql_fetch_assoc($get_transaction_list)) {
 				echo "replace into transactions (transactionid, username, count, original_count, experiment_id) values($get_transaction[transactionid], '$get_transaction[username]', $get_transaction[count], $get_transaction[original_count], $get_transaction[experiment_id]);";
 				$get_criteria_linked_list = mysql_query("select * from trans_criteria_link where transactionid = $get_transaction[transactionid]");

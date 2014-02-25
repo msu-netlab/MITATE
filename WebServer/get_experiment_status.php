@@ -12,7 +12,7 @@ if ($loginresultset) {
     $loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == "1") {
 		$get_status_list = mysql_query("select count(teb.transferid) as totalExecuted, count(ttl.transferid) as totalTransfers
-		from experiment exp, transaction1 tr, trans_transfer_link ttl left outer join transferexecutedby teb on ttl.transferid = teb.transferid
+		from experiment exp, transactions tr, trans_transfer_link ttl left outer join transferexecutedby teb on ttl.transferid = teb.transferid
 		where exp.experiment_id = $_POST[experiment_id]
 		and exp.experiment_id = tr.experiment_id
 		and tr.transactionid = ttl.transactionid;");

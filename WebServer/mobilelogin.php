@@ -18,7 +18,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
             $pendingtestset = mysql_query("SELECT
 			trf.sourceip as sourceip, trf.destinationip as destinationip, trf.bytes as bytes, trf.transferid as transferid,
 			trs.transactionid as transactionid, trf.type as type, trf.packetdelay, trf.explicit, substring(replace(replace(content,'\t',''), '\n\r', '\n'),1) content, trf.noofpackets, trf.portnumber, trf.contenttype, trf.response, trf.delay as transferdelay
-			from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl, experiment exp, userdevice usrdvc
+			from criteria cri, transfer trf, transactions trs, trans_criteria_link tcl, trans_transfer_link ttl, experiment exp, userdevice usrdvc
 			where cri.criteriaid = tcl.criteriaid
 			and trs.transactionid = tcl.transactionid
 			and trs.count > 0
@@ -84,10 +84,10 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 					if($transaction_count_reduce != '') {
 						$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
 						if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
-						mysql_query("update transaction1 set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
+						mysql_query("update transactions set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
 						$temp_count = $temp_count - 1;
 						$get_distinct_experiment_ids = mysql_query("select distinct exp.experiment_id, exp.cellulardata, exp.wifidata 
-						from experiment exp, transaction1 tran 
+						from experiment exp, transactions tran 
 						where tran.experiment_id = exp.experiment_id
 						and tran.experiment_id = $transaction_count_reduce
 						and exp.username != '$_GET[username]'");

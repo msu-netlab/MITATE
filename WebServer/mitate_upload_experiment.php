@@ -63,18 +63,18 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								foreach($xml->transactions->transaction as $temptransaction) {
 									$order=1;
 									$transactionid = $start_value;
-									$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transaction1");
+									$get_transactionid_counts = mysql_query("SELECT count(*) as count, max(transactionid) as maxval from transactions");
 									while($get_transactionid_count = mysql_fetch_assoc($get_transactionid_counts)) {
 										if($get_transactionid_count[count] > 0)
 											$transactionid = $get_transactionid_count[maxval] + 1;
 									}
 									$transaction_count = $temptransaction["count"];
 									if($transaction_count != "") { 
-										$sql="INSERT INTO transaction1 (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
+										$sql="INSERT INTO transactions (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
 										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 									}
 									if($transaction_count == ""){
-										$sql="INSERT INTO transaction1 (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
+										$sql="INSERT INTO transactions (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
 										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 									}
 									foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {

@@ -16,8 +16,8 @@ if ($loginresultset) {
 		$experiment_id = $_POST[experiment_id];
 		if($experiment_id != "") {
 			$total_credits_in_xml = mysql_fetch_assoc(mysql_query("select cellulardata, wifidata from experiment where experiment_id = $experiment_id"));
-			$check_if_data_tobe_returned = mysql_query("select sum(original_count) as exp_ocount, sum(count) as exp_count from transaction1 where experiment_id = $experiment_id");
-			$fetch_transaction_id_set = mysql_query("select tran.transactionid from transaction1 tran, experiment exp 
+			$check_if_data_tobe_returned = mysql_query("select sum(original_count) as exp_ocount, sum(count) as exp_count from transactions where experiment_id = $experiment_id");
+			$fetch_transaction_id_set = mysql_query("select tran.transactionid from transactions tran, experiment exp 
 			where tran.experiment_id = $experiment_id
 			and exp.experiment_id = tran.experiment_id
 			and exp.username = '$username'");
@@ -40,7 +40,7 @@ if ($loginresultset) {
 				$experiment_count = $experiment_count + 1;
 			}
 		if($experiment_count > 0) {
-			mysql_query("delete from transaction1 where experiment_id = $experiment_id");
+			mysql_query("delete from transactions where experiment_id = $experiment_id");
 			mysql_query("delete from experiment where experiment_id = $experiment_id");
 			Delete("user_accounts/$username/experiments/$experiment_id");
 			rmdir("user_accounts/$username/$experiment_id");

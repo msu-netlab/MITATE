@@ -25,7 +25,7 @@ SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 3), ';', -1) as starttim
 SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) as endtime,
 trf.sourceip as sourceip, trf.destinationip as destinationip, trf.bytes as bytes, trf.transferid as transferid, trf.packetdelay as packetdelay,
 trs.transactionid as transactionid, trf.type as type, trf.noofpackets as noofpackets, trf.protocoltype as protocoltype, trf.portnumber as port
-from criteria cri, transfer trf, transaction1 trs, trans_criteria_link tcl, trans_transfer_link ttl
+from criteria cri, transfer trf, transactions trs, trans_criteria_link tcl, trans_transfer_link ttl
 where cri.criteriaid = tcl.criteriaid
 and trs.transactionid = tcl.transactionid
 and trf.transferid = ttl.transferid
