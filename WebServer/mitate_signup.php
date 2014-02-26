@@ -38,7 +38,12 @@ if(isset($_POST['fname']) || isset($_POST['lname']) || isset($_POST['email']) ||
 		if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 		
 		$msg="Hi $_POST[fname],<br /><br />Please click on the verification link below to complete your registration with MITATE.<br /><br />http://mitate.cs.montana.edu/user_verification.php?key=$verification_key <br /><br />Thank you, <br /><br />Team MITATE";
-		mail($_POST[email], "Account Verification", $msg, "From: MITATE <mitate@cs.montana.edu>\r\n MIME-Version: 1.0\r\n Content-type:text/html;charset=UTF-8 \r\n");
+		
+		$headers = "From: MITATE <mitate@cs.montana.edu>\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";	
+		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+		
+		mail($_POST[email], "MITATE Account Verification", $msg, $headers);
 		printf("<script>alert('A verification email has been sent to the email address you provided. Please click on the verification link in the email to complete the registration process.')</script>");
 	}
 	else {

@@ -8,6 +8,8 @@
 	<div><div>Username/Email:</div><div><input type="text" placeholder="Username/Email" id="userid" name="userid" /></div></div>
 	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
 	<div><div><input type="submit" value="Sign in" /></div></div>
+	<br />
+	<div><div><a href="forgotpass.php">Forgot Password?</a></div></div>
 	</form>
 	</div>
 <?php include('footer.php'); ?>

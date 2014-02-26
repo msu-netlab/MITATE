@@ -9,7 +9,9 @@ $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$dbconnection)	{die('Could not connect: ' . mysql_error());}
 mysql_select_db($dbschemaname, $dbconnection);
 $verificationresult = mysql_query("SELECT * FROM user_verification where verification_key = '$_GET[key]' limit 1");
+$num_records = 0;
 while($verificationresultrow = mysql_fetch_assoc($verificationresult)) {
+	$num_records = $num_records + 1;
 	if($verificationresultrow[if_used] == 1)
 		echo "<h2>You are already registered.";
 	else {
@@ -28,5 +30,7 @@ while($verificationresultrow = mysql_fetch_assoc($verificationresult)) {
 	}
 	echo " Please refer to our tutorial to proceed.</h2>";
 }
+if($num_records == 0)
+	echo "<h2>Invalid URL.</h2>"
 ?>
 <?php include('footer.php'); ?>
