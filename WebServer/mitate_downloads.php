@@ -12,7 +12,7 @@ if(isset($_SESSION['mitateLoggedInUser'])) {
 	<br />
 	4. MITATE Command Line API (<a target="_blank" href="sample/mitate.sh" style="color: red;">download</a>)
 	<br />
-	5. MITATE Documentation V 1.0 (<a target="_blank" href="sample/MITATE_Documentation_v1.0.pdf" style="color: red;">download</a>)
+	5. MITATE User Manual V 1.0 (<a target="_blank" href="sample/MITATE_User_Manual_v1.0.pdf" style="color: red;">download</a>)
 	</div>
 	<?php include('footer.php'); 
 }

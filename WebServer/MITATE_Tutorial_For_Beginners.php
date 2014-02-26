@@ -1,7 +1,7 @@
 <?php include('header.php'); ?>
-	<div style="font-size: 18;text-align: justify;">
+	<div style="font-size: 18;">
 	<h3 style="text-decoration:underline">MITATE Tutorial for Beginners</h3>
-	This tutorial assumes that you have read and understood the <a href="http://mitate.cs.montana.edu/sample/MITATE_Documentation_v1.0.pdf" target="_blank">MITATE User Manual</a>. This tutorial will provide you step-by-step instructions to execute a basic experiment with MITATE.
+	This tutorial assumes that you have read and understood the <a href="http://mitate.cs.montana.edu/sample/MITATE_User_Manual_v1.0.pdf" target="_blank">MITATE User Manual</a>. This tutorial will provide you step-by-step instructions to execute a basic experiment with MITATE.
 	
 	<h3>Step 1: Initialization</h3>
 	1. Go to the <a href="http://mitate.cs.montana.edu/mitate_signup.php" target="_blank">signup page</a> and create an account with MITATE system. <br /><br />
@@ -81,5 +81,15 @@
 	and md.metricid = mt.metricid <br />
 	and mt.name in ('device_travel_speed', 'signal_strength')
 	</b><br /><br />
+	21. To query data like the unique deviceid, the network carrier name, and the model name, for the mobile device that executed your experiment, run the following SQL query from your MySQL command line: <br /><br />
+	<b>
+	select DISTINCT md.deviceid as deviceId, ud.devicename as deviceName, ud.devicecarrier as deviceCarrier <br />
+	from experiment exp, transactions trans, trans_transfer_link ttl, metricdata md, userdevice ud <br />
+	where exp.experiment_id = <i>experiment_id_from_step_11</i><br />
+	and trans.experiment_id = exp.experiment_id <br />
+	and ttl.transactionid = trans.transactionid <br />
+	and ttl.transferid = md.transferid <br />
+	and md.deviceid = ud.deviceid <br />
+	</b>
 	</div>
 <?php include('footer.php'); ?>
