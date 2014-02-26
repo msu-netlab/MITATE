@@ -7,7 +7,7 @@ $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$dbconnection)	{die('Could not connect: ' . mysql_error());}
 mysql_select_db($dbschemaname, $dbconnection);
 $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
-$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_POST[username]' and password = '$encrypted_password'");
+$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_POST[username]' and password = '$encrypted_password' and status = 1");
 if ($loginresultset) {
     $loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == "1") {
