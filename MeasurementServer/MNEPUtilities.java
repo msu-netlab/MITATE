@@ -1,9 +1,8 @@
-//package com.mitate;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.lang.reflect.Array;
 
 public class MNEPUtilities {
     
@@ -163,4 +162,51 @@ public class MNEPUtilities {
         lServerOffsetWithNTP = lSystemTime - lNTPTime;
         return lServerOffsetWithNTP;
     }
+	
+	public static float calculateConfInterval(long[] laLatencies, float[] faThroughput, String tag) {
+		float fStandardDeviation = 0.0f;
+		float fValueToReturn = 0.0f;
+		float fSum;
+		if(tag.equals("latencyConfInterval")) {
+			float fLatencyConfInterval;
+			long[] templatencies = laLatencies.clone();
+			Arrays.sort(templatencies);
+			int elim = 0;
+			while(elim < templatencies.length) {
+				if(templatencies[elim] == 0)
+					elim = elim + 1;
+				else
+					break;
+			}
+			float fLatencyMean = MNEPUtilities.getSum(laLatencies) / (float)(laLatencies.length - elim + 1);
+			fSum = 0.0f;
+			for(int i=elim; i<templatencies.length; i++) {
+				fSum += (float)Math.pow((templatencies[i] - fLatencyMean), 2);
+			}
+			fStandardDeviation = (float)Math.sqrt(fSum / (laLatencies.length - elim + 1));
+			fLatencyConfInterval = (float)(1.96 * fStandardDeviation / (Math.sqrt(laLatencies.length - elim + 1)));	
+			fValueToReturn = fLatencyConfInterval;
+		}
+		if(tag.equals("throughputConfInterval")) {
+			float fThroughpuConfInterval;
+			float[] tempthroughputs = faThroughput.clone();
+			Arrays.sort(tempthroughputs);
+			int elim = 0;
+			while(elim < tempthroughputs.length) {
+				if(tempthroughputs[elim] == 0)
+					elim = elim + 1;
+				else
+					break;
+			}
+			float fThroughputMean = MNEPUtilities.getSumThroughput(faThroughput) / (float)(faThroughput.length - elim + 1);
+			fSum = 0.0f;
+			for(int i=elim; i<tempthroughputs.length; i++) {
+				fSum += (float)Math.pow((tempthroughputs[i] - fThroughputMean), 2);
+			}
+			fStandardDeviation= (float)Math.sqrt(fSum / (faThroughput.length - elim + 1));
+			fThroughpuConfInterval = (float)(1.96 * fStandardDeviation / (Math.sqrt(faThroughput.length - elim + 1)));
+			fValueToReturn = fThroughpuConfInterval;
+		}
+		return fValueToReturn;
+	}
 }
