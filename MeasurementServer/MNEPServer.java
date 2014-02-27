@@ -472,14 +472,15 @@ public class MNEPServer {
 				    				psInsertStmt.setInt(1, iTransferId);
 				    				psInsertStmt.setInt(2, iTransactionId);
 									
-									ByteArrayOutputStream baosWriteObject = new ByteArrayOutputStream();
+									ByteArrayOutputStream baosWriteObjectUDP = new ByteArrayOutputStream();									
+									new ObjectOutputStream(baosWriteObjectUDP).writeObject(tmUDPTransferMetrics);
+				    				psInsertStmt.setString(3, DatatypeConverter.printBase64Binary(baosWriteObjectUDP.toByteArray()));	
+									baosWriteObjectUDP.close();
 									
-									new ObjectOutputStream(baosWriteObject).writeObject(tmUDPTransferMetrics);
-				    				psInsertStmt.setString(3, DatatypeConverter.printBase64Binary(baosWriteObject.toByteArray()));	
-									
-									new ObjectOutputStream(baosWriteObject).writeObject(tmTCPTransferMetrics);								
-				    				psInsertStmt.setString(4, DatatypeConverter.printBase64Binary(baosWriteObject.toByteArray()));
-									baosWriteObject.close();
+									ByteArrayOutputStream baosWriteObjectTCP = new ByteArrayOutputStream();
+									new ObjectOutputStream(baosWriteObjectTCP).writeObject(tmTCPTransferMetrics);								
+				    				psInsertStmt.setString(4, DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray()));
+									baosWriteObjectTCP.close();
 									
 				    				psInsertStmt.setFloat(5, tmUDPTransferMetrics.fLatencyConfInterval);
 				    				psInsertStmt.setFloat(6, tmUDPTransferMetrics.fThroughpuConfInterval);

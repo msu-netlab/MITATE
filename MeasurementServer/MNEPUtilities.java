@@ -116,7 +116,7 @@ public class MNEPUtilities {
     	float[] faThroughput = new float[laLatencies.length];
     	for(int i=0; i<laLatencies.length; i++) {
     		try {
-    			faThroughput[i] = (float)iaBytes[i] / (float)(laLatencies[i] + iPacketDelay);
+    			faThroughput[i] = (float)((iaBytes[i]/1000.0) * 8) / (float)((laLatencies[i] + iPacketDelay)/1000.0);
     		} catch(Exception e) {
     			System.out.println(TAG+" : error : "+e.getMessage());
     		}
