@@ -46,7 +46,7 @@ if ($loginresultset) {
 						}
 						$get_transfermetrics_transfer_list = mysql_query("select * from transfermetrics where transferid = $get_transfer_linked[transferid]");
 						while($get_transfermetrics_transfer = mysql_fetch_assoc($get_transfermetrics_transfer_list)) {
-							echo "replace into transfermetrics (transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid) values ($get_transfermetrics_transfer[transferid], $get_transfermetrics_transfer[transactionid], '$get_transfermetrics_transfer[udppacketmetrics]', '$get_transfermetrics_transfer[tcppacketmetrics]', $get_transfermetrics_transfer[udplatencyconf], $get_transfermetrics_transfer[udpthroughputconf], $get_transfermetrics_transfer[tcplatencyconf], $get_transfermetrics_transfer[tcpthroughputconf], '$get_transfermetrics_transfer[deviceid]');";
+							echo "replace into transfermetrics (transferid, transactionid, udppacketmetrics, tcppacketmetrics, deviceid) values ($get_transfermetrics_transfer[transferid], $get_transfermetrics_transfer[transactionid], '$get_transfermetrics_transfer[udppacketmetrics]', '$get_transfermetrics_transfer[tcppacketmetrics]', '$get_transfermetrics_transfer[deviceid]');";
 						}
 						$get_logs_list = mysql_query("select * from logs where transferid = $get_transfer_linked[transferid]");
 						while($get_log = mysql_fetch_assoc($get_logs_list)) {

@@ -468,7 +468,7 @@ public class MNEPServer {
 				    				if(tmTCPTransferMetrics == null) {
 				    					tmTCPTransferMetrics = new TransferMetrics();
 				    				}          
-				    				PreparedStatement psInsertStmt = conn.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid)" + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				    				PreparedStatement psInsertStmt = conn.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, deviceid)" + "values (?, ?, ?, ?, ?)");
 				    				psInsertStmt.setInt(1, iTransferId);
 				    				psInsertStmt.setInt(2, iTransactionId);
 									
@@ -482,11 +482,7 @@ public class MNEPServer {
 				    				psInsertStmt.setString(4, DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray()));
 									baosWriteObjectTCP.close();
 									
-				    				psInsertStmt.setFloat(5, tmUDPTransferMetrics.fLatencyConfInterval);
-				    				psInsertStmt.setFloat(6, tmUDPTransferMetrics.fThroughpuConfInterval);
-				    				psInsertStmt.setFloat(7, tmTCPTransferMetrics.fLatencyConfInterval);
-				    				psInsertStmt.setFloat(8, tmTCPTransferMetrics.fThroughpuConfInterval);
-				    				psInsertStmt.setString(9, sDeviceId);
+				    				psInsertStmt.setString(5, sDeviceId);
 				               
 				    				int t = psInsertStmt.executeUpdate();
 				    				System.out.println("number of records inserted - " + t);
