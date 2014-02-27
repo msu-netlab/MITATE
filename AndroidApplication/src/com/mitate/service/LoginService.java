@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
@@ -100,7 +101,13 @@ public class LoginService extends Service {
 
 	public String getDeviceId(String sUsername, String sPassword, String sPhoneNumber, String sDeviceName) throws Exception {
 
-		   	String sURL = "http://"+sWebServerName+"/setup_deviceid.php?username=" + sUsername + "&password=" + sPassword + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
+		String s = Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT);
+		System.out.println("-"+new String(Base64.decode(s, Base64.DEFAULT)));
+		
+		System.out.println("=========="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")+"==============");
+		System.out.println("=========="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT)+"==============");
+		
+		   	String sURL = "http://"+sWebServerName+"/setup_deviceid.php?username=" + sUsername + "&password=" + (Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")) + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
 		   	HttpClient hcHttpClient = new DefaultHttpClient();	
 		   	HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
 		   	HttpResponse hrHttpResponse = hcHttpClient.execute(new HttpPost(sURL));        
@@ -145,7 +152,7 @@ public class LoginService extends Service {
     	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
     	   			// "http://10.0.2.2/mnep/mobilelogin.php?" +
        	   	   		"username="+sUserName+ //
-   	    	   	    "&password="+sPassword+ //
+   	    	   	    "&password="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")+ //
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
    	    	   	    "&networktype="+MITATEUtilities.getNetworkType(cContext)+// +"&city="+mLocation.getCity(cContext);
    	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
@@ -155,8 +162,7 @@ public class LoginService extends Service {
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
    		   	   HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
-               HttpPost hpHttpPost = new HttpPost(sURL);                           
-               // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+               HttpPost hpHttpPost = new HttpPost(sURL);     
 
                if(MITATEApplication.bDebug) Log.i(TAG, "@executeLogin() : request - "+hpHttpPost.getRequestLine().toString());
                
