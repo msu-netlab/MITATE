@@ -8,7 +8,7 @@ if(isset($_SESSION['mitateLoggedInUser'])) {
 	<br />
 	2. Sample MITATE XSD File [<a target="_blank" href="sample/Mitate_Sample_Configuration_File_XML_Format.xsd" style="color: red;">view</a>]
 	<br />
-	3. MITATE Android Application [<a target="_blank" href="sample/MITATEActivity.apk" style="color: red;">download</a>]
+	3. MITATE Android Application [<a target="_blank" href="sample/MITATE.apk" style="color: red;">download</a>]
 	<br />
 	4. MITATE Command Line API [<a target="_blank" href="sample/mitate.sh" style="color: red;">download</a>]
 	<br />
