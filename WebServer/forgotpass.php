@@ -19,7 +19,7 @@
             <td align="right">
                 </td>
             <td align="left">
-                Enter your login username</td>
+                Enter your username</td>
         </tr>
         <tr>
             <td class="style2">
