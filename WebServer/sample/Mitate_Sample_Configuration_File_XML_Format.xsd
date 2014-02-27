@@ -62,7 +62,7 @@
                           <xs:element minOccurs="1" maxOccurs="1" name="latitude" type="xs:decimal" />
                           <xs:element minOccurs="1" maxOccurs="1" name="longitude" type="xs:decimal" />
                           <xs:element minOccurs="1" maxOccurs="1" name="radius" type="xs:unsignedInt" />
-                          <xs:element minOccurs="0" maxOccurs="1"  name="networktype" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1"  name="networktype" type="xs:string" />
                           <xs:element minOccurs="0" maxOccurs="1" name="starttime" type="xs:unsignedInt" />
                           <xs:element minOccurs="0" maxOccurs="1" name="endtime" type="xs:unsignedInt" />
                           <xs:element minOccurs="0" maxOccurs="1" name="deviceid" type="xs:string" />
