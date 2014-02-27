@@ -10,7 +10,7 @@ mysql_select_db("mitate", $con);
 $username = $_POST[username];
 $password = $_POST[password];
 $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $password, MCRYPT_MODE_CBC, md5(md5("mitate"))));
-$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password'");
+$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password'  and status = 1");
 if ($loginresultset) {
 	$loginresultrow = mysql_fetch_assoc($loginresultset);
     if ($loginresultrow['status'] == 1) {	
@@ -86,17 +86,19 @@ if ($loginresultset) {
 										else if($contenttype == "BINARY")
 											$bytestostore = ceil($bytestostore/8);
 										$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
+										if($contenttype == "")
+											$bytestostore = $bytestostore - 26;
 										if ($criteria_networktype == "wifi")
-											$count_wifi_credits = $count_wifi_credits + ($transfer_repeat * $temptransfer->noofpackets * $bytestostore);
+											$count_wifi_credits = $count_wifi_credits + ($transfer_repeat * $bytestostore);
 										elseif ($criteria_networktype == "cellular")
-											$count_cellular_credits = $count_cellular_credits + ($transfer_repeat * $temptransfer->noofpackets * $bytestostore);
+											$count_cellular_credits = $count_cellular_credits + ($transfer_repeat * $bytestostore);
 									}
 								}
 							}
 							$count_wifi_credits = $count_wifi_credits * $transaction_count;
 							$count_cellular_credits = $count_cellular_credits * $transaction_count;
 						}	
-						echo "Cellular Data: $count_cellular_credits Bytes, Wi-Fi Data: $count_wifi_credits Bytes";
+						echo "Cellular Data: " . $count_cellular_credits/1000000.0 . " MB, Wi-Fi Data: " . $count_wifi_credits/1000000.0 . " MB";
 						Delete("user_accounts/" . $username . "/countcredit/" . $experiment_id);
 					}
 				}

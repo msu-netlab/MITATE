@@ -10,8 +10,8 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
         die('Could not connect: ' . mysql_error());
     }
     mysql_select_db($dbschemaname, $dbconnection);
-    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_GET[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
-	$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$encrypted_password'");
+    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), base64_decode($_GET[password]), MCRYPT_MODE_CBC, md5(md5("mitate"))));
+	$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$encrypted_password' and status = 1");
     if ($loginresultset) {
         $loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == "1") {
@@ -27,7 +27,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 			and ttl.transactionid = trs.transactionid
 			and trs.transactionid not in (select transactionid from transaction_fetched where deviceid = '$_GET[deviceid]')
 			and '$_GET[time]' between SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 5), ';', -1) and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 6), ';', -1)
-			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = 'allNetworkTypes')
+			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 4), ';', -1) = '$_GET[networktype]'
 			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 7), ';', -1) <= $_GET[batterypower]
 			and SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 8), ';', -1) <= $_GET[signalstrength]
 			and (SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = '$_GET[networkcarrier]' or SUBSTRING_INDEX(SUBSTRING_INDEX(cri.specification, ';', 9), ';', -1) = 'allNetworkCarriers')

@@ -25,7 +25,9 @@ public class TransferMetrics implements Serializable {
 	
 	public void calculateConfInterval() {
 		long[] templatencies = laLatencies.clone();
+		float[] tempthroughputs = faThroughput.clone();
 		Arrays.sort(templatencies);
+		Arrays.sort(tempthroughputs);
 		
 		int elim = 0;
 			while(elim < templatencies.length)
@@ -39,7 +41,7 @@ public class TransferMetrics implements Serializable {
 		float fLatencyMean = MNEPUtilities.getSum(laLatencies) / (float)(laLatencies.length - elim + 1);
 		float fSum = 0.0f;
 		for(int i=elim; i<templatencies.length; i++) {
-			fSum = (float)Math.pow((templatencies[i] - fLatencyMean), 2);
+			fSum += (float)Math.pow((templatencies[i] - fLatencyMean), 2);
 		}
 		float fStandardDeviation = (float)Math.sqrt(fSum / (laLatencies.length - elim + 1));
 		fLatencyConfInterval = (float)(1.96 * fStandardDeviation / (Math.sqrt(laLatencies.length - elim + 1)));
@@ -47,7 +49,7 @@ public class TransferMetrics implements Serializable {
 		float fThroughputMean = MNEPUtilities.getSumThroughput(faThroughput) / (float)(faThroughput.length - elim + 1);
 		fSum = 0.0f;
 		for(int i=elim; i<templatencies.length; i++) {
-			fSum = (float)Math.pow((templatencies[i] - fThroughputMean), 2);
+			fSum += (float)Math.pow((tempthroughputs[i] - fThroughputMean), 2);
 		}
 		fStandardDeviation= (float)Math.sqrt(fSum / (faThroughput.length - elim + 1));
 		fThroughpuConfInterval = (float)(1.96 * fStandardDeviation / (Math.sqrt(faThroughput.length - elim + 1)));

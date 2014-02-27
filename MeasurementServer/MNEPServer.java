@@ -16,7 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.io.ObjectInputStream;
-
+import java.io.ByteArrayOutputStream;
+import javax.xml.bind.DatatypeConverter;
 import com.mitate.measurement.ClientTimes;
 import com.mitate.service.Transfer;
         
@@ -467,16 +468,21 @@ public class MNEPServer {
 				    				if(tmTCPTransferMetrics == null) {
 				    					tmTCPTransferMetrics = new TransferMetrics();
 				    				}          
-				    				PreparedStatement psInsertStmt = conn.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, udplatencyconf, udpthroughputconf, tcplatencyconf, tcpthroughputconf, deviceid)" + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				    				PreparedStatement psInsertStmt = conn.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, deviceid)" + "values (?, ?, ?, ?, ?)");
 				    				psInsertStmt.setInt(1, iTransferId);
 				    				psInsertStmt.setInt(2, iTransactionId);
-				    				psInsertStmt.setObject(3, (Object)tmUDPTransferMetrics);
-				    				psInsertStmt.setObject(4, (Object)tmTCPTransferMetrics);
-				    				psInsertStmt.setFloat(5, tmUDPTransferMetrics.fLatencyConfInterval);
-				    				psInsertStmt.setFloat(6, tmUDPTransferMetrics.fThroughpuConfInterval);
-				    				psInsertStmt.setFloat(7, tmTCPTransferMetrics.fLatencyConfInterval);
-				    				psInsertStmt.setFloat(8, tmTCPTransferMetrics.fThroughpuConfInterval);
-				    				psInsertStmt.setString(9, sDeviceId);
+									
+									ByteArrayOutputStream baosWriteObjectUDP = new ByteArrayOutputStream();									
+									new ObjectOutputStream(baosWriteObjectUDP).writeObject(tmUDPTransferMetrics);
+				    				psInsertStmt.setString(3, DatatypeConverter.printBase64Binary(baosWriteObjectUDP.toByteArray()));	
+									baosWriteObjectUDP.close();
+									
+									ByteArrayOutputStream baosWriteObjectTCP = new ByteArrayOutputStream();
+									new ObjectOutputStream(baosWriteObjectTCP).writeObject(tmTCPTransferMetrics);								
+				    				psInsertStmt.setString(4, DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray()));
+									baosWriteObjectTCP.close();
+									
+				    				psInsertStmt.setString(5, sDeviceId);
 				               
 				    				int t = psInsertStmt.executeUpdate();
 				    				System.out.println("number of records inserted - " + t);

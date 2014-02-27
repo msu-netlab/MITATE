@@ -1,6 +1,17 @@
 #!/bin/sh
 isValid=0
 
+populateUserExperimentList() {
+	experimentList=`curl -k -ssl3 -F "username=$username" -F "password=$password" http://mitate.cs.montana.edu/populate_user_experiment_list.php`
+	touch user_experiment_list.txt
+	experimentArray=$(echo $experimentList | tr ":" "\n")
+	touch user_experiment_list.txt
+	for experimentId in $experimentArray
+	do
+		echo $experimentId >> user_experiment_list.txt
+	done
+}
+
 validateExistingUserCredential() {
 	ifUserIsValid='false'
 	touch user.txt
@@ -21,14 +32,21 @@ validateExistingUserCredential() {
 saveUserCredentials() {
 	if [ "$ifUserIsValid" == 'true' ]
 	then
+		touch user.txt
 		chmod 777 user.txt
 		echo "$encrypted_username:$encrypted_password" > user.txt;
 		chmod 444 user.txt
 		isValid=1;
 		if [ "$1" == 'withEcho' ]
 		then
+			populateUserExperimentList
 			echo "You are now authenticated."
 		fi
+	else
+		touch user.txt
+		rm user.txt
+		touch user_experiment_list.txt
+		rm user_experiment_list.txt
 	fi
 }
 
@@ -47,10 +65,12 @@ userLogin() {
 		then
 			encrypted_username=`curl -k -ssl3 -F "string=$username" https://mitate.cs.montana.edu/encrypt_user.php`
 			encrypted_password=`curl -k -ssl3 -F "string=$password" https://mitate.cs.montana.edu/encrypt_user.php`
+			touch user.txt
 			chmod 777 user.txt
 			echo "$encrypted_username:$encrypted_password" > user.txt;
 			chmod 444 user.txt
 			isValid=1;
+			populateUserExperimentList
 			printf "\nYou are now authenticated."
 		else
 			isValid=0;
@@ -70,7 +90,7 @@ then
 	echo -e `curl -k -ssl3 https://mitate.cs.montana.edu/mitate_api_help.php`
 elif [ "$1" == '' -a "$isValid" == 0 ]
 then
-	echo "You are not authenticated. To authenticate yourself, run mitate.sh login ";
+	echo "Invalid command. To learn all possible commands, run mitate.sh help";
 elif [ "$1" != '' -a "$isValid" == 0 -a "$1" != 'login' ]
 then
 	echo "You are not authenticated. To authenticate yourself, run mitate.sh login ";
@@ -135,7 +155,7 @@ then
 		read update_response;
 		if [ $update_response == 'y' ]
 		then
-			curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_update_experiment.php
+			curl -k -ssl3 -F "username=$username" -F "password=$password" -F experiment_id=$2 https://mitate.cs.montana.edu/mitate_make_public_experiment.php
 		fi
 	elif [ "$1" == 'validate' -a "$2" != '' ]
 	then

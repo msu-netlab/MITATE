@@ -310,8 +310,8 @@ DROP TABLE IF EXISTS `transfermetrics`;
 CREATE TABLE `transfermetrics` (
   `transferid` int(10) NOT NULL DEFAULT '0',
   `transactionid` int(10) NOT NULL DEFAULT '0',
-  `udppacketmetrics` blob,
-  `tcppacketmetrics` blob,
+  `udppacketmetrics` longtext,
+  `tcppacketmetrics` longtext,
   `udplatencyconf` decimal(10,2) DEFAULT NULL,
   `udpthroughputconf` decimal(10,2) DEFAULT NULL,
   `tcplatencyconf` decimal(10,2) DEFAULT NULL,
