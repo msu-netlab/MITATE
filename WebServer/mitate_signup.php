@@ -42,31 +42,10 @@ if($_POST['fname'] != '' && $_POST['lname'] != '' && $_POST['email'] != '' && $_
 <script type="text/javascript">
 function validateSignupForm() {
     var form = document.usersignup;
-    if (form.fname.value == "") {
-		alert("Please enter your first name.");
-		form.susername.focus();
+    if (form.fname.value == "" || form.lname.value == "" ||  form.username.value == "" || form.password.value == "" || form.email.value == "") {
+		alert("Please enter all the input fields.");
 		return false;
     }
-    if (form.lname.value == "") {
-		alert("Please enter your last name.");
-		form.spassword.focus();
-		return false;
-		}
-	if (form.username.value == "") {
-		alert("Please enter a username for yourself.");
-		form.susername.focus();
-		return false;
-    }
-    if (form.password.value == "") {
-		alert("Please enter your password.");
-		form.spassword.focus();
-		return false;
-	}
-	if (form.email.value == "") {
-		alert("Please enter your email.");
-		form.spassword.focus();
-		return false;
-	}
 	else {
 		var atpos=form.email.value.indexOf("@");
 		var dotpos=form.email.value.lastIndexOf(".");
