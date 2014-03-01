@@ -21,7 +21,7 @@
 	13. Run <b>./mitate.sh validate exp_conf.xml</b> to validate the XML against <a target="_blank" href="http://mitate.cs.montana.edu/sample/Mitate_Sample_Configuration_File_XML_Format.xsd">MITATE XML Schema Definition</a> file. <br /><br />
 	14. If the validation was successful, you will see a message <b>XML experiment  is valid.</b> If you do not see this message, fix the XML file based on the error message(s). (Refer to MITATE XML Schema Definition) <br /><br />
 	15. Run <b>./mitate.sh upload exp_conf.xml</b> to submit your experiment to MITATE system. If successful, you will receive an experiment ID for the experiment you just uploaded.<br /><br />
-	16. Connect your mobile phone to a Wi-Fi network and go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the 'MITATE Android Application'. After downloading, install the application on your mobile, enter the login credentials and finally press the <b>Start Service</b> button. It may take a minute for the experiment to execute.<br /><br />
+	16. Since this experiment is configured to execute on Wi-Fi network, connect your mobile phone to a Wi-Fi network and go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the 'MITATE Android Application'. After downloading, install the application on your mobile, enter the login credentials and finally press the <b>Start Service</b> button. It may take a minute for the experiment to execute.<br /><br />
 	
 	<h3>Step 3: Getting results</h3>
 	17. To check the status of your uploaded experiment, run <b>./mitate.sh getExpStatus experiment_ID</b>, where <i>experiment_ID</i> is the experiment ID you received in step 15.<br /><br />
