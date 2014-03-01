@@ -143,12 +143,12 @@ then
 				echo $experiment_result >> $2
 			fi
 		done < 'user_experiment_list.txt'
-		echo "The output file '$2' has been updated."
+		echo "The output file '$2' has been replaced."
 	elif [ "$1" == 'init' -a "$2" != '' ]
 	then
 		echo "Please wait while we generate initialization scripts..."
 		echo `curl -k -ssl3 -F "username=$username" -F "password=$password" https://mitate.cs.montana.edu/mitate_initialize_db.php` > $2
-		echo "Scripts are stored in $2 file"
+		echo "The database initialization scripts are now saved in $2 file"
 	elif [ "$1" == 'makePublic' -a "$2" != '' ]
 	then
 		echo "This experiment will be made public. Are you sure?(y/n))";

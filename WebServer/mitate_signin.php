@@ -1,20 +1,6 @@
-<?php 
-	session_start();
-	include('header.php'); ?>
-	<div style="font-size: 18;text-align: justify;">
-	<h3 style="text-decoration:underline">Sign in for MITATE:</h3>
-	<br />
-	<form action="" method="POST">
-	<div><div>Username/Email:</div><div><input type="text" placeholder="Username/Email" id="userid" name="userid" /></div></div>
-	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
-	<div><div><input type="submit" value="Sign in" /></div></div>
-	<br />
-	<div><div><a href="forgotpass.php">Forgot Password?</a></div></div>
-	</form>
-	</div>
-<?php include('footer.php'); ?>
+<?php session_start(); ?>
 <?php
-if(isset($_POST['userid']) || isset($_POST['password'])) {
+if(isset($_POST['userid']) && isset($_POST['password'])) {
 	$con = mysql_connect("localhost","mitate","Database4Mitate");
 	if (!$con) {die('Could not connect: ' . mysql_error());}
 	mysql_select_db("mitate", $con);
@@ -41,3 +27,25 @@ if(isset($_POST['userid']) || isset($_POST['password'])) {
 	mysql_close($con);
 }
 ?>
+<?php include('header.php'); ?>
+<script type="text/javascript">
+function validateSigninForm() {
+    var form = document.userSigninForm;
+    if (form.userid.value == "" || form.password.value == "") {
+		alert("Please enter all the input fields.");
+		return false;
+    }
+}
+</script>
+	<div style="font-size: 18;text-align: justify;">
+	<h3 style="text-decoration:underline">Sign in for MITATE:</h3>
+	<br />
+	<form action="" method="POST" name="userSigninForm" onsubmit="return validateSigninForm();">
+	<div><div>Username/Email:</div><div><input type="text" placeholder="Username/Email" id="userid" name="userid" /></div></div>
+	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
+	<div><div><input type="submit" value="Sign in" /></div></div>
+	<br />
+	<div><div><a href="forgotpass.php">Forgot Password?</a></div></div>
+	</form>
+	</div>
+<?php include('footer.php'); ?>

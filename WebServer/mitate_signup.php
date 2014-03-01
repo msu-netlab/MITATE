@@ -1,19 +1,5 @@
-<?php include('header.php'); ?>
-	<div style="font-size: 18;text-align: justify;">
-	<h3 style="text-decoration:underline">Signup for MITATE:</h3>
-	<br />
-	<form action="" method="POST">
-	<div><div>First name:</div><div><input type="text" placeholder="First name" id="fname" name="fname" /></div></div>
-	<div><div>Last Name:</div><div><input type="text" placeholder="Last name" id="lname" name="lname" /></div></div>
-	<div><div>Username:</div><div><input type="text" placeholder="Username" id="username" name="username" /></div></div>
-	<div><div>Email:</div><div><input type="text" placeholder="Valid Email" id="email" name="email" /></div></div>
-	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
-	<div><div><input type="submit" value="Create account" /></div></div>
-	</form>
-	</div>
-<?php include('footer.php'); ?>
 <?php
-if(isset($_POST['fname']) || isset($_POST['lname']) || isset($_POST['email']) || isset($_POST['username']) || isset($_POST['password'])) {
+if($_POST['fname'] != '' && $_POST['lname'] != '' && $_POST['email'] != '' && $_POST['username'] != '' && $_POST['password'] != '') {
 	$con = mysql_connect("localhost","mitate","Database4Mitate");
 	if (!$con) {die('Could not connect: ' . mysql_error());}
 	mysql_select_db("mitate", $con);
@@ -52,3 +38,36 @@ if(isset($_POST['fname']) || isset($_POST['lname']) || isset($_POST['email']) ||
 	mysql_close($con);
 }
 ?>
+<?php include('header.php'); ?>
+<script type="text/javascript">
+function validateSignupForm() {
+    var form = document.usersignup;
+    if (form.fname.value == "" || form.lname.value == "" ||  form.username.value == "" || form.password.value == "" || form.email.value == "") {
+		alert("Please enter all the input fields.");
+		return false;
+    }
+	else {
+		var atpos=form.email.value.indexOf("@");
+		var dotpos=form.email.value.lastIndexOf(".");
+		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+		{
+			alert("Please enter a valid e-mail address. Note that, we will send you a verification link on this email address to complete your registration with MITATE.");
+			return false;
+		}
+	}
+}
+
+</script>
+	<div style="font-size: 18;text-align: justify;">
+	<h3 style="text-decoration:underline">Signup for MITATE:</h3>
+	<br />
+	<form action="" method="POST" name="usersignup" onsubmit="return validateSignupForm();">
+	<div><div>First name:</div><div><input type="text" placeholder="First name" id="fname" name="fname" /></div></div>
+	<div><div>Last Name:</div><div><input type="text" placeholder="Last name" id="lname" name="lname" /></div></div>
+	<div><div>Username:</div><div><input type="text" placeholder="Username" id="username" name="username" /></div></div>
+	<div><div>Email:</div><div><input type="text" placeholder="Valid Email" id="email" name="email" /></div></div>
+	<div><div>Password:</div><div><input type="password" placeholder="Password" id="password" name="password" /></div></div>
+	<div><div><input type="submit" value="Create account" /></div></div>
+	</form>
+	</div>
+<?php include('footer.php'); ?>
