@@ -1,7 +1,7 @@
 <?php include('header.php'); ?>
 	<div style="font-size: 18;" align="justify">
 	<h3 style="text-decoration:underline">MITATE Tutorial for Beginners</h3>
-	This tutorial assumes that you have read and understood the <a href="http://mitate.cs.montana.edu/sample/MITATE_User_Manual_v1.0.pdf" target="_blank">MITATE User Manual</a>. This tutorial will provide you step-by-step instructions to execute a basic experiment with MITATE.
+	This tutorial assumes that you have read and understood the <a href="http://mitate.cs.montana.edu/sample/MITATE_User_Manual_v1.0.pdf" target="_blank">MITATE User Manual</a>, you have MySQL and JAVA installed on your computer. This tutorial will provide you step-by-step instructions to execute a basic experiment with MITATE.
 	
 	<h3>Step 1: Initialization</h3>
 	1. Go to the <a href="http://mitate.cs.montana.edu/mitate_signup.php" target="_blank">signup</a> page and create an account with MITATE system. After the signup process, you will receive an email with a verification link to verify your account. The email might get delivered to your spam folder. Click on the link to complete the registration process with the MITATE system. You will not be able to proceed without verifying your account.<br /><br />
@@ -34,6 +34,10 @@
 	22. To query data for TCP Uplink Jitter, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the SQL file for <i>TCP Uplink Jitter</i> and run <b> mysql -u m_user -p m_schema < tcp_uplink_jitter.sql	</b><br /><br />
 	23. To query data for TCP Uplink Packet Loss, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the SQL file for <i>TCP Uplink Packet Loss</i> and run <b> mysql -u m_user -p m_schema < tcp_uplink_packet_loss.sql	</b><br /><br />
 	24. To query data for Device Travel Speed in (Km/hr), Device Signal Strength, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the SQL file for <i>Device Metrics</i> and run <b> mysql -u m_user -p m_schema < device_metric.sql	</b><br /><br />
-	25. To query data like the unique deviceid, the network carrier name, and the model name, for the mobile device that executed your experiment, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the SQL file for <i>Device Details</i> and run <b> mysql -u m_user -p m_schema < device_detail.sql	</b>
+	25. To query data like the unique deviceid, the network carrier name, and the model name, for the mobile device that executed your experiment, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download the SQL file for <i>Device Details</i> and run <b> mysql -u m_user -p m_schema < device_detail.sql	</b><br /><br />
+	26. If you want to get the per packet network metrics for your experiment, which includes per packet throughput and latency, go to the <a href="http://mitate.cs.montana.edu/mitate_downloads.php" target="_blank">downloads</a> page and download <i>MITATE_Per_Packet_Network_Metrics.java</i>. Open this file and replace the default database username and password with the one you have on your MySQL.<br /><br />
+	27. Now run <b>javac MITATE_Per_Packet_Network_Metrics.java</b> from your command line terminal.<br /><br />
+	28. Run, <b>java MITATE_Per_Packet_Network_Metrics</b>. <br /><br />
+	29. 
 	</div>
 <?php include('footer.php'); ?>
