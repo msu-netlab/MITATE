@@ -28,6 +28,9 @@ if(isset($_SESSION['mitateLoggedInUser'])) {
 	<br />
 	11. Device Details [<a target="_blank" href="sample/device_detail.sql" style="color: red;">view</a>]
 	<br />
+	
+	<h3 style="text-decoration:underline">Java Code for Per Packet metrics</h3>
+	12. Per Packet Network Metrics [<a target="_blank" href="sample/MITATE_Per_Packet_Network_Metrics.zip" style="color: red;">download</a>]
 	</div>
 	<?php include('footer.php'); 
 }
