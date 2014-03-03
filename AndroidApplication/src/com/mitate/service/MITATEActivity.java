@@ -24,7 +24,7 @@ public class MITATEActivity extends Activity implements OnClickListener {
 
 	String TAG = "MITATEActivity";
 	public static boolean bStopTransactionExecution;
-	long iPollingInterval = 180000;
+	public static long iPollingInterval = 180000;
 	
 	TextView tvUsername;
 	TextView tvPassword;
@@ -237,6 +237,11 @@ public class MITATEActivity extends Activity implements OnClickListener {
 			
 			if(!bLoginStatus) {
 				tvStatus.setText(LoginService.tPendingTransfers[0].getsContent());
+				btStartService.setEnabled(true);
+				btStopService.setEnabled(false);
+		    	editor.putString("startbutton", "enabled");
+		    	editor.putString("stopbutton", "disabled");
+		    	editor.commit();
 				return;
 			}
 			

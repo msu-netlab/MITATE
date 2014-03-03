@@ -119,7 +119,7 @@ public class LoginService extends Service {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
             	   tPendingTransfers = new Transfer[1];
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("InvalidLogin");
+            	   tPendingTransfers[0].setsContent("Invalid Login");
             	   return false;	    		   
 	    	   }
 		   
@@ -128,7 +128,7 @@ public class LoginService extends Service {
 	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());    	   
 	    	   lClientTimeOffset = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
 	    	   
-    	   	   /* String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
+    	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
        	   	   		"username="+sUserName+ //
    	    	   	    "&password="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")+ //
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
@@ -136,13 +136,13 @@ public class LoginService extends Service {
    	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
    	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
-   	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel(); */
+   	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel(); 
     	   	   
     	   	   
-    	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
+    	   	   /* HttpClient hcHttpClient = new DefaultHttpClient();	
     	   	   HttpPost hpHttpPost = new HttpPost("http://"+sWebServerName+"/mobilelogin.php");  
     	   	   
-    	   	   ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+    	   	   ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
     	   	   params.add(new BasicNameValuePair("username", sUserName));
     	   	   params.add(new BasicNameValuePair("password", Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")));
     	   	   params.add(new BasicNameValuePair("time", (new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()));
@@ -154,11 +154,12 @@ public class LoginService extends Service {
     	   	   params.add(new BasicNameValuePair("signalstrength", MITATEApplication.getSignalStrength()+""));
     	   	   params.add(new BasicNameValuePair("networkcarrier", MITATEApplication.getNetworkCarrierName()));
     	   	   params.add(new BasicNameValuePair("devicemodelname", MITATEApplication.getDeviceModel()));
-    	   	   hpHttpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));    	   	   
+    	   	   hpHttpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));     	   
+    	   	   */
     	   	   
-    	   	   // HttpClient hcHttpClient = new DefaultHttpClient();	
+    	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
    		   	   HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
-               // HttpPost hpHttpPost = new HttpPost(sURL);     
+               HttpPost hpHttpPost = new HttpPost(sURL);     
 
                if(MITATEApplication.bDebug) Log.i(TAG, "@executeLogin() : request - "+hpHttpPost.getRequestLine().toString());
                
@@ -173,7 +174,7 @@ public class LoginService extends Service {
                }
 	        
                sResult = sbTemp.toString();		               
-               if(MITATEApplication.bDebug) Log.i(TAG,"@executeLogin() : got transactions - ");
+               if(MITATEApplication.bDebug) Log.i(TAG,"@executeLogin() : got transactions "+sResult);
 
                JSONArray jaPendingTransfers = new JSONArray(sResult);
                tPendingTransfers = new Transfer[jaPendingTransfers.length()];
@@ -182,13 +183,13 @@ public class LoginService extends Service {
                if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("InvalidLogin")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("InvalidLogin");
+            	   tPendingTransfers[0].setsContent("Invalid Login");
             	   return false;
                }	               
                else if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("NoPendingTransactions")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : no pending transactions");
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("NoPendingTransactions");
+            	   tPendingTransfers[0].setsContent("No Pending Transactions");
             	   return true;
                }
                else {
