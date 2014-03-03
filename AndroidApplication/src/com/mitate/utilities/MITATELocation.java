@@ -21,7 +21,6 @@ public class MITATELocation implements LocationListener {
 	private static final String TAG = "LocationDemo";
 	private LocationManager locationManager;
 	private String bestProvider;
-
 	
 	public String getCity(Context mContext) {
 		try {
@@ -49,14 +48,11 @@ public class MITATELocation implements LocationListener {
 		double latitude = location.getLatitude();
 		
 		return latitude+":"+longitude;
-		
-		// return getLatLong(mContext).getLatitude()+":"+getLatLong(mContext).getLongitude();
 	}
 	
 	public Location getLatLong(Context mContext) {
 		try {
 		Log.i("TAG", "@getLatLong - start");
-		System.out.println("----------->>1");
 		// Get the location manager
 		locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
 
@@ -65,20 +61,17 @@ public class MITATELocation implements LocationListener {
 		for (String provider : providers) {
 			printProvider(provider);
 		}
-		System.out.println("----------->>2");
+
 		Criteria criteria = new Criteria();
 		bestProvider = locationManager.getBestProvider(criteria, false);
 
 		Location location = locationManager.getLastKnownLocation(bestProvider);
-		// printLocation(location, mContext);
 		
 		return location;
 		}
 		catch(Exception e) {
-			System.out.println("----------->>3");
 			e.printStackTrace();
 		}
-		System.out.println("----------->>");
 		return null;
 	}
 
@@ -115,14 +108,12 @@ public class MITATELocation implements LocationListener {
 			// output.append("\nLocation[unknown]\n\n");
 			Log.i(TAG, "@getLatLong1 - start");
 		else {
-			// output.append("\n\n" + location.toString().substring(location.toString().indexOf("[")));
 			if(MITATEApplication.bDebug) Log.i(TAG, "\n\n" + location.getLatitude()+"--"+location.getLongitude());
-			// output.append("\n\n" + location.getLatitude()+"--"+location.getLongitude());
 			try {
-			Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
-			List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-			if (addresses.size() > 0) 
-				if(MITATEApplication.bDebug) System.out.println("-----------------"+addresses.get(0).getLocality());	
+				Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
+				List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+				if (addresses.size() > 0) 
+					if(MITATEApplication.bDebug) System.out.println("-----------------"+addresses.get(0).getLocality());	
 			}
 			catch(Exception e) {
 				e.printStackTrace();

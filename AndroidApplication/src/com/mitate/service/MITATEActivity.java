@@ -5,14 +5,12 @@ import java.util.Date;
 import com.mitate.MITATEApplication;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.telephony.NeighboringCellInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -25,25 +23,25 @@ import android.widget.TextView;
 public class MITATEActivity extends Activity implements OnClickListener {
 
 	String TAG = "MITATEActivity";
-	public static boolean bStopTransactionExecution = false;
+	public static boolean bStopTransactionExecution;
 	long iPollingInterval = 180000;
 	
-	TextView tvUsername = null;
-	TextView tvPassword = null;
-	TextView tvHeader = null;
-	TextView tvSeparator1 = null;
-	TextView tvSeparator5 = null;
-	TextView tvStatus = null;
+	TextView tvUsername;
+	TextView tvPassword;
+	TextView tvHeader;
+	TextView tvSeparator1;
+	TextView tvSeparator5;
+	TextView tvStatus;
 	
-	EditText etUsername = null;
-	EditText etPassword = null;
+	EditText etUsername;
+	EditText etPassword;
 	
-	Button btStartService = null;
-	Button btStopService = null;
+	Button btStartService;
+	Button btStopService;
 	
 	public static final String sPreferenceName = "MNEP_Preferences";	
-    public static SharedPreferences spMNEPPreference = null;
-    public static SharedPreferences.Editor editor = null;
+    public static SharedPreferences spMNEPPreference;
+    public static SharedPreferences.Editor editor;
     
     Intent intent;
     AlarmManager amCheckPendingTests;
@@ -251,20 +249,16 @@ public class MITATEActivity extends Activity implements OnClickListener {
 			intent.setAction("MNEPPending_Intent_Received");
 			intent.putExtra("username", etUsername.getText().toString().trim());
 			intent.putExtra("password", etPassword.getText().toString().trim());
-					
 			
-			// ajay@thinkpadmsu:~/software/technical/android/android-sdk-linux/platform-tools$ ./adb shell dumpsys alarm | grep -A 2 com.mitate.service
+			// $ ./adb shell dumpsys alarm | grep -A 2 com.mitate.service
 			piCheckPendingTests = PendingIntent.getBroadcast(getApplicationContext(), 12345, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	        amCheckPendingTests.cancel(piCheckPendingTests);
 	        amCheckPendingTests.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+iPollingInterval, iPollingInterval, piCheckPendingTests);
 
 	        editor.putLong("pollinginterval", iPollingInterval);
 	        editor.commit();
-	        
-	        // amCheckPendingTests.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, 9000000, piCheckPendingTests);
+
 	        if(MITATEApplication.bDebug) Log.i(TAG, "@onCreate() : pending intentt created - "+new Timestamp(System.currentTimeMillis()+10000).getMinutes()+", "+new Date(System.currentTimeMillis()+60000+30000).getMinutes());
-	       
-		    
 		}
 		
 	    @Override

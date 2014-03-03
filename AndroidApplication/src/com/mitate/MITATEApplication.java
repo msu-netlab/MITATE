@@ -72,7 +72,7 @@ public class MITATEApplication extends Application {
     	
     	NetworkInfo userNetwork = ((ConnectivityManager)cContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     	if(userNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-            // Min API required - API 17
+
     		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 CellInfoLte cellinfolte = (CellInfoLte)tmTelephonyManager.getAllCellInfo().get(0);
                 CellSignalStrengthLte cellSignalStrengthlte = cellinfolte.getCellSignalStrength();
