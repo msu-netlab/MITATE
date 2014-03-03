@@ -18,11 +18,11 @@ public class MNEPUtilities {
     public static long lServerOffsetWithNTP = 0;
 	
     static {
-       sUsername = "mitate";
-       sPassword = "Database4Mitate";
-       sDatabaseServerName = "nl.cs.montana.edu";
+       sUsername = "";
+       sPassword = "";
+       sDatabaseServerName = "";
       
-       sDatabaseName = "mitate";
+       sDatabaseName = "";
        
        sDatabaseURL = "jdbc:mysql:/"+"/"+sDatabaseServerName+":3306/"+sDatabaseName;
        try {
