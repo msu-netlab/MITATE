@@ -52,7 +52,6 @@ public class Measurement extends Thread implements SensorEventListener {
 	SensorManager smManager;
 	
  	static long lServerOffsetFromNTP;
- 	// static long lClientOffsetFromNTP;
 	
  	long lStartTime;
  	
@@ -190,8 +189,6 @@ public class Measurement extends Thread implements SensorEventListener {
 			ctTimes[index].sTCPLog = ttTCPTest.sLog;
 			ctTimes[index].iUDPBytesSentToServer = utUDPTest.iUDPBytesSentToServer;
 			
-			System.out.println(index+"--"+ctTimes[index].sUDPLog+"--------"+ctTimes[index].sTCPLog);
-			
 			if(MITATEApplication.bDebug) Log.d(TAG, "@saveMetrics : saved metrics"); 
 		
 			iMetricsSaved = 1;
@@ -223,9 +220,7 @@ public class Measurement extends Thread implements SensorEventListener {
 			
 				Set<String> s = new HashSet<String>(); 	   
 				int i=j;
-		
-				// lClientOffsetFromNTP = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
-		
+
 				for(;j<LoginService.tPendingTransfers.length && !MITATEActivity.bStopTransactionExecution;j++) {
 					
 					s.add(LoginService.tPendingTransfers[j].getsSourceIP());

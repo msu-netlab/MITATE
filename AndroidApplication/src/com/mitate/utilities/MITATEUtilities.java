@@ -19,24 +19,15 @@ import android.widget.Toast;
 
 public class MITATEUtilities extends PhoneStateListener {
 	
-	// private Handler handler;
 	public static long lTimeDifference = 0;
 	public static int iSignalStrength;
-	
-	/* public MITATEUtilities() {
-		handler = new Handler();
-		Looper.myLooper().prepare();
-	} */
 	
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength)
     {
        super.onSignalStrengthsChanged(signalStrength);
        iSignalStrength = signalStrength.getGsmSignalStrength();
-       System.out.println("------------>q"+iSignalStrength);
-       Toast.makeText(MITATEApplication.getCustomAppContext(), "Go to Firstdroid!!! GSM Cinr = "+ String.valueOf(signalStrength.getGsmSignalStrength()), Toast.LENGTH_SHORT).show();
     }	
-	
 	
 	// convert hex into string
 	public static String parseHexString(String sHexString) {

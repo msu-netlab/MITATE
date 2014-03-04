@@ -14,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,7 +43,6 @@ public class LoginService extends Service {
 	
 	public static long lClientTimeOffset;
 	
-	// public static String sWebServerName = "192.168.1.4";
 	public static String sWebServerName = "mitate.cs.montana.edu";
 	public static String sUserName;
 	public static String sPassword;
@@ -83,17 +83,6 @@ public class LoginService extends Service {
 
 				if(MITATEApplication.bDebug) Log.i(TAG, "@onClick - login button - calling @executelogin");
 				executeLogin(getApplicationContext());
-				
-				/* if(!tPendingTransfers[0].getsContent().equals("NoPendingTransactions")) {
-					tMeasurement = new Measurement();		            
-					tMeasurement.start();
-		            try {
-		            	tMeasurement.join();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} */				
-				
 			}
 		});
 		tLogin.start();			
@@ -102,20 +91,16 @@ public class LoginService extends Service {
 	public String getDeviceId(String sUsername, String sPassword, String sPhoneNumber, String sDeviceName) throws Exception {
 
 		String s = Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT);
-		System.out.println("-"+new String(Base64.decode(s, Base64.DEFAULT)));
-		
-		System.out.println("=========="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")+"==============");
-		System.out.println("=========="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT)+"==============");
-		
-		   	String sURL = "http://"+sWebServerName+"/setup_deviceid.php?username=" + sUsername + "&password=" + (Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")) + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
-		   	HttpClient hcHttpClient = new DefaultHttpClient();	
-		   	HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
-		   	HttpResponse hrHttpResponse = hcHttpClient.execute(new HttpPost(sURL));        
-			HttpEntity entity = hrHttpResponse.getEntity();
-		    
-			BufferedReader brReader = new BufferedReader(new InputStreamReader(entity.getContent(),"iso-8859-1"),8);
-		    String sLine = brReader.readLine();
-	        return sLine;  
+	
+	   	String sURL = "http://"+sWebServerName+"/setup_deviceid.php?username=" + sUsername + "&password=" + (Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")) + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
+	   	HttpClient hcHttpClient = new DefaultHttpClient();	
+	   	HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
+	   	HttpResponse hrHttpResponse = hcHttpClient.execute(new HttpPost(sURL));        
+		HttpEntity entity = hrHttpResponse.getEntity();
+	    
+		BufferedReader brReader = new BufferedReader(new InputStreamReader(entity.getContent(),"iso-8859-1"),8);
+	    String sLine = brReader.readLine();
+        return sLine;  
 	}
 	
 	// login to web server, database server
@@ -134,23 +119,16 @@ public class LoginService extends Service {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
             	   tPendingTransfers = new Transfer[1];
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("InvalidLogin");
+            	   tPendingTransfers[0].setsContent("Invalid Login");
             	   return false;	    		   
 	    	   }
 		   
 	    	   MITATELocation mLocation = new MITATELocation();
 	    	   
-	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());
-	
-	    	   
+	    	   String sCoordinates = mLocation.getCoordinates(MITATEApplication.getCustomAppContext());    	   
 	    	   lClientTimeOffset = MITATEUtilities.calculateTimeDifferenceBetweenNTPAndLocal();
 	    	   
-	    	   System.out.println("client offset - "+lClientTimeOffset);
-	    	   
-    	   	   /// String esURL = "http://54.243.186.107/mobilelogin.php?"  +
     	   	   String sURL = "http://"+sWebServerName+"/mobilelogin.php?" +
-    	   			// "http://172.17.5.69/mnep/mobilelogin.php?" +
-    	   			// "http://10.0.2.2/mnep/mobilelogin.php?" +
        	   	   		"username="+sUserName+ //
    	    	   	    "&password="+Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")+ //
    	    	   	    "&time="+(new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()+ 
@@ -158,7 +136,26 @@ public class LoginService extends Service {
    	    	   	    // "&networktype=wifi"+ //+MITATEUtilities.getNetworkType(cContext)+
    	    	   	    "&deviceid="+sDeviceId+"&latitude="+sCoordinates.split(":")[0]+"&longitude="+sCoordinates.split(":")[1]+
    	    	   	    "&batterypower="+MITATEApplication.getBatteryPower()+"&signalstrength="+MITATEApplication.getSignalStrength()+
-   	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel();
+   	    	   	    "&networkcarrier="+MITATEApplication.getNetworkCarrierName()+"&devicemodelname="+MITATEApplication.getDeviceModel(); 
+    	   	   
+    	   	   
+    	   	   /* HttpClient hcHttpClient = new DefaultHttpClient();	
+    	   	   HttpPost hpHttpPost = new HttpPost("http://"+sWebServerName+"/mobilelogin.php");  
+    	   	   
+    	   	   ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+    	   	   params.add(new BasicNameValuePair("username", sUserName));
+    	   	   params.add(new BasicNameValuePair("password", Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")));
+    	   	   params.add(new BasicNameValuePair("time", (new Timestamp(System.currentTimeMillis())).toString().substring(10, 19).replaceAll(":","").trim()));
+    	   	   params.add(new BasicNameValuePair("networktype", MITATEUtilities.getNetworkType(cContext)));
+    	   	   params.add(new BasicNameValuePair("deviceid", sDeviceId));
+    	   	   params.add(new BasicNameValuePair("latitude", sCoordinates.split(":")[0]));
+    	   	   params.add(new BasicNameValuePair("longitude", sCoordinates.split(":")[1]));
+    	   	   params.add(new BasicNameValuePair("batterypower", MITATEApplication.getBatteryPower()+""));
+    	   	   params.add(new BasicNameValuePair("signalstrength", MITATEApplication.getSignalStrength()+""));
+    	   	   params.add(new BasicNameValuePair("networkcarrier", MITATEApplication.getNetworkCarrierName()));
+    	   	   params.add(new BasicNameValuePair("devicemodelname", MITATEApplication.getDeviceModel()));
+    	   	   hpHttpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));     	   
+    	   	   */
     	   	   
     	   	   HttpClient hcHttpClient = new DefaultHttpClient();	
    		   	   HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
@@ -177,7 +174,7 @@ public class LoginService extends Service {
                }
 	        
                sResult = sbTemp.toString();		               
-               if(MITATEApplication.bDebug) Log.i(TAG,"@executeLogin() : got transactions - ");
+               if(MITATEApplication.bDebug) Log.i(TAG,"@executeLogin() : got transactions "+sResult);
 
                JSONArray jaPendingTransfers = new JSONArray(sResult);
                tPendingTransfers = new Transfer[jaPendingTransfers.length()];
@@ -186,13 +183,13 @@ public class LoginService extends Service {
                if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("InvalidLogin")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : invalid login credentials");
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("InvalidLogin");
+            	   tPendingTransfers[0].setsContent("Invalid Login");
             	   return false;
                }	               
                else if((jaPendingTransfers.getJSONObject(0)).getString("content").equals("NoPendingTransactions")) {
             	   if(MITATEApplication.bDebug) Log.v(TAG, "@executeLogin() : no pending transactions");
             	   tPendingTransfers[0] = new Transfer();
-            	   tPendingTransfers[0].setsContent("NoPendingTransactions");
+            	   tPendingTransfers[0].setsContent("No Pending Transactions");
             	   return true;
                }
                else {
@@ -228,14 +225,7 @@ public class LoginService extends Service {
                        } else {
                     	   tPendingTransfers[i].setsContent(tPendingTransfers[i].getsContent().replaceAll("\t", " "));
                        }
-                   	   // Log.v(TAG,json_data.getInt("bytes")+">>"+(json_data.getString("content").length()-json_data.getString("content").replaceAll("[^\r]", "").length())+">>"+json_data.getString("content").replace('\r', '*').replace('\n', '+'));
-                   	   // Log.v(TAG,Base64.decode(json_data.getString("content"), Base64.DEFAULT).length+">>"+Base64.decode(json_data.getString("content"), Base64.DEFAULT));
-                   	   
-                   	   // String test = json_data.getString("content");
-                   	   // Log.v(TAG, Base64.decode(test, Base64.DEFAULT).length+">>"+Base64.decode(test, Base64.DEFAULT));
-	               }
-	               // System.out.println("-------------------------------");
-               	   // System.exit(0);  
+	               } 
                }
 	       } 
 	       catch(Exception e){
@@ -259,8 +249,6 @@ public class LoginService extends Service {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-	           
-
 	           
 	       } 	
 	       

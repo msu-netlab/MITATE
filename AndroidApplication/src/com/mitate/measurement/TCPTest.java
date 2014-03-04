@@ -13,11 +13,6 @@ import com.mitate.utilities.MITATEUtilities;
 
 import android.util.Log;
 
-/**
- * 
- * @author ajay
- * 
- */
 public class TCPTest {
 	
 	String TAG = "TCPTest";
