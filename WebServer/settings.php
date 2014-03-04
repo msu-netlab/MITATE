@@ -11,7 +11,6 @@ if($_POST[cellular_credits] !='' && $_POST[wifi_credits] != '') {
 		die('Error: ' . mysql_error());
 	}
 }
-	
 $tempcount=0;
 while($tempcount < $_POST['rowCount']) {
 	$tempcount = $tempcount + 1;
@@ -25,13 +24,27 @@ while($tempcount < $_POST['rowCount']) {
 		}
 	}
 }
+?>
 
+<script type="text/javascript">
+function validateAccountForm() {
+    var formAccount = document.account;
+	var formCredits = document.credits;
+    if (formAccount.cellular_credits.value == "" || formAccount.wifi_credits.value == "") {
+		alert("Please enter all the input fields.");
+		return false;
+    }
+}
+</script>
+
+
+<?php
 $getUserSettings = mysql_query("SELECT * from usercredits where username='$_SESSION[mitateLoggedInUser]';");
 while($userSettingRow = mysql_fetch_array($getUserSettings))
   {
 ?>
 <h3 style="text-decoration:underline">Account Settings:</h3>
-<form action="" method="POST">
+<form action="" method="POST" name="account" onsubmit="return validateAccountForm();">
 <table>
 <tr>
 <td style="font-size: 18;text-align: justify;">Available Cellular Credits (MB)</td>
@@ -62,7 +75,7 @@ while($deviceCounts = mysql_fetch_array($getUserDeviceCount)) {
 }
 if($deviceCount > 0) {
 	?>
-		<form action="" method="POST">
+		<form action="" method="POST" name="credits">
 	<table>
 	<th style="font-size: 18;">Device Name</th><th style="font-size: 18;">Poll Interval (mins)</th><th style="font-size: 18;">Min. Battery (%)</th>
 	<?php
