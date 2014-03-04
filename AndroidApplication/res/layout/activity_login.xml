@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+<TableLayout android:id="@+id/TableLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#f5f5f5">  	
+  <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip" android:background="#cdc9c9">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_header1" android:text="MITATE" android:textSize="24dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+  </TableRow>
+  <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip" android:background="#cdc9c9">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_header2" android:text="Mobile Internet Testbed for Application Traffic Experimentation" android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+  </TableRow>
+  <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_separator1" android:text="" android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+  </TableRow>    
+  <TableRow android:id="@+id/TableRow05title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="2dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_signin" android:text="Sign In" android:textSize="18dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+  </TableRow>  
+  <TableRow android:id="@+id/TableRow01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingLeft="10dip" android:paddingRight="10dip" android:paddingTop="10dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_username" android:text="Username" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>
+    <EditText android:layout_height="34dip" android:id="@+id/am_et_username" android:text="mwittie"  android:singleLine="true" android:password="false" android:minWidth="170dip" android:maxWidth="170dip" android:textSize="14dip"></EditText>
+  </TableRow>
+  
+  <TableRow android:id="@+id/TableRow06" android:layout_width="wrap_content" android:layout_height="30dip" android:paddingBottom="3dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/al_tv_separator2" android:textSize="3dip"></TextView>
+  </TableRow>
+  
+  
+  <TableRow android:id="@+id/TableRow02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingLeft="10dip" android:paddingRight="10dip" android:paddingTop="6dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/am_tv_password" android:text="Password" android:textColor="#000000" android:layout_weight="0.3" android:gravity="center" android:padding="0dip"></TextView>
+    <EditText android:layout_width="wrap_content" android:layout_height="34dip" android:text="mwittie" android:id="@+id/am_et_password" android:singleLine="true" android:password="true"  android:minWidth="170dip" android:maxWidth="170dip" android:textSize="16dip"></EditText>
+  </TableRow>
+  
+   <TableRow android:id="@+id/TableRow06" android:layout_width="wrap_content" android:layout_height="40dip" android:paddingBottom="3dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/al_tv_separator4" android:text="" android:textSize="15dip"></TextView>
+  </TableRow>
+  
+    
+  <TableRow android:id="@+id/TableRow03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:paddingLeft="10dip" android:paddingRight="10dip" android:paddingTop="5dip">
+    <Button android:layout_width="wrap_content" android:layout_height="34dip" android:id="@+id/am_bt_startservice" android:text="Start Service" android:textSize="13dip" android:layout_weight="0.8" android:padding="0dip"></Button>
+    <Button android:layout_width="wrap_content" android:layout_height="34dip" android:id="@+id/am_bt_stopservice" android:text="Stop Service" android:layout_weight="0.2" android:textSize="13dip"></Button>
+  </TableRow>  
+  <TableRow android:id="@+id/TableRow06" android:layout_width="wrap_content" android:layout_height="30dip" android:paddingBottom="3dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/al_tv_status" android:text="status message" android:textSize="11dip" android:textStyle="bold" android:gravity="center" android:textColor="#000000"></TextView>
+  </TableRow>
+  <TableRow android:id="@+id/TableRow06" android:layout_width="wrap_content" android:layout_height="30dip" android:paddingBottom="3dip">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/al_tv_separator5" android:text="" android:textSize="147dip" ></TextView>
+  </TableRow>
+  <TableRow android:id="@+id/TableRow07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="1dip" android:background="#cdc9c9">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/al_tv_footer1" android:text="Montana State University - Bozeman" android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:layout_weight="0.3" android:padding="0dip"></TextView>    
+  </TableRow>
+</TableLayout>
+</LinearLayout>
