@@ -15,7 +15,7 @@ if(isset($_POST['userid']) && isset($_POST['password'])) {
 		printf("<script>alert('Invalid login credentials.')</script>");
 	}
 	else {
-		if(($_POST["userid"] == "mitateuser" && $_POST[password] == "mitatepassword") || ($_POST["userid"] == "mitate@gmail.com" && $_POST[password] == "mitatepassword") || ($_POST["userid"] == "mlabuser" && $_POST[password] == "Password4Mlab") || ($_POST["userid"] == "mlabuser@gmail.com" && $_POST[password] == "Password4Mlab")) {
+		if(($_POST["userid"] == "mitateuser" && $_POST[password] == "mitatepassword") || ($_POST["userid"] == "mitate@gmail.com" && $_POST[password] == "mitatepassword") || ($_POST["userid"] == "mlabuser" && $_POST[password] == "mlabpassword") || ($_POST["userid"] == "utkarsh.090@gmail.com" && $_POST[password] == "mlabpassword")) {
 			$_SESSION['mitateLoggedInUser'] = $_POST["userid"];
 			printf("<script>location.href = 'mitate_downloads.php'</script>");
 		}

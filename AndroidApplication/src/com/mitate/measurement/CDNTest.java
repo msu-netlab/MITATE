@@ -78,8 +78,6 @@ public class CDNTest {
 			sHTTPRequest = sHTTPRequest.replaceAll("\\/","aabbcc").replaceAll("aabbcc","/"); //.replaceAll("\r\n", "====").replaceAll("====", "\r\n");
 		}
 		else if(sContentTypeEncoding.equals("HEX")) {  
-			System.out.println("in hex code -- ");
-			
 			StringBuilder output = new StringBuilder();
 			for (int i = 0; i < sHTTPRequest.length() - 1; i+=2) {
 				String str = sHTTPRequest.substring(i, i+2);
@@ -145,8 +143,6 @@ public class CDNTest {
 				dsUDPSocket.receive(dpUDPRecvPacket);
 				time.add(System.currentTimeMillis());
 				iBytesRead += dpUDPRecvPacket.getData().length;
-				System.out.println(System.currentTimeMillis());
-				//System.out.println("+++++" + new String(dpUDPRecvPacket.getData()));
 				sResponseFromServer = sResponseFromServer + new String(dpUDPRecvPacket.getData());
 				if(System.currentTimeMillis() - time.get(time.size()-1) > 1000)
 					break;
@@ -199,11 +195,7 @@ public class CDNTest {
 	   	   params.add(new BasicNameValuePair("log", sLog));
 	   	   hpHttpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-	   	   //Execute and get the response.
 	   	   HttpResponse response = hcHttpClient.execute(hpHttpPost);
-	   	   
-	   	   //HttpGet hpHttpGet = new HttpGet(sURL);    
-	   	   //HttpResponse hrHttpResponse = hcHttpClient.execute(hpHttpPost);
 	   	   
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -18,11 +18,11 @@ public class MNEPUtilities {
     public static long lServerOffsetWithNTP = 0;
 	
     static {
-       sUsername = "mitate";
-       sPassword = "Database4Mitate";
-       sDatabaseServerName = "nl.cs.montana.edu";
+       sUsername = "";
+       sPassword = "";
+       sDatabaseServerName = "";
       
-       sDatabaseName = "mitate";
+       sDatabaseName = "";
        
        sDatabaseURL = "jdbc:mysql:/"+"/"+sDatabaseServerName+":3306/"+sDatabaseName;
        try {
@@ -34,7 +34,7 @@ public class MNEPUtilities {
     }
     
     // to create a database connection
-    public static Connection getDBConnection() {
+    public Connection getDBConnection() {
         try {
             cDatabaseConnection = DriverManager.getConnection(sDatabaseURL, sUsername, sPassword);
             System.out.println ("Database connection created");
@@ -47,7 +47,7 @@ public class MNEPUtilities {
     }
 	
     // to close a database connection
-    public static void closeDBConnection() {
+    public void closeDBConnection() {
         if (cDatabaseConnection != null) {
            try {
                cDatabaseConnection.close ();
@@ -62,7 +62,7 @@ public class MNEPUtilities {
     }
     
     // to calculate throughtput in kilobytes per second
-    public static float toKbps(int bytes, int msecs){
+    public float toKbps(int bytes, int msecs){
         float result = 0;
         try {
             result = (float)((toKb(bytes))/(msecs/1000.0));
@@ -74,12 +74,12 @@ public class MNEPUtilities {
     } 
     
     // to convert bytes to kilobytes
-    public static float toKb(long bytes){
+    public float toKb(long bytes){
         return (float)((bytes * 8)/1000.0);
     }
  
     //creates a Timestamp array from a String array of long values
-    public static long[] toTimeArray(String timesStr){
+    public long[] toTimeArray(String timesStr){
         //remove extra characters and split into array
         timesStr = timesStr.trim().substring(1, timesStr.length()-1);
         String[] timestamps = timesStr.split(",");
@@ -95,7 +95,7 @@ public class MNEPUtilities {
         return times;
     }
     
-    public static int[] toNumberOfBytesArray(String timesStr){
+    public int[] toNumberOfBytesArray(String timesStr){
         //remove extra characters and split into array
         timesStr = timesStr.trim().substring(1, timesStr.length()-1);
         String[] timestamps = timesStr.split(",");
@@ -111,7 +111,7 @@ public class MNEPUtilities {
         return times;
     }
     
-    public static float[] calculateThroughput(long[] laLatencies, int[] iaBytes, int iPacketDelay) {
+    public float[] calculateThroughput(long[] laLatencies, int[] iaBytes, int iPacketDelay) {
     	float[] faThroughput = new float[laLatencies.length];
     	for(int i=0; i<laLatencies.length; i++) {
     		try {
@@ -123,7 +123,7 @@ public class MNEPUtilities {
     	return faThroughput;
     }
     
-    public static int getSum(long[] values){
+    public int getSum(long[] values){
         int total = 0;
         for (long value: values) {
             total += Math.abs(value);
@@ -131,7 +131,7 @@ public class MNEPUtilities {
         return total;
     }   
     
-    public static float getSumThroughput(float[] values){
+    public float getSumThroughput(float[] values){
         int total = 0;
         for (float value: values) {
             total += value;
@@ -139,7 +139,7 @@ public class MNEPUtilities {
         return total;
     }  
     
-    public static long calculateTimeDifferenceBetweenNTPAndLocal() {
+    public long calculateTimeDifferenceBetweenNTPAndLocal() {
         long lNTPTime = 0;
 		String sNTPServer = "us.pool.ntp.org";
 		int ntpSubDomain = 0;
@@ -163,7 +163,7 @@ public class MNEPUtilities {
         return lServerOffsetWithNTP;
     }
 	
-	public static float calculateConfInterval(long[] laLatencies, float[] faThroughput, String tag) {
+	public float calculateConfInterval(long[] laLatencies, float[] faThroughput, String tag) {
 		float fStandardDeviation = 0.0f;
 		float fValueToReturn = 0.0f;
 		float fSum;
@@ -178,7 +178,7 @@ public class MNEPUtilities {
 				else
 					break;
 			}
-			float fLatencyMean = MNEPUtilities.getSum(laLatencies) / (float)(laLatencies.length - elim + 1);
+			float fLatencyMean = getSum(laLatencies) / (float)(laLatencies.length - elim + 1);
 			fSum = 0.0f;
 			for(int i=elim; i<templatencies.length; i++) {
 				fSum += (float)Math.pow((templatencies[i] - fLatencyMean), 2);
@@ -198,7 +198,7 @@ public class MNEPUtilities {
 				else
 					break;
 			}
-			float fThroughputMean = MNEPUtilities.getSumThroughput(faThroughput) / (float)(faThroughput.length - elim + 1);
+			float fThroughputMean = getSumThroughput(faThroughput) / (float)(faThroughput.length - elim + 1);
 			fSum = 0.0f;
 			for(int i=elim; i<tempthroughputs.length; i++) {
 				fSum += (float)Math.pow((tempthroughputs[i] - fThroughputMean), 2);
