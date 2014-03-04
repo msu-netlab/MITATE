@@ -400,6 +400,8 @@ CREATE TABLE `userinfo` (
   `password` varchar(500) DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `datecreated` date DEFAULT NULL,
+   `status` int(1) DEFAULT '0',
+  `isAdmin` int(1) DEFAULT '0',
   PRIMARY KEY (`username`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
