@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid XML 2014 Designer Edition (Trial) 12.0.3.4958 (http://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="entry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="defines">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="contentdefine">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="content">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="contentid" type="xs:string" />
+                          <xs:element minOccurs="1" name="protocol" type="xs:string" />
+                          <xs:element minOccurs="1" name="data" type="xs:string" />
+                          <xs:element minOccurs="1" name="contenttype" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="1" minOccurs="1" name="transferdefine">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="transfer">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="sourceip" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="destinationip" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="packetdelay" type="xs:unsignedInt" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="type" type="xs:unsignedByte" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="portnumber" type="xs:unsignedInt" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="response" type="xs:unsignedByte" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="bytes">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" maxOccurs="1" name="explicit" type="xs:unsignedByte" />
+                                <xs:element minOccurs="0" name="noofbytes" type="xs:unsignedInt" />
+                                <xs:element minOccurs="0" name="contentid" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" maxOccurs="1" name="noofpackets" type="xs:unsignedInt" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="1" name="criteriadefine">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="criteria">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="latitude" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="longitude" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="radius" type="xs:unsignedInt" />
+                          <xs:element minOccurs="1" maxOccurs="1"  name="networktype" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="starttime" type="xs:unsignedInt" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="endtime" type="xs:unsignedInt" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="deviceid" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="minimumbatterypower" type="xs:unsignedInt" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="minimumsignalstrength" type="xs:integer" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="networkcarrier" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="devicemodelname" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="1" name="transactions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="unbounded" name="transaction">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="1" name="transfers">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="unbounded" name="transfer">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" maxOccurs="1" name="transferid" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute name="repeat" type="xs:unsignedInt" use="optional" />
+                              <xs:attribute name="delay" type="xs:unsignedInt" use="optional" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" maxOccurs="1" name="criteria">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="1" name="criteriaid" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="count" type="xs:unsignedInt" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

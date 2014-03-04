@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/am_rl_1" android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+	<LinearLayout 
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/am_ll_1" android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" android:orientation="vertical" android:layout_alignParentTop="true" android:background="#ffffff">
+		<LinearLayout 
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/am_ll_10" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center"
+			android:orientation="vertical">		
+		    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" 
+		        android:id="@+id/am_tv_header1" android:text="Mobile Network Experimentation Platform" 
+		        android:textSize="16dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" android:background="#cdc9c9"
+		         android:padding="0dip"/>
+		    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" 
+		        android:id="@+id/am_tv_header1" android:text=" " 
+		        android:textSize="1dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		        android:padding="0dip"/>   
+		</LinearLayout>	
+		
+		<LinearLayout 
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/am_ll_10" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center"
+			android:orientation="horizontal">		
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		        android:id="@+id/am_tv_username" android:text="Username" 
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center"
+		         android:padding="0dip"/>
+		    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" 
+		        android:id="@+id/am_et_username" android:text="ajay" android:height="14dip"
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		        android:padding="0dip"/> 
+		 </LinearLayout>				
+		
+		<LinearLayout 
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/am_ll_10" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center"
+			android:orientation="horizontal">		
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		        android:id="@+id/am_tv_password" android:text="Password" 
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		         android:padding="0dip"/>
+		    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" 
+		        android:id="@+id/am_et_password" android:text="ajay" 
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		        android:padding="0dip"/> 
+		 </LinearLayout>				
+		
+				
+		<LinearLayout 
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/am_ll_10" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center"
+			android:orientation="horizontal">		
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		        android:id="@+id/am_tv_pollinginterval" android:text="Poll Interval" 
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		         android:padding="0dip"/>
+		    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" 
+		        android:id="@+id/am_et_pollinginterval" android:text="900000" 
+		        android:textSize="14dip" android:textStyle="bold" android:textColor="#000000" android:gravity="center" 
+		        android:padding="0dip"  android:numeric="integer"/> 
+		 </LinearLayout>
+		
+		</LinearLayout>
+	<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/am_ll_16" android:layout_width="match_parent" android:background="#ffffff"
+	android:layout_height="wrap_content" android:orientation="vertical" android:layout_below="@+id/am_ll_1">
+	    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" 
+        android:id="@+id/am_tv_separator" android:text="" 
+        android:textSize="1dip"  android:textColor="#000000" android:gravity="center" android:background="#ffffff"
+        android:padding="0dip" />
+		<LinearLayout 
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/am_ll_12" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center">		
+			<Button
+				android:id="@+id/am_bt_startservice" android:layout_width="wrap_content"
+				android:layout_height="34dip" android:layout_gravity="center"
+				android:text="Start Service" android:textSize="12dip"/>
+			<Button
+				android:id="@+id/am_bt_stopservice" android:layout_width="wrap_content"
+				android:layout_height="34dip" android:layout_gravity="center"
+				android:text="Stop Service" android:state_enabled="false" android:textSize="12dip"/>
+		</LinearLayout>	
+		<LinearLayout 
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/am_ll_14" android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" 
+	        android:id="@+id/am_tv_footer1" android:text="Montana State University - Bozeman" 
+	        android:textSize="12dip"  android:textColor="#000000" android:gravity="center" android:background="#cdc9c9"
+	        android:padding="0dip" />
+	    </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
