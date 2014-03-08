@@ -90,9 +90,10 @@ public class LoginService extends Service {
 
 	public String getDeviceId(String sUsername, String sPassword, String sPhoneNumber, String sDeviceName) throws Exception {
 
-		String s = Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT);
+		// String s = Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT);
 	
-	   	String sURL = "http://"+sWebServerName+"/setup_deviceid.php?username=" + sUsername + "&password=" + (Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")) + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
+	   	String sURL = "http://"+sWebServerName+"/setup.php?username=" + sUsername + "&password=" + (Base64.encodeToString(sPassword.getBytes(), Base64.DEFAULT).replaceAll("[\\n]","")) + "&phone_number=" + sPhoneNumber + "&device_name=" + sDeviceName;
+	   	
 	   	HttpClient hcHttpClient = new DefaultHttpClient();	
 	   	HttpConnectionParams.setConnectionTimeout(hcHttpClient.getParams(), iConnectionTimeout);
 	   	HttpResponse hrHttpResponse = hcHttpClient.execute(new HttpPost(sURL));        
@@ -100,7 +101,10 @@ public class LoginService extends Service {
 	    
 		BufferedReader brReader = new BufferedReader(new InputStreamReader(entity.getContent(),"iso-8859-1"),8);
 	    String sLine = brReader.readLine();
-        return sLine;  
+	    
+	    MITATEActivity.iPollingInterval = Integer.parseInt(sLine.split(":")[1]);
+	    
+        return sLine.split(":")[0];  
 	}
 	
 	// login to web server, database server
