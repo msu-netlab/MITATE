@@ -17,15 +17,15 @@
 	<h3 style="text-decoration:underline">Presentations:</h3>
 	<ul>
 	<li>
-	<b>MITATE: Mobile Internet Testbed for Application Traffic Experimentation</b>
-	<br />M. P. Wittie.
-	<br />to appear, <i>Workshop on Active Internet Measurements (AIMS) 2014</i>. 
+	<b>MITATE: Mobile Internet Testbed for Application Traffic Experimentation</b> [<a target="_blank" href="http://www.caida.org/workshops/aims/1403/abstracts.xml#MikeWittie" style="color: red;">link</a> | <a target="_blank" href="http://www.caida.org/workshops/aims/1403/slides/aims1403_mwittie.pdf" style="color: red;">slides</a>]
+	<br />U. Goel, A. Miyyapuram, M. P. Wittie, Q. Yang.
+	<br /><i>Workshop on Active Internet Measurements (AIMS) 2014</i>. 
 	<br /><br />
 	</li>
 	<li>
 	<b>MITATE: Mobile Internet Testbed for Application Traffic Experimentation</b> [<a target="_blank" href="publications/Goel_MITATE_IMC13_Abstract.pdf" style="color: red;">abstract</a> | <a target="_blank" href="publications/Goel_MITATE_IMC13_Announcement.pdf" style="color: red;">slides</a>]
 	<br />U. Goel, A. Miyyapuram, M. P. Wittie, Q. Yang.
-	<br /><i>News & Community Feedback Session, Internet Measurement Conference (IMC) 2013</i>. 
+	<br /><i>News & Community Feedback Session, ACM SIGCOMM Internet Measurement Conference (IMC) 2013</i>. 
 	<br /><br />
 	</li>
 	<li>
