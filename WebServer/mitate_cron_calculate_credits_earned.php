@@ -1,10 +1,15 @@
 <?php
-$con = mysql_connect("localhost","mitate","Database4Mitate");
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$con)
 {
-	die('Could not connect: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 $get_details = mysql_query("select * from usercredits");
 while($get_detail = mysql_fetch_assoc($get_details)) {
 	$get_days_left_details = mysql_query("select

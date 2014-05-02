@@ -1,10 +1,19 @@
 <?php session_start(); ?>
 <?php
+$xml = simplexml_load_file("config.xml");
+$webSitename = $xml->webServer->webSiteName;
 if(isset($_POST['userid']) && isset($_POST['password'])) {
-	$con = mysql_connect("localhost","mitate","Database4Mitate");
-	if (!$con) {die('Could not connect: ' . mysql_error());}
-	mysql_select_db("mitate", $con);
-	$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+	$dbhostname = $xml->databaseConnection->serverAddress;
+	$dbusername = $xml->databaseConnection->user;
+	$dbpassword = $xml->databaseConnection->password;
+	$dbschemaname = $xml->databaseConnection->name;
+	$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
+	$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
+	if (!$con) {
+		die('Website down for maintenance. We will be live soon.');
+	}
+	mysql_select_db($dbschemaname, $con);
+	$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $_POST[password], MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 	$result = mysql_query("SELECT * FROM userinfo where username = '$_POST[userid]' and password = '$encrypted_password'");
 	$isUserValid=0;
 	$isUserAdmin = 0;
@@ -42,7 +51,7 @@ function validateSigninForm() {
 }
 </script>
 	<div style="font-size: 18;text-align: justify;">
-	<h3 style="text-decoration:underline">Sign in for MITATE:</h3>
+	<h3 style="text-decoration:underline">Sign in for <?php echo $webSitename; ?>:</h3>
 	<br />
 	<form action="" method="POST" name="userSigninForm" onsubmit="return validateSigninForm();">
 	<div><div>Username:</div><div><input type="text" placeholder="Username/Email" id="userid" name="userid" /></div></div>

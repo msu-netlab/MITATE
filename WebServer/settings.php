@@ -1,14 +1,19 @@
 <?php session_start();
 include('header.php');
-$con = mysql_connect("localhost","mitate","Database4Mitate");
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$con) {
-	die('Could not connect: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 if($_POST[cellular_credits] !='' && $_POST[wifi_credits] != '') {
 	$sql="update usercredits set available_cellular_credits = $_POST[cellular_credits], available_wifi_credits = $_POST[wifi_credits] where username = '$_SESSION[mitateLoggedInUser]'";
-	if (!mysql_query($sql,$con)) {
-		die('Error: ' . mysql_error());
+	if (!mysql_query($sql, $con)) {
+		die('Website down for maintenance. We will be live soon.');
 	}
 }
 $tempcount=0;
@@ -20,7 +25,7 @@ while($tempcount < $_POST['rowCount']) {
 	if($minbatterypowervar != '' && $pollintervalvar != '') {
 		$sql="update userdevice set pollinterval = $pollintervalvar, minbatterypower = $minbatterypowervar where deviceid = $tempdeviceid";
 		if (!mysql_query($sql,$con)) {
-			die('Error: ' . mysql_error());
+			die('Website down for maintenance. We will be live soon.');
 		}
 	}
 }
@@ -39,6 +44,7 @@ function validateAccountForm() {
 
 
 <?php
+if($_SESSION[mitateLoggedInUser]) {
 $getUserSettings = mysql_query("SELECT * from usercredits where username='$_SESSION[mitateLoggedInUser]';");
 while($userSettingRow = mysql_fetch_array($getUserSettings))
   {
@@ -109,4 +115,7 @@ if($deviceCount > 0) {
 }
 else
 	echo '<label style="font-size: 18;">You do not have any registered devices.</label>';
+}
+else
+	printf('<script>document.location.href="mitate_signin.php";</script>')
 ?>

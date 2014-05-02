@@ -1,16 +1,18 @@
 <?php
 if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="" && $_GET['batterypower']!="" && $_GET['signalstrength']!="" && $_GET['networkcarrier'] !="" && $_GET['devicemodelname'] != "")
 {
-	$dbhostname = "localhost";
-    $dbusername = "mitate";
-    $dbpassword = "Database4Mitate";
-    $dbschemaname = "mitate";
+	$xml = simplexml_load_file("config.xml");
+	$dbhostname = $xml->databaseConnection->serverAddress;
+	$dbusername = $xml->databaseConnection->user;
+	$dbpassword = $xml->databaseConnection->password;
+	$dbschemaname = $xml->databaseConnection->name;
+	$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
     $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
     if (!$dbconnection)	{
-        die('Could not connect: ' . mysql_error());
+        die('Website down for maintenance. We will be live soon.');
     }
     mysql_select_db($dbschemaname, $dbconnection);
-    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), base64_decode($_GET[password]), MCRYPT_MODE_CBC, md5(md5("mitate"))));
+    $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), base64_decode($_GET[password]), MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 	$loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$_GET[username]' and password = '$encrypted_password' and status = 1");
     if ($loginresultset) {
         $loginresultrow = mysql_fetch_assoc($loginresultset);
@@ -83,7 +85,7 @@ if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_
 					$transaction_count_reduce = $final_transaction_id_array[$temp_check_for_null_val];
 					if($transaction_count_reduce != '') {
 						$sql_store_deviceid ="INSERT INTO transaction_fetched (transactionid, deviceid) VALUES($transaction_count_reduce, '$_GET[deviceid]')";
-						if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Error: ' . mysql_error());}
+						if (!mysql_query($sql_store_deviceid, $dbconnection)) {die('Website down for maintenance. We will be live soon.');}
 						mysql_query("update transactions set count = count - 1 where transactionid = $transaction_count_reduce", $dbconnection);
 						$temp_count = $temp_count - 1;
 						$get_distinct_experiment_ids = mysql_query("select distinct exp.experiment_id, exp.cellulardata, exp.wifidata 

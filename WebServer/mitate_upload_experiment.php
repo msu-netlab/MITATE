@@ -1,15 +1,23 @@
 <?php
 libxml_use_internal_errors(true); 
 
-$con = mysql_connect("localhost","mitate","Database4Mitate");
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
+$webServerAddress = $xml->webServer->address;
+
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$con)
 {
-	die('Could not connect: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 $username = $_POST[username];
 $password = $_POST[password];
-$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $password, MCRYPT_MODE_CBC, md5(md5("mitate"))));
+$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $password, MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password' and status = 1");
     if ($loginresultset) {
 		$loginresultrow = mysql_fetch_assoc($loginresultset);
@@ -45,7 +53,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							Delete("user_accounts/" . $username . "/experiments/" . $experiment_id);
 						}
 						else {
-							$urltopost = "http://mitate.cs.montana.edu/mitate_count_credit.php";
+							$urltopost = $webServerAddress . "mitate_count_credit.php";
 							$datatopost = array ("XMLFilePath" => "user_accounts/$username/experiments/$experiment_id/$final_file_path");
 							$ch = curl_init ($urltopost);
 							curl_setopt ($ch, CURLOPT_POST, true);
@@ -59,7 +67,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 								$xml = simplexml_load_file("$filepath");
 								$sql="INSERT INTO experiment (experiment_id, username, permission, cellulardata, wifidata) VALUES($experiment_id, '$username', 'private', $total_credits_in_xml[0]/1000000.0, $total_credits_in_xml[1]/1000000.0)";
-								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+								if (!mysql_query($sql, $con)) {die('Website down for maintenance. We will be live soon.');}
 								foreach($xml->transactions->transaction as $temptransaction) {
 									$order=1;
 									$transactionid = $start_value;
@@ -71,11 +79,11 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 									$transaction_count = $temptransaction["count"];
 									if($transaction_count != "") { 
 										$sql="INSERT INTO transactions (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
-										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+										if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 									}
 									if($transaction_count == ""){
 										$sql="INSERT INTO transactions (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
-										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+										if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 									}
 									foreach($xml->defines->criteriadefine->criteria as $tempcriteria) {
 										$ccheck = $tempcriteria->id;
@@ -110,11 +118,11 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 												$criteria_endtime = '235959';
 											$cstring = $tempcriteria->latitude . ";" . $tempcriteria->longitude . ";" . $tempcriteria->radius . ";" . $criteria_networktype . ";" . $criteria_starttime . ";" . $criteria_endtime . ";" . $criteria_minimumbatterypower . ";" . $criteria_minimumsignalstrength . ";" . $criteria_networkcarrier . ";" . $criteria_devicemodelname;	 
 											$sql="INSERT INTO criteria (criteriaid, specification, deviceid) VALUES($criteriaid,'$cstring', '$criteria_deviceid')";
-											if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+											if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 										}
 									}
 									$sql="INSERT INTO trans_criteria_link (criteriaid, transactionid) VALUES($criteriaid, $transactionid)";
-									if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());} 
+									if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');} 
 									foreach($temptransaction->transfers[0]->transfer as $temptransferr) {
 										$temptransferid = $temptransferr->transferid;
 										$transfer_repeat = $temptransferr["repeat"];
@@ -158,9 +166,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 														$bytestostore = ceil($bytestostore/8);
 													$bytestostore = $bytestostore + 26 + substr_count($contenttostore, '\r\n');
 													$sql="INSERT INTO transfer (transferid, sourceip, destinationip, bytes, type, transferadded, packetdelay, explicit, content, noofpackets, protocoltype, portnumber, contenttype, response, delay) VALUES($transferid,'$temptransfer->sourceip','$temptransfer->destinationip', $bytestostore, $temptransfer->type, '$datetime', $temptransfer->packetdelay, $tempexplicit, '$contenttostore', $temptransfer->noofpackets, '$protocoltype', $temptransfer->portnumber, '$contenttype', $temptransfer->response, $transfer_delay)";
-													if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}	
+													if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}	
 													$sql="INSERT INTO trans_transfer_link (transferid, transactionid, orderno) VALUES($transferid,$transactionid, $order)";
-													if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+													if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 													$order++;
 												}
 											}
@@ -171,7 +179,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								$yesdone = 1;
 								echo "$experiment_id";
 								$sql="update usercredits set available_cellular_credits = (available_cellular_credits - ($total_credits_in_xml[0]/1000000.0)), available_wifi_credits = (available_wifi_credits - ($total_credits_in_xml[1]/1000000.0)) where username = '$username'";
-								if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+								if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 							}
 							else {
 								if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1000000.0)

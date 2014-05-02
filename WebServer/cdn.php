@@ -1,30 +1,35 @@
 <?php
-    $con = mysql_connect("localhost","mitate","Database4Mitate");
-	if (!$con)
-	{
-		die('Could not connect: ' . mysql_error());
+	$xml = simplexml_load_file("config.xml");
+	$dbhostname = $xml->databaseConnection->serverAddress;
+	$dbusername = $xml->databaseConnection->user;
+	$dbpassword = $xml->databaseConnection->password;
+	$dbschemaname = $xml->databaseConnection->name;
+
+    $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
+	if (!$con) {
+		die('Website down for maintenance. We will be live soon.');
 	}
-	mysql_select_db("mitate", $con);
+	mysql_select_db($dbschemaname, $con);
 	$k = 0;
 	$time = str_replace("T", " ", $_POST[time]);
 	if($_POST[oneway] == 0 && $_POST[size] == 0 && $_POST[rtt] == 0) {
 		$sql="insert into logs (username, transferid, deviceid, logmessage, transferfinished) values('$_POST[username]', $_POST[transferid], '$_POST[deviceid]', '$_POST[log]', '$_POST[time]')";
 		if (!mysql_query($sql,$con)) {
-			die('Error: ' . mysql_error());
+			die('Website down for maintenance. We will be live soon.');
 		}
 	}
 	else {
 	$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value, transferfinished, deviceid) VALUES(10027, $_POST[transferid], $_POST[transactionid], $_POST[oneway], '$time', '$_POST[deviceid]')";
 	if (!mysql_query($sql,$con))
 	{
-	die('Error: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 	}
 	else $k = $k +1;
 	
 	$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value, transferfinished, deviceid) VALUES(10028, $_POST[transferid], $_POST[transactionid], $_POST[rtt], '$time', '$_POST[deviceid]')";
 	if (!mysql_query($sql,$con))
 	{
-	die('Error: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 	}
 	else $k = $k +1;
 	
@@ -32,7 +37,7 @@
 	$sql="INSERT INTO metricdata (metricid, transferid, transactionid, value, transferfinished, deviceid) VALUES(10029, $_POST[transferid], $_POST[transactionid], $onewaythrouhput, '$time', '$_POST[deviceid]')";
 	if (!mysql_query($sql,$con))
 	{
-	die('Error: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 	}
 	else $k = $k +1;
 	
@@ -40,21 +45,21 @@
 	$sql="update metricdata set transferfinished = '$time' where transferid = $_POST[transferid] and transactionid = $_POST[transactionid] and deviceid = '$_POST[deviceid]'";
 	if (!mysql_query($sql,$con))
 	{
-	die('Error: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 	}
 	else $k = $k +1;
 	
 	$sql="insert into transferexecutedby values($_POST[transferid], '$_POST[devicename]', '$_POST[username]', '$_POST[mobilecarrier]', '$_POST[deviceid]')";
 	if (!mysql_query($sql, $con))
 	{
-	die('Error: ' . mysql_error());
+	die('Website down for maintenance. We will be live soon.');
 	}
 	else $k = $k +1;
 	
 	if($k==5) {
 		$sql="INSERT INTO metricdata (metricid, transferid, transactionid, transferfinished, deviceid, responsedata) VALUES(10040, $_POST[transferid], $_POST[transactionid], '$time', '$_POST[deviceid]', '$_POST[log]')";
 		if (!mysql_query($sql, $con)) {
-			die('Error: ' . mysql_error());
+			die('Website down for maintenance. We will be live soon.');
 		}
 		echo "1";
 	}

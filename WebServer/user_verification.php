@@ -1,13 +1,20 @@
 <?php include('header.php'); ?>
 <br />
 <?php
-$dbhostname = "localhost";
-$dbusername = "mitate";
-$dbpassword = "Database4Mitate";
-$dbschemaname = "mitate";
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$startingWifiCreditInMb = $xml->credit->startingWifiCreditInMb;
+$startingCellularCreditInMb = $xml->credit->startingCellularCreditInMb;
+
 $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
-if (!$dbconnection)	{die('Could not connect: ' . mysql_error());}
+if (!$dbconnection)	{
+	die('Website down for maintenance. We will be live soon.');
+}
 mysql_select_db($dbschemaname, $dbconnection);
+
 $verificationresult = mysql_query("SELECT * FROM user_verification where verification_key = '$_GET[key]' limit 1");
 $num_records = 0;
 while($verificationresultrow = mysql_fetch_assoc($verificationresult)) {
@@ -24,8 +31,8 @@ while($verificationresultrow = mysql_fetch_assoc($verificationresult)) {
 			if($get_credit_id_count[count] > 0)
 				$credit_id = $get_credit_id_count[maxval] + 1;
 		}
-		$sql_store_credits ="INSERT INTO usercredits (credit_id, username, available_cellular_credits, contributed_cellular_credits, available_wifi_credits, contributed_wifi_credits) VALUES($credit_id, '$verificationresultrow[username]', 200, 0, 500, 0)";
-		if (!mysql_query($sql_store_credits, $dbconnection)) {die('Error: ' . mysql_error());}	
+		$sql_store_credits ="INSERT INTO usercredits (credit_id, username, available_cellular_credits, contributed_cellular_credits, available_wifi_credits, contributed_wifi_credits) VALUES($credit_id, '$verificationresultrow[username]', $startingCellularCreditInMb, 0, $startingWifiCreditInMb, 0)";
+		if (!mysql_query($sql_store_credits, $dbconnection)) {die('Website down for maintenance. We will be live soon.');}	
 		echo "<h2>You are now registered with MITATE.";
 	}
 	echo " Please refer to our tutorial to proceed.</h2>";

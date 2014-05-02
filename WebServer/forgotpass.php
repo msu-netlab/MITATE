@@ -1,21 +1,31 @@
  <?php
 if(isset($_POST["username"]) && isset($_POST["email"])) {
-	$con = mysql_connect("localhost","mitate","Database4Mitate");
+	$xml = simplexml_load_file("config.xml");
+	$dbhostname = $xml->databaseConnection->serverAddress;
+	$dbusername = $xml->databaseConnection->user;
+	$dbpassword = $xml->databaseConnection->password;
+	$dbschemaname = $xml->databaseConnection->name;
+	$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
+	$webSiteName = $xml->webServer->webSiteName;
+	$adminEmail = $xml->webServer->adminEmail;
+	$adminEmailName = $xml->webServer->adminEmailName;
+	
+	$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con) {
-		die('Could not connect: ' . mysql_error());
+		die('Website down for maintenance. We will be live soon.');
 	}
-	mysql_select_db("mitate", $con);
+	mysql_select_db($dbschemaname, $con);
 	$result = mysql_query("SELECT * FROM userinfo");
 	$k=0;
 	while(($row = mysql_fetch_array($result)) && $k==0 ) {
 		if($row['username'] == $_POST["username"] || $row['email'] == $_POST["email"]) {
 			$k=1;
-			$decrypted_password = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), base64_decode($row[password]), MCRYPT_MODE_CBC, md5(md5("mitate"))), "\0");
-			$headers = "From: MITATE <mitate@cs.montana.edu>\r\n";
+			$decrypted_password = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), base64_decode($row[password]), MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))), "\0");
+			$headers = "From: $adminEmailName <$adminEmail>\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";	
 			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-			$msg="Hi " . $row['fname'] . ", <br /><br />This is a password recovery email for your account with MITATE as requested by you. Your account details are as follows:<br /><br />  Username: " . $row['username'] . "<br />Password: " . $decrypted_password . "<br />Email: " . $row['email'] . "<br /><br />Thank you<br />The Team MITATE";
-			mail($row['email'], "Password Recovery for your MITATE Account", $msg, $headers);
+			$msg="Hi " . $row['fname'] . ", <br /><br />This is a password recovery email for your account with $webSiteName as requested by you. Your account details are as follows:<br /><br />  Username: " . $row['username'] . "<br />Password: " . $decrypted_password . "<br />Email: " . $row['email'] . "<br /><br />Thank you<br />The Team $webSiteName";
+			mail($row['email'], "Password Recovery for your $webSiteName Account", $msg, $headers);
 			printf("<script>alert('An email has been sent to the email address you registered with this account.')</script>");
 		}
 	}

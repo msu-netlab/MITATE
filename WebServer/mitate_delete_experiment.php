@@ -1,13 +1,18 @@
 <?php
-$con = mysql_connect("localhost","mitate","Database4Mitate");
-if (!$con)
-{
-	die('Could not connect: ' . mysql_error());
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
+if (!$con) {
+	die('Website down for maintenance. We will be live soon.');
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 $username = $_POST[username];
 $password = $_POST[password];
-$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $password, MCRYPT_MODE_CBC, md5(md5("mitate"))));
+$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $password, MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password' and status = 1");
 if ($loginresultset) {
 	$loginresultrow = mysql_fetch_assoc($loginresultset);
@@ -48,7 +53,7 @@ if ($loginresultset) {
 			$get_if_data_tobe_returned = mysql_fetch_assoc($check_if_data_tobe_returned);
 			if($get_if_data_tobe_returned[exp_ocount] == $get_if_data_tobe_returned[exp_count]) {
 				$sql="update usercredits set available_cellular_credits = (available_cellular_credits + $total_credits_in_xml[cellulardata]), available_wifi_credits = (available_wifi_credits + $total_credits_in_xml[wifidata])  where username = '$username'";
-				if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
+				if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 			}
 		}
 		else 
