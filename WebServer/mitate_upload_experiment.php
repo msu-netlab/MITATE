@@ -127,8 +127,8 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 										$temptransferid = $temptransferr->transferid;
 										$transfer_repeat = $temptransferr["repeat"];
 										$transfer_delay = $temptransferr["delay"];
-										if($trasnsfer_delay == "") 
-											$trasnsfer_delay = 0;
+										if($transfer_delay == "") 
+											$transfer_delay = 0;
 										while($transfer_repeat > 0) {
 											foreach($xml->defines->transferdefine->transfer as $temptransfer) {
 												$tcheck = $temptransfer->id;
