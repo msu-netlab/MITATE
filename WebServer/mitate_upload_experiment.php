@@ -11,7 +11,7 @@ $username = $_POST[username];
 $password = $_POST[password];
 $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $password, MCRYPT_MODE_CBC, md5(md5("mitate"))));
 $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where username = '$username' and password = '$encrypted_password' and status = 1");
-    if ($loginresultset) {
+    if ($loginresultset){
 		$loginresultrow = mysql_fetch_assoc($loginresultset);
         if ($loginresultrow['status'] == 1) {	
 			$start_value = 1000000000;
@@ -73,7 +73,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 										$sql="INSERT INTO transactions (transactionid, username, count, original_count, experiment_id) VALUES($transactionid, '$username', $transaction_count, $transaction_count, $experiment_id)";
 										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 									}
-									if($transaction_count == ""){
+									else {
 										$sql="INSERT INTO transactions (transactionid, username, experiment_id) VALUES($transactionid,'$username', $experiment_id)";
 										if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
 									}
@@ -188,7 +188,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 		}
 		else
 			echo "Invalid account credentials.";
-		}	
+	}
+	else
+		echo "There was an error processing your request. Please try again later.";
 
 function libxml_display_error($error) { 
 	$return = "\n"; 

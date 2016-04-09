@@ -148,12 +148,15 @@ then
 			if [ -e "$2" ] 
 			then
 				result=$(curl -F "username=$username" -F "password=$password" -F file=@$2 http://mitate.cs.montana.edu/mitate_upload_experiment.php)
-                		if [ -z "${result//[0-9]/}" ]
+                		if [ "$result" == '' ]
+                        then
+                           	echo 'There was an error processing your request. Please try again later.'
+                        elif [ -z "${result//[0-9]/}" ]
                 		then
                         		echo $result >> user_experiment_list.txt
                         		echo "Your experiment with ID: $result has been uploaded."
                 		else
-                        		echo $result
+                        	echo $result
                 		fi
 
 			else
