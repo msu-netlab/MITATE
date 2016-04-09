@@ -1,5 +1,11 @@
 <?php
-    $con = mysql_connect("localhost","mitate","Database4Mitate");
+    libxml_use_internal_errors(true); 
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con)
 	{
 		die('Could not connect: ' . mysql_error());

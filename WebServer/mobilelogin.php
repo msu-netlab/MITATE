@@ -1,10 +1,12 @@
 <?php
 if($_GET['username']!="" && $_GET['password']!="" && $_GET['deviceid']!="" && $_GET['time']!="" && $_GET['networktype']!="" && $_GET['latitude']!="" && $_GET['longitude']!="" && $_GET['batterypower']!="" && $_GET['signalstrength']!="" && $_GET['networkcarrier'] !="" && $_GET['devicemodelname'] != "")
 {
-	$dbhostname = "localhost";
-    $dbusername = "mitate";
-    $dbpassword = "Database4Mitate";
-    $dbschemaname = "mitate";
+	libxml_use_internal_errors(true); 
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
     $dbconnection = mysql_connect($dbhostname, $dbusername, $dbpassword);
     if (!$dbconnection)	{
         die('Could not connect: ' . mysql_error());

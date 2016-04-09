@@ -1,7 +1,15 @@
 <?php session_start(); ?>
 <?php
 if(isset($_POST['userid']) && isset($_POST['password'])) {
-	$con = mysql_connect("localhost","mitate","Database4Mitate");
+	libxml_use_internal_errors(true); 
+$xml = simplexml_load_file("config.xml");
+$dbhostname = $xml->databaseConnection->serverAddress;
+$dbusername = $xml->databaseConnection->user;
+$dbpassword = $xml->databaseConnection->password;
+$dbschemaname = $xml->databaseConnection->name;
+$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
+$webServerAddress = $xml->webServer->address;
+$con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con) {die('Could not connect: ' . mysql_error());}
 	mysql_select_db("mitate", $con);
 	$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
