@@ -63,7 +63,11 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 							$total_credits_in_xml = explode(":", $returndata);
 							$get_user_available_credits = mysql_query("SELECT sum(available_cellular_credits) as availabledata, sum(available_wifi_credits) as availablewifi FROM usercredits where username = '$username'");
 							$user_data_credits = mysql_fetch_assoc($get_user_available_credits);
-							if($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1000000.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1000000.0) {
+							if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1000000.0)
+								echo "You do not have enough cellular data credits.";
+							elseif ($user_data_credits[availablewifi] < $total_credits_in_xml[1]/1000000.0)
+								echo "You do not have enough Wi-Fi data credits.";
+							elseif($user_data_credits[availabledata] >= $total_credits_in_xml[0]/1000000.0 && $user_data_credits[availablewifi] >= $total_credits_in_xml[1]/1000000.0) {
 								$filepath = "user_accounts/" . $username . "/experiments/$experiment_id/" . $final_file_path;
 								$xml = simplexml_load_file("$filepath");
 								$sql="INSERT INTO experiment (experiment_id, username, permission, cellulardata, wifidata) VALUES($experiment_id, '$username', 'private', $total_credits_in_xml[0]/1000000.0, $total_credits_in_xml[1]/1000000.0)";
@@ -158,6 +162,9 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 															}
 														}
 													}
+													else {
+														die('Incorrect value for explicit tag. The value could be either 1 or 0.');
+													}
 													$tempexplicit = $temptransfer->bytes->explicit;
 													$contenttostore = str_replace("'", "\'", $contenttostore);
 													if($contenttype == "HEX")
@@ -182,10 +189,7 @@ $loginresultset = mysql_query("SELECT count(*) as status FROM userinfo where use
 								if (!mysql_query($sql,$con)) {die('Website down for maintenance. We will be live soon.');}
 							}
 							else {
-								if($user_data_credits[availabledata] < $total_credits_in_xml[0]/1000000.0)
-									echo "You do not have enough cellular data credits.";
-								elseif ($user_wifi_credits[availablewifi] < $total_credits_in_xml[1]/1000000.0)
-									echo "You do not have enough Wi-Fi data credits.";
+								echo "There was an error processing your request. Please try again later.";	
 							}
 						}
 					}	
