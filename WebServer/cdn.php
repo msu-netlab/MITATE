@@ -10,7 +10,7 @@ $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	{
 		die('Could not connect: ' . mysql_error());
 	}
-	mysql_select_db("mitate", $con);
+	mysql_select_db($dbschemaname, $con);
 	$k = 0;
 	$time = str_replace("T", " ", $_POST[time]);
 	if($_POST[oneway] == 0 && $_POST[size] == 0 && $_POST[rtt] == 0) {

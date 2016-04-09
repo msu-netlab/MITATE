@@ -7,18 +7,17 @@ $dbusername = $xml->databaseConnection->user;
 $dbpassword = $xml->databaseConnection->password;
 $dbschemaname = $xml->databaseConnection->name;
 $passwordEncryptionKey = $xml->database->passwordEncryptionKey;
-$webServerAddress = $xml->webServer->address;
 $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con) {
 		die('Could not connect: ' . mysql_error());
 	}
-	mysql_select_db("mitate", $con);
+	mysql_select_db($dbschemaname, $con);
 	$result = mysql_query("SELECT * FROM userinfo");
 	$k=0;
 	while(($row = mysql_fetch_array($result)) && $k==0 ) {
 		if($row['username'] == $_POST["username"] || $row['email'] == $_POST["email"]) {
 			$k=1;
-			$decrypted_password = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), base64_decode($row[password]), MCRYPT_MODE_CBC, md5(md5("mitate"))), "\0");
+			$decrypted_password = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), base64_decode($row[password]), MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))), "\0");
 			$headers = "From: MITATE <mitate@cs.montana.edu>\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";	
 			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";

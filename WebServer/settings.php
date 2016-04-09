@@ -6,13 +6,11 @@ $dbhostname = $xml->databaseConnection->serverAddress;
 $dbusername = $xml->databaseConnection->user;
 $dbpassword = $xml->databaseConnection->password;
 $dbschemaname = $xml->databaseConnection->name;
-$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
-$webServerAddress = $xml->webServer->address;
 $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$con) {
 	die('Could not connect: ' . mysql_error());
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 if($_POST[cellular_credits] !='' && $_POST[wifi_credits] != '') {
 	$sql="update usercredits set available_cellular_credits = $_POST[cellular_credits], available_wifi_credits = $_POST[wifi_credits] where username = '$_SESSION[mitateLoggedInUser]'";
 	if (!mysql_query($sql,$con)) {

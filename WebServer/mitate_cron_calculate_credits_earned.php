@@ -5,14 +5,12 @@ $dbhostname = $xml->databaseConnection->serverAddress;
 $dbusername = $xml->databaseConnection->user;
 $dbpassword = $xml->databaseConnection->password;
 $dbschemaname = $xml->databaseConnection->name;
-$passwordEncryptionKey = $xml->database->passwordEncryptionKey;
-$webServerAddress = $xml->webServer->address;
 $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 if (!$con)
 {
 	die('Could not connect: ' . mysql_error());
 }
-mysql_select_db("mitate", $con);
+mysql_select_db($dbschemaname, $con);
 $get_details = mysql_query("select * from usercredits");
 while($get_detail = mysql_fetch_assoc($get_details)) {
 	$get_days_left_details = mysql_query("select

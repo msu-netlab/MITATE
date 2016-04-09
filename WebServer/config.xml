@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<databaseConnection>
+		<serverAddress></serverAddress>
+		<name></name>
+		<user></user>
+		<password></password>
+	</databaseConnection>
+	<database>
+		<passwordEncryptionKey></passwordEncryptionKey>
+	</database>
+	<credit>
+		<startingCellularCreditInMb></startingCellularCreditInMb>
+		<startingWifiCreditInMb></startingWifiCreditInMb>
+	</credit>
+	<webServer>
+		<address>http://mitate.cs.montana.edu/</address>
+		<webSiteName>MITATE</webSiteName>
+		<adminEmailName>MITATE</adminEmailName>
+		<adminEmail>mitate@cs.montana.edu</adminEmail>
+	</webServer>
+	<userApi>
+		<encryptionPasswordKey></encryptionPasswordKey>
+	</userApi>
+</config>

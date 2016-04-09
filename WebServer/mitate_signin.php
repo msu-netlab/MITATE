@@ -8,11 +8,10 @@ $dbusername = $xml->databaseConnection->user;
 $dbpassword = $xml->databaseConnection->password;
 $dbschemaname = $xml->databaseConnection->name;
 $passwordEncryptionKey = $xml->database->passwordEncryptionKey;
-$webServerAddress = $xml->webServer->address;
 $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con) {die('Could not connect: ' . mysql_error());}
-	mysql_select_db("mitate", $con);
-	$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+	mysql_select_db($dbschemaname, $con);
+	$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $_POST[password], MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 	$result = mysql_query("SELECT * FROM userinfo where username = '$_POST[userid]' and password = '$encrypted_password'");
 	$isUserValid=0;
 	$isUserAdmin = 0;

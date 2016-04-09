@@ -7,10 +7,9 @@ $dbusername = $xml->databaseConnection->user;
 $dbpassword = $xml->databaseConnection->password;
 $dbschemaname = $xml->databaseConnection->name;
 $passwordEncryptionKey = $xml->database->passwordEncryptionKey;
-$webServerAddress = $xml->webServer->address;
 $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 	if (!$con) {die('Could not connect: ' . mysql_error());}
-	mysql_select_db("mitate", $con);
+	mysql_select_db($dbschemaname, $con);
 	$result = mysql_query("SELECT * FROM userinfo");
 	$k=0;
 	while($row = mysql_fetch_array($result)) {
@@ -18,7 +17,7 @@ $con = mysql_connect($dbhostname, $dbusername, $dbpassword);
 			$k=1;
 	}
 	if($k == 0) {
-		$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5("mitate"), $_POST[password], MCRYPT_MODE_CBC, md5(md5("mitate"))));
+		$encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $_POST[password], MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 		$current_date = date("Y-m-d");
 		$sql="INSERT INTO userinfo (fname, lname, username, password, email, datecreated, status) VALUES ('$_POST[fname]','$_POST[lname]','$_POST[username]','$encrypted_password','$_POST[email]', '$current_date', 0)";
 		if (!mysql_query($sql,$con)) {die('Error: ' . mysql_error());}
