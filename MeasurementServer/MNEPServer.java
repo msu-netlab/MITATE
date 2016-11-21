@@ -2,16 +2,9 @@
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.CharBuffer;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,18 +31,22 @@ public class MNEPServer {
     static String sMetricData = "metricdata";
     static String sLogs = "logs";
     static String sTransferExecutedBy = "transferexecutedby";
+    static String sTransferMetrics = "transfermetrics";
 
     static String[] metricDataFields = {"metricid", "transferid", "transactionid", "value", "transferfinished", "deviceid", "responsedata"};
     static String[] logsFields = {"logid", "username", "transferid", "deviceid", "logmessage", "transferfinished"};
     static String[] transferExececutedByFields = {"transferid", "devicename", "username", "carriername", "deviceid"};
+    static String[] transferMetricsFields = {"transferid", "transactionid", "udppacketmetrics", "tcppacketmetrics", "udplatencyconf", "udpthroughputconf", "tcplatencyconf", "tcpthroughputconf", "deviceid"};
 
     static Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
     static Table logsTable = bigquery.getTable(datasetId, sLogs);
     static Table transferExecutedByTable = bigquery.getTable(datasetId, sTransferExecutedBy);
+    static Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);
 
     static List<InsertAllRequest.RowToInsert> metricRowsToInsert = new ArrayList<>();
     static List<InsertAllRequest.RowToInsert> logsRowsToInsert = new ArrayList<>();
     static List<InsertAllRequest.RowToInsert> transferExecutedByRowsToInsert = new ArrayList<>();
+    static List<InsertAllRequest.RowToInsert> transferMetricsRowsToInsert = new ArrayList<>();
 
     ServerSocket ssTCPServerSocket;
     Socket sTCPConnectionSocket;
@@ -212,8 +209,8 @@ public class MNEPServer {
                 oos.writeObject(1);
                 sTCPConnectionSocket.close();
                 ssTCPServerSocket.close();
-                Bigquery bigQuery = null;
-                bigQuery = utilHelper.createAuthorizedBigQueryClient();
+                //Bigquery bigQuery = null;
+                //bigQuery = utilHelper.createAuthorizedBigQueryClient();
                 //Statement s = null;
                 //s = bigQuery.createStatement();
                 for (int iLoopAllClientTimes = 0; iLoopAllClientTimes < convertReceivedClientTimesObject.length; iLoopAllClientTimes++) {
@@ -421,131 +418,119 @@ public class MNEPServer {
                         }
                         sServerUDPLog = currentTransferServerMetrics.sUDPLog;
                     }
-                    try {
-                        if (bigQuery != null) {
-                            iTransferId = currentTransferServerMetrics.iTransferId;
-                            iTransactionId = currentTransferServerMetrics.iTransactionId;
-                            if (currentTransferServerMetrics.iUDPBytes > 0) {
-                                if (currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")) {
-                                    addMetricDataRow(10000, iTransferId, iTransactionId, fUDPUplinkThroughput, sClientTime, sDeviceId);
-                                    addMetricDataRow(10004, iTransferId, iTransactionId, fUDPUplinkMinLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10006, iTransferId, iTransactionId, fUDPUplinkMeanLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10023, iTransferId, iTransactionId, fUDPUplinkMedianLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10008, iTransferId, iTransactionId, fUDPUplinkMaxLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10016, iTransferId, iTransactionId, fUDPUplinkJitter, sClientTime, sDeviceId);
-                                    addMetricDataRow(10041, iTransferId, iTransactionId, fUDPUplinkPacketLoss, sClientTime, sDeviceId);
-                                }
-                                if (currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")) {
-                                    addMetricDataRow(10002, iTransferId, iTransactionId, fUDPDownlinkThroughput, sClientTime, sDeviceId);
-                                    addMetricDataRow(10010, iTransferId, iTransactionId, fUDPDownlinkMinLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10012, iTransferId, iTransactionId, fUDPDownlinkMeanLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10025, iTransferId, iTransactionId, fUDPDownlinkMedianLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10014, iTransferId, iTransactionId, fUDPDownlinkMaxLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10018, iTransferId, iTransactionId, fUDPDownlinkJitter, sClientTime, sDeviceId);
-                                    addMetricDataRow(10042, iTransferId, iTransactionId, fUDPDownlinkPacketLoss, sClientTime, sDeviceId);
-                                }
-                                if (!sServerUDPLog.equals("SUCCESS")) {
-                                    addLogsRow(sUsername, iTransferId, sDeviceId, sServerUDPLog, sClientTime);
-                                }
-                                if (!sClientUDPLog.equals("SUCCESS")) {
-                                    addLogsRow(sUsername, iTransferId, sDeviceId, sClientUDPLog, sClientTime);
-                                }
+                    if (bigquery != null) {
+                        iTransferId = currentTransferServerMetrics.iTransferId;
+                        iTransactionId = currentTransferServerMetrics.iTransactionId;
+                        if (currentTransferServerMetrics.iUDPBytes > 0) {
+                            if (currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")) {
+                                addMetricDataRow(10000, iTransferId, iTransactionId, fUDPUplinkThroughput, sClientTime, sDeviceId);
+                                addMetricDataRow(10004, iTransferId, iTransactionId, fUDPUplinkMinLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10006, iTransferId, iTransactionId, fUDPUplinkMeanLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10023, iTransferId, iTransactionId, fUDPUplinkMedianLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10008, iTransferId, iTransactionId, fUDPUplinkMaxLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10016, iTransferId, iTransactionId, fUDPUplinkJitter, sClientTime, sDeviceId);
+                                addMetricDataRow(10041, iTransferId, iTransactionId, fUDPUplinkPacketLoss, sClientTime, sDeviceId);
                             }
-                            if (currentTransferServerMetrics.iTCPBytes > 0) {
-                                if (currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
-                                    addMetricDataRow(10001, iTransferId, iTransactionId, fTCPUplinkThroughput, sClientTime, sDeviceId);
-                                    addMetricDataRow(10005, iTransferId, iTransactionId, fTCPUplinkMinLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10007, iTransferId, iTransactionId, fTCPUplinkMeanLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10009, iTransferId, iTransactionId, fTCPUplinkMaxLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10024, iTransferId, iTransactionId, fTCPUplinkMedianLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10017, iTransferId, iTransactionId, fTCPUplinkJitter, sClientTime, sDeviceId);
-                                    addMetricDataRow(10020, iTransferId, iTransactionId, fTCPUplinkPacketLoss, sClientTime, sDeviceId);
-                                }
-                                if (currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
-                                    addMetricDataRow(10003, iTransferId, iTransactionId, fTCPDownlinkThroughput, sClientTime, sDeviceId);
-                                    addMetricDataRow(10011, iTransferId, iTransactionId, fTCPDownlinkMinLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10013, iTransferId, iTransactionId, fTCPDownlinkMeanLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10015, iTransferId, iTransactionId, fTCPDownlinkMaxLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10026, iTransferId, iTransactionId, fTCPDownlinkMedianLatency, sClientTime, sDeviceId);
-                                    addMetricDataRow(10019, iTransferId, iTransactionId, fTCPDownlinkJitter, sClientTime, sDeviceId);
-                                    addMetricDataRow(10021, iTransferId, iTransactionId, fTCPDownlinkPacketLoss, sClientTime, sDeviceId);
-                                }
-                                if (!sServerTCPLog.equals("SUCCESS")) {
-                                    addLogsRow(sUsername, iTransferId, sDeviceId, sServerTCPLog, sClientTime);
-                                }
-                                if (!sClientTCPLog.equals("SUCCESS")) {
-                                    addLogsRow(sUsername, iTransferId, sDeviceId, sClientTCPLog, sClientTime);
-                                }
+                            if (currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS")) {
+                                addMetricDataRow(10002, iTransferId, iTransactionId, fUDPDownlinkThroughput, sClientTime, sDeviceId);
+                                addMetricDataRow(10010, iTransferId, iTransactionId, fUDPDownlinkMinLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10012, iTransferId, iTransactionId, fUDPDownlinkMeanLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10025, iTransferId, iTransactionId, fUDPDownlinkMedianLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10014, iTransferId, iTransactionId, fUDPDownlinkMaxLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10018, iTransferId, iTransactionId, fUDPDownlinkJitter, sClientTime, sDeviceId);
+                                addMetricDataRow(10042, iTransferId, iTransactionId, fUDPDownlinkPacketLoss, sClientTime, sDeviceId);
                             }
-                            if ((currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) || (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS"))) {
-                                if (tmUDPTransferMetrics == null) {
-                                    tmUDPTransferMetrics = new TransferMetrics();
-                                }
-                                if (tmTCPTransferMetrics == null) {
-                                    tmTCPTransferMetrics = new TransferMetrics();
-                                }
-                                PreparedStatement psInsertStmt = bigQuery.prepareStatement("insert into transfermetrics " + "(transferid, transactionid, udppacketmetrics, tcppacketmetrics, deviceid)" + "values (?, ?, ?, ?, ?)");
-                                psInsertStmt.setInt(1, iTransferId);
-                                psInsertStmt.setInt(2, iTransactionId);
-
-                                ByteArrayOutputStream baosWriteObjectUDP = new ByteArrayOutputStream();
-                                new ObjectOutputStream(baosWriteObjectUDP).writeObject(tmUDPTransferMetrics);
-                                psInsertStmt.setString(3, DatatypeConverter.printBase64Binary(baosWriteObjectUDP.toByteArray()));
-                                baosWriteObjectUDP.close();
-
-                                ByteArrayOutputStream baosWriteObjectTCP = new ByteArrayOutputStream();
-                                new ObjectOutputStream(baosWriteObjectTCP).writeObject(tmTCPTransferMetrics);
-                                psInsertStmt.setString(4, DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray()));
-                                baosWriteObjectTCP.close();
-
-                                psInsertStmt.setString(5, sDeviceId);
-
-                                int t = psInsertStmt.executeUpdate();
-                                System.out.println("number of records inserted - " + t);
-
-                                double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * Math.acos(Math.cos(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.cos(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))) * Math.cos((Double.parseDouble(sLongitudeAfterTransferExecution) - Double.parseDouble(sLongitudeBeforeTransferExecution)) * (22 / (180 * 7))) + Math.sin(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.sin(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))));
-
-                                float fTotalTimeForTransfer = 0.0f;
-                                if (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.iTCPBytes == 0)
-                                    fTotalTimeForTransfer = fUDPUplinkMeanLatency;
-                                if (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.iTCPBytes == 0)
-                                    fTotalTimeForTransfer = fUDPDownlinkMeanLatency;
-                                if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.iUDPBytes == 0)
-                                    fTotalTimeForTransfer = fTCPUplinkMeanLatency;
-                                if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.iUDPBytes == 0)
-                                    fTotalTimeForTransfer = fTCPDownlinkMeanLatency;
-                                if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0)
-                                    fTotalTimeForTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
-                                if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1)
-                                    fTotalTimeForTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
-
-                                double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (fTotalTimeForTransfer / 1000.0);
-
-                                addMetricDataRow(10030, iTransferId, iTransactionId, Double.parseDouble(sLatitudeBeforeTransferExecution), sClientTime, sDeviceId);
-                                addMetricDataRow(10031, iTransferId, iTransactionId, Double.parseDouble(sLongitudeBeforeTransferExecution), sClientTime, sDeviceId);
-                                addMetricDataRow(10032, iTransferId, iTransactionId, Double.parseDouble(sLatitudeAfterTransferExecution), sClientTime, sDeviceId);
-                                addMetricDataRow(10033, iTransferId, iTransactionId, Double.parseDouble(sLongitudeAfterTransferExecution), sClientTime, sDeviceId);
-
-                                addMetricDataRow(10034, iTransferId, iTransactionId, dDeviceTravelSpeedInMeterPerSecond, sClientTime, sDeviceId);
-
-                                addMetricDataRow(10035, iTransferId, iTransactionId, Double.parseDouble(sMobileSignalStrength), sClientTime, sDeviceId);
-                                addMetricDataRow(10036, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[0]), sClientTime, sDeviceId);
-                                addMetricDataRow(10037, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[1]), sClientTime, sDeviceId);
-                                addMetricDataRow(10038, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[2]), sClientTime, sDeviceId);
-                                addMetricDataRow(10039, iTransferId, iTransactionId, Double.parseDouble(isDeviceInCall), sClientTime, sDeviceId);
-                                addTransferExecutedByRow(iTransferId, sDeviceName, sUsername, sMobileNetworkCarrier, sDeviceId);
+                            if (!sServerUDPLog.equals("SUCCESS")) {
+                                addLogsRow(sUsername, iTransferId, sDeviceId, sServerUDPLog, sClientTime);
+                            }
+                            if (!sClientUDPLog.equals("SUCCESS")) {
+                                addLogsRow(sUsername, iTransferId, sDeviceId, sClientUDPLog, sClientTime);
                             }
                         }
-                    } catch (SQLException e) {
-                        System.err.println("Could not make entry to database server");
-                        e.printStackTrace();
+                        if (currentTransferServerMetrics.iTCPBytes > 0) {
+                            if (currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
+                                addMetricDataRow(10001, iTransferId, iTransactionId, fTCPUplinkThroughput, sClientTime, sDeviceId);
+                                addMetricDataRow(10005, iTransferId, iTransactionId, fTCPUplinkMinLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10007, iTransferId, iTransactionId, fTCPUplinkMeanLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10009, iTransferId, iTransactionId, fTCPUplinkMaxLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10024, iTransferId, iTransactionId, fTCPUplinkMedianLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10017, iTransferId, iTransactionId, fTCPUplinkJitter, sClientTime, sDeviceId);
+                                addMetricDataRow(10020, iTransferId, iTransactionId, fTCPUplinkPacketLoss, sClientTime, sDeviceId);
+                            }
+                            if (currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) {
+                                addMetricDataRow(10003, iTransferId, iTransactionId, fTCPDownlinkThroughput, sClientTime, sDeviceId);
+                                addMetricDataRow(10011, iTransferId, iTransactionId, fTCPDownlinkMinLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10013, iTransferId, iTransactionId, fTCPDownlinkMeanLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10015, iTransferId, iTransactionId, fTCPDownlinkMaxLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10026, iTransferId, iTransactionId, fTCPDownlinkMedianLatency, sClientTime, sDeviceId);
+                                addMetricDataRow(10019, iTransferId, iTransactionId, fTCPDownlinkJitter, sClientTime, sDeviceId);
+                                addMetricDataRow(10021, iTransferId, iTransactionId, fTCPDownlinkPacketLoss, sClientTime, sDeviceId);
+                            }
+                            if (!sServerTCPLog.equals("SUCCESS")) {
+                                addLogsRow(sUsername, iTransferId, sDeviceId, sServerTCPLog, sClientTime);
+                            }
+                            if (!sClientTCPLog.equals("SUCCESS")) {
+                                addLogsRow(sUsername, iTransferId, sDeviceId, sClientTCPLog, sClientTime);
+                            }
+                        }
+                        if ((currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.sTCPLog.equals("SUCCESS") && sClientTCPLog.equals("SUCCESS")) || (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.sUDPLog.equals("SUCCESS") && sClientUDPLog.equals("SUCCESS"))) {
+                            if (tmUDPTransferMetrics == null) {
+                                tmUDPTransferMetrics = new TransferMetrics();
+                            }
+                            if (tmTCPTransferMetrics == null) {
+                                tmTCPTransferMetrics = new TransferMetrics();
+                            }
+
+                            ByteArrayOutputStream baosWriteObjectUDP = new ByteArrayOutputStream();
+                            new ObjectOutputStream(baosWriteObjectUDP).writeObject(tmUDPTransferMetrics);
+                            String sUDPTransferMetrics = DatatypeConverter.printBase64Binary(baosWriteObjectUDP.toByteArray());
+                            baosWriteObjectUDP.close();
+
+                            ByteArrayOutputStream baosWriteObjectTCP = new ByteArrayOutputStream();
+                            new ObjectOutputStream(baosWriteObjectTCP).writeObject(tmTCPTransferMetrics);
+                            String sTCPTransferMetrics = DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray());
+                            baosWriteObjectTCP.close();
+
+                            addTransferMetricsRow(iTransferId, iTransactionId,sUDPTransferMetrics, sTCPTransferMetrics, sDeviceId);
+
+                            double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * Math.acos(Math.cos(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.cos(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))) * Math.cos((Double.parseDouble(sLongitudeAfterTransferExecution) - Double.parseDouble(sLongitudeBeforeTransferExecution)) * (22 / (180 * 7))) + Math.sin(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.sin(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))));
+
+                            float fTotalTimeForTransfer = 0.0f;
+                            if (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.iTCPBytes == 0)
+                                fTotalTimeForTransfer = fUDPUplinkMeanLatency;
+                            if (currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.iTCPBytes == 0)
+                                fTotalTimeForTransfer = fUDPDownlinkMeanLatency;
+                            if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0 && currentTransferServerMetrics.iUDPBytes == 0)
+                                fTotalTimeForTransfer = fTCPUplinkMeanLatency;
+                            if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1 && currentTransferServerMetrics.iUDPBytes == 0)
+                                fTotalTimeForTransfer = fTCPDownlinkMeanLatency;
+                            if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 0)
+                                fTotalTimeForTransfer = fUDPUplinkMeanLatency + fTCPUplinkMeanLatency;
+                            if (currentTransferServerMetrics.iTCPBytes > 0 && currentTransferServerMetrics.iUDPBytes > 0 && currentTransferServerMetrics.iUplinkOrDownlink == 1)
+                                fTotalTimeForTransfer = fUDPDownlinkMeanLatency + fTCPDownlinkMeanLatency;
+
+                            double dDeviceTravelSpeedInMeterPerSecond = (dDistanceBetweenTwoGeographicCoordinatesInKilometeres * 1000.0) / (fTotalTimeForTransfer / 1000.0);
+
+                            addMetricDataRow(10030, iTransferId, iTransactionId, Double.parseDouble(sLatitudeBeforeTransferExecution), sClientTime, sDeviceId);
+                            addMetricDataRow(10031, iTransferId, iTransactionId, Double.parseDouble(sLongitudeBeforeTransferExecution), sClientTime, sDeviceId);
+                            addMetricDataRow(10032, iTransferId, iTransactionId, Double.parseDouble(sLatitudeAfterTransferExecution), sClientTime, sDeviceId);
+                            addMetricDataRow(10033, iTransferId, iTransactionId, Double.parseDouble(sLongitudeAfterTransferExecution), sClientTime, sDeviceId);
+
+                            addMetricDataRow(10034, iTransferId, iTransactionId, dDeviceTravelSpeedInMeterPerSecond, sClientTime, sDeviceId);
+
+                            addMetricDataRow(10035, iTransferId, iTransactionId, Double.parseDouble(sMobileSignalStrength), sClientTime, sDeviceId);
+                            addMetricDataRow(10036, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[0]), sClientTime, sDeviceId);
+                            addMetricDataRow(10037, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[1]), sClientTime, sDeviceId);
+                            addMetricDataRow(10038, iTransferId, iTransactionId, Double.parseDouble(sAccelerometerReading.split(":")[2]), sClientTime, sDeviceId);
+                            addMetricDataRow(10039, iTransferId, iTransactionId, Double.parseDouble(isDeviceInCall), sClientTime, sDeviceId);
+                            addTransferExecutedByRow(iTransferId, sDeviceName, sUsername, sMobileNetworkCarrier, sDeviceId);
+                        }
                     }
                 }
                 metricDataTable.insert(metricRowsToInsert);
                 logsTable.insert(logsRowsToInsert);
                 transferExecutedByTable.insert(transferExecutedByRowsToInsert);
-                //s.executeBatch();
-                //bigQuery.close();
+                transferMetricsTable.insert(transferMetricsRowsToInsert);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -605,4 +590,15 @@ public class MNEPServer {
         transferExecutedByRowsToInsert.add(InsertAllRequest.RowToInsert.of(row));
     }
 
+    // Create a row for the transfer metrcs table, then add it to the array list of rows to be inserted into it respective table
+    private static void addTransferMetricsRow(int iTransferId, int iTransactionId, String sUDPPacketMetrics, String sTCPPacketMetrics, String sDeviceId) {
+        Map<String, Object> row = new HashMap<>();
+        row.put(transferMetricsFields[0], iTransferId);
+        row.put(transferMetricsFields[1], iTransactionId);
+        row.put(transferMetricsFields[2], sUDPPacketMetrics);
+        row.put(transferMetricsFields[3], sTCPPacketMetrics);
+        row.put(transferMetricsFields[8], sDeviceId);
+
+        transferMetricsRowsToInsert.add(InsertAllRequest.RowToInsert.of(row));
+    }
 }
