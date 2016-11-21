@@ -1,8 +1,16 @@
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.lang.reflect.Array;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.bigquery.Bigquery;
+import com.google.api.services.bigquery.BigqueryScopes;
+import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.BigQueryOptions;
 
 public class MNEPUtilities {
     
@@ -32,9 +40,29 @@ public class MNEPUtilities {
            e.printStackTrace();
        }
     }
-    
+
+    // Creates a new Bigquery client authorized via Application Default Credentials.
+    public static Bigquery createAuthorizedBigQueryClient() throws IOException {
+        // Create the credential
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
+        GoogleCredential credential = GoogleCredential.getApplicationDefault(transport, jsonFactory);
+
+        if (credential.createScopedRequired()) {
+            credential = credential.createScoped(BigqueryScopes.all());
+        }
+
+        return new Bigquery.Builder(transport, jsonFactory, credential)
+                .setApplicationName("MITATE")
+                .build();
+    }
+
+    public static BigQuery createAuthorizedBQClient() throws IOException{
+        return BigQueryOptions.getDefaultInstance().getService();
+    }
+
     // to create a database connection
-    public Connection getDBConnection() {
+    /*public Connection getDBConnection() {
         try {
             cDatabaseConnection = DriverManager.getConnection(sDatabaseURL, sUsername, sPassword);
             System.out.println ("Database connection created");
@@ -59,7 +87,7 @@ public class MNEPUtilities {
            }
        }
     
-    }
+    }*/
     
     // to calculate throughtput in kilobytes per second
     public float toKbps(int bytes, int msecs){
