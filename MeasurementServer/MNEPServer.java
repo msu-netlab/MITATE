@@ -26,7 +26,7 @@ public class MNEPServer {
     public static long lServerOffsetFromNTP;
     public long lClientOffsetFromNTP;
 
-    static BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+    //static BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
     static String datasetId = "MITATE";
     static String sMetricData = "metricdata";
     static String sLogs = "logs";
@@ -38,10 +38,10 @@ public class MNEPServer {
     static String[] transferExececutedByFields = {"transferid", "devicename", "username", "carriername", "deviceid"};
     static String[] transferMetricsFields = {"transferid", "transactionid", "udppacketmetrics", "tcppacketmetrics", "udplatencyconf", "udpthroughputconf", "tcplatencyconf", "tcpthroughputconf", "deviceid"};
 
-    static Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
+    /*static Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
     static Table logsTable = bigquery.getTable(datasetId, sLogs);
     static Table transferExecutedByTable = bigquery.getTable(datasetId, sTransferExecutedBy);
-    static Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);
+    static Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);*/
 
     static List<InsertAllRequest.RowToInsert> metricRowsToInsert = new ArrayList<>();
     static List<InsertAllRequest.RowToInsert> logsRowsToInsert = new ArrayList<>();
@@ -209,6 +209,11 @@ public class MNEPServer {
                 oos.writeObject(1);
                 sTCPConnectionSocket.close();
                 ssTCPServerSocket.close();
+                BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+                Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
+                Table logsTable = bigquery.getTable(datasetId, sLogs);
+                Table transferExecutedByTable = bigquery.getTable(datasetId, sTransferExecutedBy);
+                Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);
                 //Bigquery bigQuery = null;
                 //bigQuery = utilHelper.createAuthorizedBigQueryClient();
                 //Statement s = null;
@@ -527,10 +532,22 @@ public class MNEPServer {
                         }
                     }
                 }
-                metricDataTable.insert(metricRowsToInsert);
-                logsTable.insert(logsRowsToInsert);
-                transferExecutedByTable.insert(transferExecutedByRowsToInsert);
-                transferMetricsTable.insert(transferMetricsRowsToInsert);
+                InsertAllResponse metricDataRespone = metricDataTable.insert(metricRowsToInsert);
+                InsertAllResponse logsResponse = logsTable.insert(logsRowsToInsert);
+                InsertAllResponse transferExecutedByResponse = transferExecutedByTable.insert(transferExecutedByRowsToInsert);
+                InsertAllResponse transferMetricsResponse = transferMetricsTable.insert(transferMetricsRowsToInsert);
+                if(metricDataRespone.hasErrors() || logsResponse.hasErrors() || transferExecutedByResponse.hasErrors() || transferMetricsResponse.hasErrors()){
+                    findErrors(metricDataRespone, metricRowsToInsert);
+                    findErrors(logsResponse, logsRowsToInsert);
+                    findErrors(transferExecutedByResponse, transferExecutedByRowsToInsert);
+                    findErrors(transferMetricsResponse, transferMetricsRowsToInsert);
+                }
+                else{
+                    metricRowsToInsert.clear();
+                    logsRowsToInsert.clear();
+                    transferExecutedByRowsToInsert.clear();
+                    transferMetricsRowsToInsert.clear();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -600,5 +617,23 @@ public class MNEPServer {
         row.put(transferMetricsFields[8], sDeviceId);
 
         transferMetricsRowsToInsert.add(InsertAllRequest.RowToInsert.of(row));
+    }
+
+    private static void findErrors(InsertAllResponse response, List<InsertAllRequest.RowToInsert> rows){
+        // If the response has errors, print them all out
+        if(response.hasErrors()){
+            Map<Long,List<BigQueryError>> errorsMap = response.getInsertErrors();
+            for(Map.Entry<Long,List<BigQueryError>> entry : errorsMap.entrySet()){
+                List<BigQueryError> errorsList = entry.getValue();
+                for(BigQueryError error : errorsList){
+                    // getReason will return a string with an error code
+                    System.out.println(error.getReason());
+                }
+            }
+        }
+        // Otherwise this table had no errors so clear the rows that were supposed to be inserted
+        else{
+            rows.clear();
+        }
     }
 }
