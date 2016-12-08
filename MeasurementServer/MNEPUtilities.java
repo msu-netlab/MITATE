@@ -57,38 +57,6 @@ public class MNEPUtilities {
                 .build();
     }
 
-    public static BigQuery createAuthorizedBQClient() throws IOException{
-        return BigQueryOptions.getDefaultInstance().getService();
-    }
-
-    // to create a database connection
-    /*public Connection getDBConnection() {
-        try {
-            cDatabaseConnection = DriverManager.getConnection(sDatabaseURL, sUsername, sPassword);
-            System.out.println ("Database connection created");
-            return cDatabaseConnection;
-        } catch(Exception e) {
-           System.err.println(TAG+" : @getConnection : error - "+e.getMessage());
-           e.printStackTrace();
-        }
-        return null;
-    }
-	
-    // to close a database connection
-    public void closeDBConnection() {
-        if (cDatabaseConnection != null) {
-           try {
-               cDatabaseConnection.close ();
-               System.out.println ("Database connection closed");
-           }
-           catch (Exception e) { 
-              System.err.println(TAG+" : @closeDBConnection : error - "+e.getMessage());
-              e.printStackTrace();
-           }
-       }
-    
-    }*/
-    
     // to calculate throughtput in kilobytes per second
     public float toKbps(int bytes, int msecs){
         float result = 0;

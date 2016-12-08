@@ -26,7 +26,6 @@ public class MNEPServer {
     public static long lServerOffsetFromNTP;
     public long lClientOffsetFromNTP;
 
-    //static BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
     static String datasetId = "MITATE";
     static String sMetricData = "metricdata";
     static String sLogs = "logs";
@@ -37,11 +36,6 @@ public class MNEPServer {
     static String[] logsFields = {"logid", "username", "transferid", "deviceid", "logmessage", "transferfinished"};
     static String[] transferExececutedByFields = {"transferid", "devicename", "username", "carriername", "deviceid"};
     static String[] transferMetricsFields = {"transferid", "transactionid", "udppacketmetrics", "tcppacketmetrics", "udplatencyconf", "udpthroughputconf", "tcplatencyconf", "tcpthroughputconf", "deviceid"};
-
-    /*static Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
-    static Table logsTable = bigquery.getTable(datasetId, sLogs);
-    static Table transferExecutedByTable = bigquery.getTable(datasetId, sTransferExecutedBy);
-    static Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);*/
 
     static List<InsertAllRequest.RowToInsert> metricRowsToInsert = new ArrayList<>();
     static List<InsertAllRequest.RowToInsert> logsRowsToInsert = new ArrayList<>();
@@ -209,15 +203,14 @@ public class MNEPServer {
                 oos.writeObject(1);
                 sTCPConnectionSocket.close();
                 ssTCPServerSocket.close();
+
+                // Get connection to BigQuery
                 BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
                 Table metricDataTable = bigquery.getTable(datasetId, sMetricData);
                 Table logsTable = bigquery.getTable(datasetId, sLogs);
                 Table transferExecutedByTable = bigquery.getTable(datasetId, sTransferExecutedBy);
                 Table transferMetricsTable = bigquery.getTable(datasetId, sTransferMetrics);
-                //Bigquery bigQuery = null;
-                //bigQuery = utilHelper.createAuthorizedBigQueryClient();
-                //Statement s = null;
-                //s = bigQuery.createStatement();
+
                 for (int iLoopAllClientTimes = 0; iLoopAllClientTimes < convertReceivedClientTimesObject.length; iLoopAllClientTimes++) {
                     tsaTCPPacketReceivedTimes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getLaTCPPacketReceivedTimes());
                     iaTCPBytes_Client = Arrays.toString(convertReceivedClientTimesObject[iLoopAllClientTimes].getIaTCPBytes());
@@ -496,7 +489,7 @@ public class MNEPServer {
                             String sTCPTransferMetrics = DatatypeConverter.printBase64Binary(baosWriteObjectTCP.toByteArray());
                             baosWriteObjectTCP.close();
 
-                            addTransferMetricsRow(iTransferId, iTransactionId,sUDPTransferMetrics, sTCPTransferMetrics, sDeviceId);
+                            addTransferMetricsRow(iTransferId, iTransactionId, sUDPTransferMetrics, sTCPTransferMetrics, sDeviceId);
 
                             double dDistanceBetweenTwoGeographicCoordinatesInKilometeres = 6378.137 * Math.acos(Math.cos(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.cos(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))) * Math.cos((Double.parseDouble(sLongitudeAfterTransferExecution) - Double.parseDouble(sLongitudeBeforeTransferExecution)) * (22 / (180 * 7))) + Math.sin(Double.parseDouble(sLatitudeBeforeTransferExecution) * (22 / (180 * 7))) * Math.sin(Double.parseDouble(sLatitudeAfterTransferExecution) * (22 / (180 * 7))));
 
@@ -532,17 +525,19 @@ public class MNEPServer {
                         }
                     }
                 }
-                InsertAllResponse metricDataRespone = metricDataTable.insert(metricRowsToInsert);
+                InsertAllResponse metricDataResponse = metricDataTable.insert(metricRowsToInsert);
                 InsertAllResponse logsResponse = logsTable.insert(logsRowsToInsert);
                 InsertAllResponse transferExecutedByResponse = transferExecutedByTable.insert(transferExecutedByRowsToInsert);
                 InsertAllResponse transferMetricsResponse = transferMetricsTable.insert(transferMetricsRowsToInsert);
-                if(metricDataRespone.hasErrors() || logsResponse.hasErrors() || transferExecutedByResponse.hasErrors() || transferMetricsResponse.hasErrors()){
-                    findErrors(metricDataRespone, metricRowsToInsert);
+
+                // If any had errors, which is rare, find which and print the errors. This avoids a large if/elseif statement.
+                // Otherwise, clear the rows to avoid duplicate insertions.
+                if (metricDataResponse.hasErrors() || logsResponse.hasErrors() || transferExecutedByResponse.hasErrors() || transferMetricsResponse.hasErrors()) {
+                    findErrors(metricDataResponse, metricRowsToInsert);
                     findErrors(logsResponse, logsRowsToInsert);
                     findErrors(transferExecutedByResponse, transferExecutedByRowsToInsert);
                     findErrors(transferMetricsResponse, transferMetricsRowsToInsert);
-                }
-                else{
+                } else {
                     metricRowsToInsert.clear();
                     logsRowsToInsert.clear();
                     transferExecutedByRowsToInsert.clear();
@@ -619,20 +614,21 @@ public class MNEPServer {
         transferMetricsRowsToInsert.add(InsertAllRequest.RowToInsert.of(row));
     }
 
-    private static void findErrors(InsertAllResponse response, List<InsertAllRequest.RowToInsert> rows){
+    private static void findErrors(InsertAllResponse response, List<InsertAllRequest.RowToInsert> rows) {
         // If the response has errors, print them all out
-        if(response.hasErrors()){
-            Map<Long,List<BigQueryError>> errorsMap = response.getInsertErrors();
-            for(Map.Entry<Long,List<BigQueryError>> entry : errorsMap.entrySet()){
+        // Errors would theoretically only be caused by connection or API exceptions so save the rows in memory
+        if (response.hasErrors()) {
+            Map<Long, List<BigQueryError>> errorsMap = response.getInsertErrors();
+            for (Map.Entry<Long, List<BigQueryError>> entry : errorsMap.entrySet()) {
                 List<BigQueryError> errorsList = entry.getValue();
-                for(BigQueryError error : errorsList){
+                for (BigQueryError error : errorsList) {
                     // getReason will return a string with an error code
                     System.out.println(error.getReason());
                 }
             }
         }
-        // Otherwise this table had no errors so clear the rows that were supposed to be inserted
-        else{
+        // Otherwise this table had no errors so clear the rows that were already inserted
+        else {
             rows.clear();
         }
     }
