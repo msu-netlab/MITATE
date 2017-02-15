@@ -16,8 +16,8 @@
     <dependencies>
         <dependency>
             <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud</artifactId>
-            <version>0.5.1</version>
+            <artifactId>google-cloud-bigquery</artifactId>
+            <version>0.8.1-beta</version>
         </dependency>
     </dependencies>
 </project>

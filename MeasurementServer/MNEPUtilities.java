@@ -32,13 +32,13 @@ public class MNEPUtilities {
       
        sDatabaseName = "";
        
-       sDatabaseURL = "jdbc:mysql:/"+"/"+sDatabaseServerName+":3306/"+sDatabaseName;
+       /*sDatabaseURL = "jdbc:mysql:/"+"/"+sDatabaseServerName+":3306/"+sDatabaseName;
        try {
             Class.forName ("com.mysql.jdbc.Driver").newInstance ();
        } catch (Exception e) {
            System.err.println(TAG+" : @static : error - "+e.getMessage());
            e.printStackTrace();
-       }
+       }*/
     }
 
     // Creates a new Bigquery client authorized via Application Default Credentials.
