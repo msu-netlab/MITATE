@@ -15,6 +15,9 @@ list($bigQuery, $dataset) = require 'get_bq_connection.php';
 //$dataset = $bigQuery->dataset('test');
 $table = $dataset->table('test');
 
+if(!$bigQuery){
+    echo 'No BQ!';
+}
 
 $insertResponse = $table->insertRow(['name' => 'Emi', 'id' => 164]);
 if (!$insertResponse->isSuccessful()) {
@@ -26,22 +29,6 @@ if (!$insertResponse->isSuccessful()) {
         echo $error['reason'] . ': ' . $error['message'] . PHP_EOL;
     }
 }
-
-/*$data = array(array('name' => 'Brian', 'id' => 1245), array('name' => 'Derek', 'id' => 3698));
-//$rows = array();
-foreach ($data as $row) {
-    $insertResponse = $table->insertRow($row);
-    if (!$insertResponse->isSuccessful()) {
-        $row = $insertResponse->failedRows()[0];
-
-        print_r($row['rowData']);
-
-        foreach ($row['errors'] as $error) {
-            echo $error['reason'] . ': ' . $error['message'] . PHP_EOL;
-        }
-    }
-}*/
-
 
 $queryResults = $bigQuery->runQuery('SELECT name, id FROM [mitate-144222:test.test] ORDER BY name ASC');
 

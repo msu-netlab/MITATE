@@ -1,0 +1,8 @@
+runtime: php55
+api_version: 1
+application: mitate-144222
+version: 2
+
+handlers:
+- url: /
+  script: index.php
