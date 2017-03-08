@@ -31,7 +31,7 @@ if ($_POST[oneway] == 0 && $_POST[size] == 0 && $_POST[rtt] == 0) {
         die(printErrors($insertResponse));
     } else $k = $k + 1;
 
-
+    //TODO aggregate queries or find a workaround since BQ is append only
     $sql = "update metricdata set transferfinished = '$time' where transferid = $_POST[transferid] and transactionid = $_POST[transactionid] and deviceid = '$_POST[deviceid]'";
     if (!mysql_query($sql, $bigQuery)) {
         die('Error: ' . mysql_error());
