@@ -3,7 +3,7 @@ libxml_use_internal_errors(true);
 $xml = simplexml_load_file("config.xml");
 list($bigQuery, $dataset) = require 'get_bq_connection.php';
 if (!$bigQuery) {
-    die('Could not connect to BigQuery');
+    die('Could not connect to database');
 }
 $k = 0;
 $time = str_replace("T", " ", $_POST[time]);
@@ -32,10 +32,10 @@ if ($_POST[oneway] == 0 && $_POST[size] == 0 && $_POST[rtt] == 0) {
     } else $k = $k + 1;
 
     //TODO aggregate queries or find a workaround since BQ is append only
-    $sql = "update metricdata set transferfinished = '$time' where transferid = $_POST[transferid] and transactionid = $_POST[transactionid] and deviceid = '$_POST[deviceid]'";
-    if (!mysql_query($sql, $bigQuery)) {
-        die('Error: ' . mysql_error());
-    } else $k = $k + 1;
+    //$sql = "update metricdata set transferfinished = '$time' where transferid = $_POST[transferid] and transactionid = $_POST[transactionid] and deviceid = '$_POST[deviceid]'";
+    //if (!mysql_query($sql, $bigQuery)) {
+    //    die('Error: ' . mysql_error());
+    //} else $k = $k + 1;
 
     $transferExecutedByTable = $dataset->table('transferexecutedby');
     $insertResponse = $transferExecutedByTable->insertRow(['transferid' => $_POST[transferid], 'devicename' => $_POST[devicename], 'username' => $_POST[username], 'carriername' => $_POST[mobilecarrier], 'deviceid' => $_POST[deviceid]]);

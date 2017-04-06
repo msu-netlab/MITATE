@@ -3,7 +3,7 @@ libxml_use_internal_errors(true);
 $xml = simplexml_load_file("config.xml");
 list($bigQuery, $dataset) = require 'get_bq_connection.php';
 if (!$bigQuery) {
-    die('Could not connect to BigQuery');
+    die('Could not connect to database');
 }
 $encrypted_password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($passwordEncryptionKey), $_POST[password], MCRYPT_MODE_CBC, md5(md5($passwordEncryptionKey))));
 $loginresultset = $bigQuery->runQuery("SELECT COUNT(*) AS status FROM MITATE.userinfo WHERE username = '$_POST[username]' AND password = '$encrypted_password' AND status = 1");

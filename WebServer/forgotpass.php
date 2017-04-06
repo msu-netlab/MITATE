@@ -4,8 +4,9 @@ if (isset($_POST["username"]) && isset($_POST["email"])) {
     $xml = simplexml_load_file("config.xml");
     list($bigQuery, $dataset) = require 'get_bq_connection.php';
     if (!$bigQuery) {
-        die('Could not connect to BigQuery');
+        die('Could not connect to database');
     }
+    //Iterate to avoid injection
     //$queryResults = $bigQuery->runQuery("SELECT * FROM [MITATE.userinfo] WHERE email='{$email}' OR username='{$username}'");
     $queryResults = $bigQuery->runQuery("SELECT * FROM MITATE.userinfo");
 

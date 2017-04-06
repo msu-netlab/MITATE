@@ -3,7 +3,7 @@ libxml_use_internal_errors(true);
 $xml = simplexml_load_file("config.xml");
 list($bigQuery, $dataset) = require 'get_bq_connection.php';
 if (!$bigQuery) {
-    die('Could not connect to BigQuery');
+    die('Could not connect to database');
 }
 $username = $_POST[username];
 $password = $_POST[password];
