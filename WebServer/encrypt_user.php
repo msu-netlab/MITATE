@@ -1,6 +1,5 @@
 <?php
-
-libxml_use_internal_errors(true); 
+libxml_use_internal_errors(true);
 $xml = simplexml_load_file("config.xml");
 $encryptionPasswordKey = $xml->userApi->encryptionPasswordKey;
 
