@@ -1,5 +1,5 @@
 {
   "require": {
-    "google/cloud": "v0.21.0"
+    "google/cloud": "v0.26.0"
   }
 }
