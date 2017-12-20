@@ -1,0 +1,122 @@
+runtime: php55
+api_version: 1
+application: mitate-144222
+version: 1
+
+handlers:
+- url: /
+  script: index.php
+
+- url: /cdn.php
+  script: cdn.php
+
+- url: /chart.php
+  script: chart.php
+
+- url: /decrypt_user.php
+  script: decrypt_user.php
+
+- url: /encrypt_user.php
+  script: encrypt_user.php
+
+- url: /footer.php
+  script: footer.php
+
+- url: /forgotpass.php
+  script: forgotpass.php
+
+- url: /get_experiment_status.php
+  script: get_experiment_status.php
+
+- url: /get_user_credits.php
+  script: get_user_credits.php
+
+- url: /header.php
+  script: header.php
+
+- url: /img
+  static_dir: img
+
+- url: /index.php
+  script: index.php
+
+- url: /mitate_api_help.php
+  script: mitate_api_help.php
+
+- url: /mitate_count_credit.php
+  script: mitate_count_credit.php
+
+- url: /mitate_count_credit_xml.php
+  script: mitate_count_credit_xml.php
+
+- url: /mitate_cron_calculate_credits_earned.php
+  script: mitate_cron_calculate_credits_earned.php
+
+- url: /mitate_delete_experiment.php
+  script: mitate_delete_experiment.php
+
+- url: /mitate_downloads.php
+  script: mitate_downloads.php
+
+- url: /mitate_initialize_db.php
+  script: mitate_initialize_db.php
+
+- url: /mitate_logout.php
+  script: mitate_logout.php
+
+- url: /mitate_make_public_experiment.php
+  script: mitate_make_public_experiment.php
+
+- url: /mitate_publications.php
+  script: mitate_publications.php
+
+- url: /mitate_query_experiment.php
+  script: mitate_query_experiment.php
+
+- url: /mitate_signin.php
+  script: mitate_signin.php
+
+- url: /mitate_signup.php
+  script: mitate_signup.php
+
+- url: /mitate_team.php
+  script: mitate_team.php
+
+- url: /mitate_tutorial_for_beginners.php
+  script: mitate_tutorial_for_beginners.php
+
+- url: /mitate_upload_experiment.php
+  script: mitate_upload_experiment.php
+
+- url: /mitate_validate_xml.php
+  script: mitate_validate_xml.php
+
+- url: /mobilelogin.php
+  script: mobilelogin.php
+
+- url: /populate_user_experiment_list.php
+  script: populate_user_experiment_list.php
+
+- url: /publications
+  static_dir: publications
+
+- url: /sample
+  static_dir: sample
+
+- url: /settings.php
+  script: settings.php
+
+- url: /setup.php
+  script: setup.php
+
+- url: /setup_deviceid.php
+  script: setup_deviceid.php
+
+- url: /user_verification.php
+  script: user_verification.php
+
+- url: /validate_user.php
+  script: validate_user.php
+
+env_variables:
+
